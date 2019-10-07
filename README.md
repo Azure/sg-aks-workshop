@@ -18,7 +18,7 @@ The workshop runs over 2 days and is mean to take an outside in approach. Meanin
   3. [Service Mesh - Do I need it?](day2-03-service-mesh.md)
   4. [Deploy Sample App](day2-04-deploy-app.md)
   5. [Validate Scenarios](day2-05-validate-scenarios.md)
-  6. [Thought Leadership & Next Steps](day2-06-thought-leadeship.md)
+  6. [Thought Leadership & Next Steps](day2-06-thought-leadership.md)
   
 # Contributing
 
