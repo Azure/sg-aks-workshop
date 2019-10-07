@@ -4,6 +4,10 @@
 
 locals {
   k8s-ns = "flux"
+
+  labels = {
+    name = "flux"
+  }
 }
 
 resource "kubernetes_namespace" "flux" {
@@ -19,8 +23,7 @@ resource "kubernetes_service_account" "flux" {
     name      = "flux"
     namespace = "${local.k8s-ns}"
 
-    labels {
-      name = "flux"
+    labels = local.labels
     }
   }
 
