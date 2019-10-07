@@ -1,25 +1,4 @@
-# Cloud Native App Governance + Security Workshop
 
-Hello, and welcome to the workshop. This is a 2-day hands-on workshop focused on setting up AKS along with additional technologies to make it adhere to the governance and security needs of highly regulated customers.
-
-The workshop runs over 2 days and is mean to take an outside in approach. Meaning, we will start from the outside and make our way inwards. It starts with focusing on Governance and Security decisions that need to get made before a single Azure resource is even provisioned. We will then focus on decisions that need to get made prior to provisioning the cluster. Next we will actually provision the cluster along with focusing on how to deploy common components post-provisioning. Now that the clsuter is configured, the next steps is to actually deploy some workloads. Once the workloads are deployed we will focus in on some Day 2 operations when it comes to managing, maintaining and provising observability into the cluster.
-
-## Lab Guides - Day 1
-
-  1. [Governance and Security Setup](day1-01-gov-sec-setup.md)
-  2. [Cluster Pre-Provisioning](day1-02-cluster-pre-provisioning.md)
-  3. [Cluster Provisioning)](day1-03-cluster-provisioning.md)
-  4. [Post-Provisioning Infra-centric](day1-04-post-provisioning-infra.md)
-
-## Lab Guides - Day 2
-
-  1. [Post-Provisioning App-Centric](day2-01-post-provisioning-app.md)
-  2. [Cost Governance](day2-02-cost-governance.md)
-  3. [Service Mesh - Do I need it?](day2-03-service-mesh.md)
-  4. [Deploy Sample App](day2-04-deploy-app.md)
-  5. [Validate Scenarios](day2-05-validate-scenarios.md)
-  6. [Thought Leadership & Next Steps](day2-06-thought-leadeship.md)
-  
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
