@@ -21,7 +21,7 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 - On-prem Connectivity – Although ContosoFinancial has moved a large majority of their workloads to the Cloud, there is still connectivity back to on-prem required. Connectivity back to on-prem requires getting IPs whitelisted to access certain services, as well as cert-based AuthN.
 - Secrets Mgmt – ConstoFinancial uses Azure Key Vault today for storing secrets, certs and keys for disk encryption for example. What is the recommended way to expose sensitive information to the running containers?
 - Certificate Authority (CA) – The desire is to leverage ContosoFinancials own CA when possible.
-- Existing Azure Network – ConstosoFinancial has adopted a hub and spoke VNET architecture aligned to Virtual Data Center (VDC). 
+- Existing Azure Network – ConstosoFinancial has adopted a hub and spoke VNET architecture aligned to Virtual Data Center (VDC).
 - On-prem to Cloud Connectivity with Express Route (ER) – Address space 10.0.0.0/16 is currently used on-premises and extended out to Azure through ER. ContosFinancial would like to use Azure CNI, but foresee a problem with running out of IP space.
 - Share Clusters – ContosoFinancial wants to share a cluster out to multiple parties so need to be able to carve the resources up into logical buckets and assign RBAC permissions (RBAC & Namespace Setup).
 - Container Registry – ContosoFinancial is currently partial to Artifactory as their container image repository as it provides the ability to have a single store that can be segmented via AuthZ using RBAC.

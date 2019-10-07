@@ -6,19 +6,19 @@ The workshop runs over 2 days and is mean to take an outside in approach. Meanin
 
 ## Lab Guides - Day 1
 
-  1. [Governance and Security Setup](day1-01-gov-sec-setup.md)
-  2. [Cluster Pre-Provisioning](day1-02-cluster-pre-provisioning.md)
-  3. [Cluster Provisioning)](day1-03-cluster-provisioning.md)
-  4. [Post-Provisioning Infra-centric](day1-04-post-provisioning-infra.md)
+  1. [Governance and Security Setup](governance-security/README.md)
+  2. [Cluster Pre-Provisioning](cluster-pre-provisioning/README.md)
+  3. [Cluster Provisioning](cluster-provisioning/README.md)
+  4. [Post-Provisioning Infra-centric](post-provisioning-infra/README.md)
 
 ## Lab Guides - Day 2
 
-  1. [Post-Provisioning App-Centric](day2-01-post-provisioning-app.md)
-  2. [Cost Governance](day2-02-cost-governance.md)
-  3. [Service Mesh - Do I need it?](day2-03-service-mesh.md)
-  4. [Deploy Sample App](day2-04-deploy-app.md)
-  5. [Validate Scenarios](day2-05-validate-scenarios.md)
-  6. [Thought Leadership & Next Steps](day2-06-thought-leadership.md)
+  1. [Post-Provisioning App-Centric](post-provisioning-app/README.md)
+  2. [Cost Governance](cost-governance/README.md)
+  3. [Service Mesh - Do I need it?](service-mesh/README.md)
+  4. [Deploy Sample App](deploy-app/README.md)
+  5. [Validate Scenarios](validate-scenarios/README.md)
+  6. [Thought Leadership & Next Steps](thought-leadership/README.md)
   
 # Contributing
 
