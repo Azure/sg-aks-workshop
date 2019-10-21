@@ -1,3 +1,7 @@
+# WORK IN PROGRESS
+
+This repo is a work in progress.
+
 # Cloud Native App Governance + Security Workshop
 
 Hello, and welcome to the workshop. This is a 2-day hands-on workshop focused on setting up AKS along with additional technologies to make it adhere to the governance and security needs of highly regulated customers.
