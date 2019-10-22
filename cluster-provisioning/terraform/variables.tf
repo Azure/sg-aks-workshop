@@ -25,6 +25,22 @@ variable "client_secret" {
   description = "The Client Secret for the Service Principal to use for this Managed Kubernetes Cluster"
 }
 
+variable "aad_client_app_id" {
+  description = "AAD APP ID for AAD Integration"
+}
+
+variable "aad_server_app_id" {
+  description = "AAD Server ID for AAD Integration"
+}
+
+variable "aad_server_app_secret" {
+  description = "AAD Server App Secret for AAD Integration"
+}
+
+variable "aad_tenant_id" {
+  description = "AAD Tenant ID for AAD Integration"
+}
+
 variable "public_ssh_key_path" {
   description = "The Path at which your Public SSH Key is located. Defaults to ~/.ssh/id_rsa.pub"
   default     = "~/.ssh/id_rsa.pub"
