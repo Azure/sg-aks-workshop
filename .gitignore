@@ -5,6 +5,9 @@
 *.so
 *.dylib
 *.terraform
+*.backup
+*.tfstate.backup
+*.tfstate.*
 *.tfstate
 # Test binary, build with `go test -c`
 *.test
