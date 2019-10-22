@@ -38,8 +38,6 @@ One of the key benefits of putting an Enterprise Control Plane framework in plac
 
 ![Enterprise Control Plane Governance?](/governance-security/img/EnterpriseControlPlaneGovernance.png)
 
-![Enterprise Control Plane Architecture?](/governance-security/img/EnterpriseControlPlaneArchitecture.png)
-
 ## Next Steps
 
 [Cluster Pre-Provisioning](/cluster-pre-provisioning/README.md)
