@@ -2,7 +2,7 @@ output "id" {
   value = "${azurerm_kubernetes_cluster.demo.id}"
 }
 
-output "kube_config" {
+output "kube_admin_config" {
   value = "${azurerm_kubernetes_cluster.demo.kube_config_raw}"
 }
 
