@@ -25,10 +25,6 @@ resource "kubernetes_service_account" "flux" {
 
     labels = local.labels
     }
-  }
-
-  automount_service_account_token = true
-
   depends_on = ["kubernetes_namespace.flux"]
 }
 
@@ -36,7 +32,7 @@ resource "kubernetes_cluster_role" "flux" {
   metadata {
     name = "flux"
 
-    labels {
+    labels = {
       name = "flux"
     }
   }
@@ -59,7 +55,7 @@ resource "kubernetes_cluster_role_binding" "flux" {
   metadata {
     name = "flux"
 
-    labels {
+    labels = {
       name = "flux"
     }
   }
@@ -92,7 +88,7 @@ resource "kubernetes_deployment" "flux" {
 
   spec {
     selector {
-      match_labels {
+      match_labels = {
         name = "flux"
       }
     }
@@ -103,7 +99,7 @@ resource "kubernetes_deployment" "flux" {
 
     template {
       metadata {
-        labels {
+        labels = {
           name = "flux"
         }
       }
@@ -187,14 +183,14 @@ resource "kubernetes_deployment" "memcached" {
 
   spec {
     selector {
-      match_labels {
+      match_labels = {
         name = "memcached"
       }
     }
 
     template {
       metadata {
-        labels {
+        labels = {
           name = "memcached"
         }
       }
@@ -228,7 +224,7 @@ resource "kubernetes_service" "memcached" {
       port = 11211
     }
 
-    selector {
+    selector = {
       name = "memcached"
     }
   }

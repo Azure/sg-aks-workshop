@@ -76,14 +76,10 @@ variable "network_policy" {
   description = "Uses calico by default for network policy"
 }
 
-<<<<<<< HEAD
 variable "azure_subnet_id" {
   default = "/subscriptions/xxxxxx-xxxxxx-xxxx/resourceGroups/tf-sg/providers/Microsoft.Network/virtualNetworks/tfsg/subnets/cluster"
   description = "Subnet ID for virtual network where aks will be deployed"
 }
-=======
-
->>>>>>> parent of a9e25c3... this might work
 variable "pod_cidr" {
   default = "172.23.0.0/16"
   description = "Only use if kubenet is assigned as the network plugin. It will be divided into a /24 for each node and will be the space assigned for POD IPs on each node. A Rout Table will be created by Azure, but it must be assigned to the AKS subnet upon completion of deployment to complete install"
