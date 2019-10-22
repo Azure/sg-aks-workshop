@@ -1,6 +1,6 @@
 # WORK IN PROGRESS
 
-This repo is a work in progress.
+This repo is a **WORK IN PROGRESS**.
 
 # Cloud Native App Governance + Security Workshop
 
@@ -23,6 +23,22 @@ The workshop runs over 2 days and is mean to take an outside in approach. Meanin
   4. [Deploy Sample App](deploy-app/README.md)
   5. [Validate Scenarios](validate-scenarios/README.md)
   6. [Thought Leadership & Next Steps](thought-leadership/README.md)
+
+## Prerequisites
+
+The following are the requirements to **start**.
+
+* Azure Account [Azure Portal](https://portal.azure.com)
+* Azure CLI [Install CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+* Kubectl CLI [Install kubectl with Azure CLI](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough#connect-to-the-cluster)
+* Git [Git SCM](https://git-scm.com/downloads)
+* Terraform [Terraform Download](https://www.terraform.io/downloads.html)
+* Docker Community Edition (CE)[Install CE](https://docs.docker.com/v17.09/engine/installation/)
+
+  * [Install Docker for Mac](https://docs.docker.com/v17.09/docker-for-mac/install/)
+  * [Install Docker for Windows](https://docs.docker.com/v17.09/docker-for-windows/install/)
+
+* Code Editor [Install VS Code](https://code.visualstudio.com/download)
   
 # Contributing
 

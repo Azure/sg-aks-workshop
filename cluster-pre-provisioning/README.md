@@ -38,6 +38,11 @@ This section leverages the variables from above and creates the initial Resoruce
 # Get ARM Access Token and Subscription ID - This will be used for AuthN later.
 ACCESS_TOKEN=$(az account get-access-token -o tsv --query 'accessToken')
 # NOTE: Update Subscription Name
+# Use list command to get list of Subscription IDs & Names
+az account list -o table
+# Set Default Azure Subscription to be Used via Subscription ID
+az account set -s <SUBSCRIPTION_ID_GOES_HERE>
+# Put Subsc
 SUBID=$(az account show -s '<SUBSCRIPTION_NAME_GOES_HERE>' -o tsv --query 'id')
 # Create Resource Group
 az group create --name $RG --location $LOC
@@ -117,7 +122,6 @@ az extension add --name azure-firewall
 # Create the Outbound Network Rule from Worker Nodes to Control Plane
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr' -n 'ssh' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 9000 443 --action allow --priority 100
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr2' -n 'dns' --protocols 'UDP' --source-addresses '*' --destination-addresses '*' --destination-ports 53 --action allow --priority 200
-
 # Add Application FW Rules
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar' -n 'AKS' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns '*.hcp.eastus.azmk8s.io' 'aksrepos.azurecr.io' '*blob.core.windows.net' 'mcr.microsoft.com' '*cdn.mscr.io' 'management.azure.com' 'login.microsoftonline.com' 'api.snapcraft.io' '*auth.docker.io' '*cloudflare.docker.io' '*cloudflare.docker.com' '*registry-1.docker.io' '*.ubuntu.com' 'packages.microsoft.com' 'dc.services.visualstudio.com' '*.opinsights.azure.com' '*.monitoring.azure.com' 'apt.dockerproject.org' 'nvidia.github.io' '*.azurecr.io' --action allow --priority 100
 # Associate AKS Subnet to FW
@@ -145,6 +149,8 @@ PASSWORD="<SERVICEPRINCIPAL_PASSWORD_GOES_HERE>"
 VNETID=$(az network vnet show -g $RG --name $VNET_NAME --query id -o tsv)
 # Assign SP Permission to VNET
 az role assignment create --assignee $APPID --scope $VNETID --role Contributor
+# View Role Assignment
+az role assignment list --assignee $APPID --all -o table
 ```
 
 ## Next Steps

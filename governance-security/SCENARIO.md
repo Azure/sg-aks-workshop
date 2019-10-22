@@ -53,6 +53,10 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 * Implement & Deploy Image Processing Application
 * Easily rollout new versions of Application
 
+## Next Steps
+
+[Return to Governance and Security Setup](governance-security/README.md)
+
 ## Key Links
 
 * ???
