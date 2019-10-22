@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "demo" {
-  name     = "k8-clusters"
+  name     = "${var.resource_group}"
   location = "${var.location}"
 }
 

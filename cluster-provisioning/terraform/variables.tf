@@ -1,5 +1,10 @@
 variable "prefix" {
+  default = "sg"
   description = "A prefix used for all resources"
+}
+
+variable "resource_group" {
+  description = "Resource group for all resources."
 }
 
 variable "location" {
