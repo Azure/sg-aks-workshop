@@ -168,7 +168,7 @@ resource "kubernetes_secret" "flux-git-deploy" {
 
   type = "Opaque"
 
-  data {
+  data = {
     identity = "${tls_private_key.flux.private_key_pem}"
   }
 

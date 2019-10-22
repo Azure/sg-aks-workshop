@@ -3,12 +3,12 @@ variable "prefix" {
 }
 
 variable "location" {
-  default     = "Central US"
+  default     = "East US"
   description = "The Azure Region in which all resources will be provisioned in"
 }
 
 variable "kubernetes_version" {
-  default     = "1.14.6"
+  default     = "1.14.7"
   description = "The version of Kubernetes you want deployed to your cluster. Please reference the command: az aks get-versions --location eastus -o table"
 }
 
@@ -26,12 +26,12 @@ variable "public_ssh_key_path" {
 }
 
 variable "address_space" {
-  default = "172.20.0.0/16"
+  default = "100.64.0.0/16"
   description = "The IP address CIDR block to be assigned to the entride Azure Virtual Network. If connecting to another peer or to you On-Premises netwokr this CIDR block MUST NOT overlap with existing BGP learned routes"
 }
 
 variable "subnet" {
-  default = "172.20.0.0/20"
+  default = "100.64.1.0/24"
   description = "The IP address CIDR block to be assigned to the subnet that AKS nodes and Pods will ge their IP addresses from. This is a subset CIDR of the vnetIPCIDR"
 }
 
@@ -40,12 +40,12 @@ variable "admin_username" {
   description = "The username assigned to the admin user on the OS of the AKS nodes if SSH access is ever needed"
 }
 variable "agent_count" {
-  default = "4"
+  default = "3"
   description = "The starting number of Nodes in the AKS cluster"
 }
 
 variable "vm_size" {
-  default = "Standard_E2s_v3"
+  default = "Standard_DS3_v3"
   description = "The Node type and size based on Azure VM SKUs Reference: az vm list-sizes --location eastus -o table"
 }
 variable "os_disk_size_gb" {
@@ -80,23 +80,19 @@ variable "azure_subnet_id" {
   default = "/subscriptions/xxxxxx-xxxxxx-xxxx/resourceGroups/tf-sg/providers/Microsoft.Network/virtualNetworks/tfsg/subnets/cluster"
   description = "Subnet ID for virtual network where aks will be deployed"
 }
-variable "pod_cidr" {
-  default = "172.23.0.0/16"
-  description = "Only use if kubenet is assigned as the network plugin. It will be divided into a /24 for each node and will be the space assigned for POD IPs on each node. A Rout Table will be created by Azure, but it must be assigned to the AKS subnet upon completion of deployment to complete install"
-}
 
 variable "service_cidr" {
-  default = "172.21.0.0/16"
+  default = "192.168.0.0/16"
   description = "The IP address CIDR block to be assigned to the service created inside the Kubernetes cluster. If connecting to another peer or to you On-Premises network this CIDR block MUST NOT overlap with existing BGP learned routes"
 }
 
 variable "dns_service_ip" {
-  default = "172.21.0.10"
+  default = "192.168.0.10"
   description = "The IP address that will be assigned to the CoreDNS or KubeDNS service inside of Kubernetes for Service Discovery. Must start at the .10 or higher of the svc-cidr range"
 }
 
 variable "docker_bridge_cidr" {
-  default = "172.22.0.1/16"
+  default = "172.22.0.1/29"
   description = "The IP address CIDR block to be assigned to the Docker container bridge on each node. If connecting to another peer or to you On-Premises network this CIDR block SHOULD NOT overlap with existing BGP learned routes"
 }
 variable "github_organization" {
