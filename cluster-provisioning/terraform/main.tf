@@ -22,19 +22,6 @@ resource "azurerm_log_analytics_solution" "demo" {
     product   = "OMSGallery/Containers"
   }
 }
-resource "azurerm_virtual_network" "demo" {
-  name                = "${var.prefix}-network"
-  location            = "${azurerm_resource_group.demo.location}"
-  resource_group_name = "${azurerm_resource_group.demo.name}"
-  address_space       = ["${var.address_space}"]
-}
-resource "azurerm_subnet" "demo" {
-  name                 = "internal"
-  resource_group_name  = "${azurerm_resource_group.demo.name}"
-  address_prefix       = "${var.subnet}"
-  virtual_network_name = "${azurerm_virtual_network.demo.name}"
-}
-
 resource "azurerm_kubernetes_cluster" "demo" {
   name                = "${var.prefix}-aks"
   location            = "${azurerm_resource_group.demo.location}"
@@ -58,7 +45,7 @@ resource "azurerm_kubernetes_cluster" "demo" {
     os_disk_size_gb = "${var.os_disk_size_gb}"
 
     # Required for advanced networking
-    vnet_subnet_id = "${azurerm_subnet.demo.id}"
+    vnet_subnet_id = "${var.azure_subnet_id}"
   }
 
   service_principal {
