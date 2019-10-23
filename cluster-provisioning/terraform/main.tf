@@ -43,6 +43,7 @@ resource "azurerm_kubernetes_cluster" "demo" {
     vm_size         = "${var.vm_size}"
     os_type         = "Linux"
     os_disk_size_gb = "${var.os_disk_size_gb}"
+    type            = "VirtualMachineScaleSets"
 
     # Required for advanced networking
     vnet_subnet_id = "${var.azure_subnet_id}"
