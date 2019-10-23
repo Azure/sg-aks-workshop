@@ -1,5 +1,5 @@
 variable "prefix" {
-  default = "sg"
+  default     = "sg"
   description = "A prefix used for all resources"
 }
 
@@ -47,73 +47,73 @@ variable "public_ssh_key_path" {
 }
 
 variable "address_space" {
-  default = "100.64.0.0/16"
+  default     = "100.64.0.0/16"
   description = "The IP address CIDR block to be assigned to the entride Azure Virtual Network. If connecting to another peer or to you On-Premises netwokr this CIDR block MUST NOT overlap with existing BGP learned routes"
 }
 
 variable "subnet" {
-  default = "100.64.1.0/24"
+  default     = "100.64.1.0/24"
   description = "The IP address CIDR block to be assigned to the subnet that AKS nodes and Pods will ge their IP addresses from. This is a subset CIDR of the vnetIPCIDR"
 }
 
 variable "admin_username" {
-  default = "azureuser"
+  default     = "azureuser"
   description = "The username assigned to the admin user on the OS of the AKS nodes if SSH access is ever needed"
 }
 variable "agent_count" {
-  default = "3"
+  default     = "3"
   description = "The starting number of Nodes in the AKS cluster"
 }
 
 variable "vm_size" {
-  default = "Standard_DS3_v2"
+  default     = "Standard_DS3_v2"
   description = "The Node type and size based on Azure VM SKUs Reference: az vm list-sizes --location eastus -o table"
 }
 variable "os_disk_size_gb" {
-  default = 30
+  default     = 30
   description = "The Agent Operating System disk size in GB. Changing this forces a new resource to be created."
-  
+
 }
 
 
 variable "max_pods" {
-  default = 30
+  default     = 30
   description = "The maximum number of pods that can run on each agent. Changing this forces a new resource to be created."
 }
 
 variable "pool_type" {
-  default = "VirtualMachineScaleSets"
+  default     = "VirtualMachineScaleSets"
   description = "Uses VMSS as the backing scale set"
-  
+
 }
 
 variable "network_plugin" {
-  default = "azure"
+  default     = "azure"
   description = "Can either be azure or kubenet. azure will use Azure subnet IPs for Pod IPs. Kubenet you need to use the pod-cidr variable below"
 }
 
 variable "network_policy" {
-  default = "calico"
+  default     = "calico"
   description = "Uses calico by default for network policy"
 }
 
 variable "azure_subnet_id" {
-  default = "/subscriptions/xxxxxx-xxxxxx-xxxx/resourceGroups/tf-sg/providers/Microsoft.Network/virtualNetworks/tfsg/subnets/cluster"
+  default     = "/subscriptions/xxxxxx-xxxxxx-xxxx/resourceGroups/tf-sg/providers/Microsoft.Network/virtualNetworks/tfsg/subnets/cluster"
   description = "Subnet ID for virtual network where aks will be deployed"
 }
 
 variable "service_cidr" {
-  default = "192.168.0.0/16"
+  default     = "192.168.0.0/16"
   description = "The IP address CIDR block to be assigned to the service created inside the Kubernetes cluster. If connecting to another peer or to you On-Premises network this CIDR block MUST NOT overlap with existing BGP learned routes"
 }
 
 variable "dns_service_ip" {
-  default = "192.168.0.10"
+  default     = "192.168.0.10"
   description = "The IP address that will be assigned to the CoreDNS or KubeDNS service inside of Kubernetes for Service Discovery. Must start at the .10 or higher of the svc-cidr range"
 }
 
 variable "docker_bridge_cidr" {
-  default = "172.22.0.1/29"
+  default     = "172.22.0.1/29"
   description = "The IP address CIDR block to be assigned to the Docker container bridge on each node. If connecting to another peer or to you On-Premises network this CIDR block SHOULD NOT overlap with existing BGP learned routes"
 }
 variable "github_organization" {
@@ -126,5 +126,5 @@ variable "github_repository_name" {
 
 variable "github_token" {
   description = "github token to authenticate"
-  
+
 }

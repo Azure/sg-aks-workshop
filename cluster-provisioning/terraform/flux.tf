@@ -24,7 +24,7 @@ resource "kubernetes_service_account" "flux" {
     namespace = "${local.k8s-ns}"
 
     labels = local.labels
-    }
+  }
   depends_on = ["kubernetes_namespace.flux"]
 }
 
@@ -105,7 +105,7 @@ resource "kubernetes_deployment" "flux" {
       }
 
       spec {
-        service_account_name = "flux"
+        service_account_name            = "flux"
         automount_service_account_token = true
 
         # See the following GH issue for why we have to do this manually
