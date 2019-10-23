@@ -6,13 +6,13 @@ resource "tls_private_key" "flux" {
   rsa_bits  = 2048
 }
 
-data "github_repository" "flux-repo" {
-  name = "${var.github_repository_name}"
+data "github_repository" "flux" {
+  name = "${var.github_repository}"
 }
 
 resource "github_repository_deploy_key" "flux" {
   title      = "Flux deploy key (flux-${var.prefix})"
-  repository = "${data.github_repository.flux-repo.name}"
+  repository = "${data.github_repository.flux.name}"
   read_only  = false
   key        = "${tls_private_key.flux.public_key_openssh}"
 }

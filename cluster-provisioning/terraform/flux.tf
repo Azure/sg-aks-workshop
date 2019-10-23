@@ -146,7 +146,7 @@ resource "kubernetes_deployment" "flux" {
           args = [
             "--memcached-service=memcached",
             "--ssh-keygen-dir=/var/fluxd/keygen",
-            "--git-url=${data.github_repository.flux-repo.ssh_clone_url}",
+            "--git-url=${data.github_repository.flux.ssh_clone_url}",
             "--git-branch=master",
             "--git-path=cluster-config",
           ]
