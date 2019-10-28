@@ -40,11 +40,11 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 * Monitoring and Alerting Events
 
   * Alert when SSH into Container
-  * Passwords are stored in ConfigMaps
-  * Non-conformative K8s Namespace Added
+  * AKS Cluster has IP whitelisting set
 
 * Integrate with Existing SIEM
 * Deploy into Existing VNET with Ingress and Egress Restrictions
+* Resources can only be created in specific regions due to data sovereignty
 * Container Registry Whitelisting
 * Ability to Chargeback to Line of Business
 * Secrets Mgmt
