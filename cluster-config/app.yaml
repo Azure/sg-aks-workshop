@@ -39,12 +39,8 @@ metadata:
   namespace: dev
   labels:
     app: imageclassifierweb
-  annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "contosofinsvcsubnet"
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 100.64.2.232
+  type: ClusterIP
   ports:
     - port: 80
       targetPort: http
