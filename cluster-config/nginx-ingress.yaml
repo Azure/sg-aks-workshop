@@ -218,7 +218,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "contosofinsvcsubnet"
   labels:
     app: nginx-ingress
     chart: nginx-ingress-1.24.4
@@ -228,8 +227,7 @@ metadata:
   name: nginx-ingress-controller
   namespace: ingress
 spec:
-  clusterIP: ""
-  loadBalancerIP: "100.64.2.232"
+  loadBalancerIP: "100.64.1.232"
   externalTrafficPolicy: "Cluster"
   ports:
     - name: http
@@ -261,7 +259,6 @@ metadata:
   name: nginx-ingress-default-backend
   namespace: ingress
 spec:
-  clusterIP: ""
   ports:
     - name: http
       port: 80
