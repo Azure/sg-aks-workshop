@@ -43,13 +43,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: linkerd
-  labels:
-    app: linkerd
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: ingress
   labels:
     app: ingress
