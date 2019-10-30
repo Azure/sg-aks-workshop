@@ -51,15 +51,7 @@ spec:
   - Ingress
   - Egress
   ingress:
-    - from: []
-      ports:
-      - port: 80
-        protocol: TCP
-    - from:
-      - namespaceSelector:
-          matchLabels:
-            linkerd.io/is-control-plane: "true"
-      - podSelector: {}
+    - {}
   egress:
     - to:
       - podSelector: {}

@@ -226,7 +226,6 @@ metadata:
   name: nginx-ingress-controller
   namespace: ingress
 spec:
-  clusterIP: ""
   externalTrafficPolicy: "Cluster"
   ports:
     - name: http
@@ -258,7 +257,6 @@ metadata:
   name: nginx-ingress-default-backend
   namespace: ingress
 spec:
-  clusterIP: ""
   ports:
     - name: http
       port: 80
