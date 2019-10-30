@@ -43,7 +43,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: aksrbac-production-reader
+  name: aksrbac-staging-reader
   namespace: production
 roleRef:
   apiGroup: rbac.authorization.k8s.io

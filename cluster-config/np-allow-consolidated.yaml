@@ -1,0 +1,134 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-dev
+  namespace: dev
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+    - from:
+      - podSelector: {}
+      - namespaceSelector:
+          matchLabels:
+            linkerd.io/is-control-plane: "true"
+      - namespaceSelector:
+          matchLabels:
+            app: ingress
+  egress:
+    - to:
+      - podSelector: {}
+      - namespaceSelector:
+          matchLabels:
+            linkerd.io/is-control-plane: "true"
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            app: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      ports:
+      - port: 445
+        protocol: TCP
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-ingress
+  namespace: ingress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+    - from: []
+      ports:
+      - port: 80
+        protocol: TCP
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            linkerd.io/is-control-plane: "true"
+      - podSelector: {}
+  egress:
+    - to:
+      - podSelector: {}
+      - namespaceSelector:
+          matchLabels:
+            linkerd.io/is-control-plane: "true"
+      - namespaceSelector:
+          matchLabels:
+            app: dev
+    - ports:
+      - port: 443
+      to:
+        - ipBlock:
+            cidr: 40.85.169.219/32
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            app: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-linkerd
+  namespace: linkerd
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+    - from:
+      - namespaceSelector: {}
+        podSelector:
+          matchExpressions:
+          - key: linkerd.io/proxy-deployment
+            operator: Exists
+      - podSelector: {}
+      - namespaceSelector:
+          matchLabels:
+            app: kube-system
+  egress:
+    - to:
+      - podSelector: {}
+      - namespaceSelector:
+          matchExpressions:
+            - {key: app, operator: In, values: [dev,ingress]}
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            app: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - ports:
+      - port: 443
+      to:
+        - ipBlock:
+            cidr: 40.85.169.219/32
+

@@ -6,17 +6,17 @@ metadata:
 spec:
   limits:
   - default:
-      cpu: 0.5
+      cpu: 500m
       memory: 512Mi
     defaultRequest:
-      cpu: 0.25
+      cpu: 250m
       memory: 256Mi
     max:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 2Gi
     min:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 10m
+      memory: 10Mi
     type: Container
   - max:
       storage: 2Gi
@@ -32,17 +32,17 @@ metadata:
 spec:
   limits:
   - default:
-      cpu: 0.5
+      cpu: 500m
       memory: 512Mi
     defaultRequest:
-      cpu: 0.25
+      cpu: 250m
       memory: 256Mi
     max:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 2Gi
     min:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 10m
+      memory: 10Mi
     type: Container
   - max:
       storage: 5Gi
@@ -58,17 +58,17 @@ metadata:
 spec:
   limits:
   - default:
-      cpu: 0.5
+      cpu: 500m
       memory: 512Mi
     defaultRequest:
-      cpu: 0.25
+      cpu: 250m
       memory: 256Mi
     max:
-      cpu: 1
-      memory: 1Gi
+      cpu: 2
+      memory: 2Gi
     min:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 10m
+      memory: 10Mi
     type: Container
   - max:
       storage: 10Gi
