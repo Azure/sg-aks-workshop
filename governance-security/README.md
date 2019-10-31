@@ -46,14 +46,13 @@ In the interests of time with respect to the workshop, we are not going to imple
 
 Reading through the Contoso Financials scenario we will be implementing the following requirements via security controls:
 
-* Ensure Logging is Enabled
+* Log All Cloud API requests for Audit Reporting purposes
 * AKS Clusters can only be created in certain regions
-* Alert when SSH into Container
 * AKS Cluster has IP whitelisting set
 
 ## Next Steps
 
-[Cluster Pre-Provisioning](/cluster-pre-provisioning/README.md)
+[Control Setup](governance-security/CONTROL_SETUP.md)
 
 ## Key Links
 

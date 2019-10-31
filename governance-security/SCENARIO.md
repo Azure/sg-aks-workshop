@@ -37,7 +37,7 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 * Implement Security Least Privilege Principle
 * Log Everything for Audit Reporting purposes
 * Ensure Security Controls are being met (No Drifting)
-* Monitoring and Alerting Events
+* Monitoring and Alerting for SecurityEvents
 
   * Alert when SSH into Container
   * AKS Cluster has IP whitelisting set
@@ -49,7 +49,6 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 * Ability to Chargeback to Line of Business
 * Secrets Mgmt
 * Container Image Mgmt
-* Restrict Creation of Public IPs
 * Implement & Deploy Image Processing Application
 * Easily rollout new versions of Application
 

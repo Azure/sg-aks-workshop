@@ -1,6 +1,6 @@
 # Cluster Pre-Provisioning
 
-This section walks us through all the pre-requisite setup before actually provisioning the AKS cluster. Most organizations have existing virutal networks that they need to deploy into with networking rules that control ingress and egress traffic.
+This section walks us through all the pre-requisite setup before actually provisioning the Azure Kubernetes Service (AKS) cluster. Most organizations have existing virutal networks that they need to deploy into with networking rules that control ingress and egress traffic.
 
 For the purposes of this workshop we will be using Azure Firewall to control egress traffic destined for the Internet or to simulate going on-prem. Network Security Groups (NSGs) and User-Defined Routes (UDRs) will be used to control North/South traffic in and out of the AKS cluster itself.
 
@@ -123,6 +123,7 @@ az extension add --name azure-firewall
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr' -n 'ssh' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 9000 443 --action allow --priority 100
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr2' -n 'dns' --protocols 'UDP' --source-addresses '*' --destination-addresses '*' --destination-ports 53 --action allow --priority 200
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr3' -n 'gitssh' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 22 --action allow --priority 300
+az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr4' -n 'fileshare' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 445 --action allow --priority 400
 # Add Application FW Rules
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar' -n 'AKS' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns '*.hcp.eastus.azmk8s.io' 'aksrepos.azurecr.io' '*blob.core.windows.net' 'mcr.microsoft.com' '*cdn.mscr.io' 'management.azure.com' 'login.microsoftonline.com' 'api.snapcraft.io' '*auth.docker.io' '*cloudflare.docker.io' '*cloudflare.docker.com' '*registry-1.docker.io' '*.ubuntu.com' 'packages.microsoft.com' 'dc.services.visualstudio.com' '*.opinsights.azure.com' '*.monitoring.azure.com' 'apt.dockerproject.org' 'nvidia.github.io' '*.azurecr.io' --action allow --priority 100
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar2' -n 'GitHub' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns '*.github.com' --action allow --priority 200
@@ -169,3 +170,4 @@ az role assignment list --assignee $APPID --all -o table
 * [Using Multiple Node Pools](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools)
 * [Create nginx Ingress Controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic)
 * [Create HTTPS Ingress Controller](https://docs.microsoft.com/en-us/azure/aks/ingress-tls)
+* [Integrate ILB with Firewall](https://docs.microsoft.com/en-us/azure/firewall/integrate-lb)
