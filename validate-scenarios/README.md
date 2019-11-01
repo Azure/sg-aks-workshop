@@ -190,7 +190,12 @@ az storage account create --sku Standard_LRS --kind StorageV2 --location westus 
 
 * Try to pull from a non-whitelisted Container Registry
 
-???
+```bash
+# Test out Allowed Registry Policy Against production Namespace
+kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n production
+```
+
+![Gatekeeper Allowed Registries](/validate-scenarios/img/gatekeeper_allowed_registries.png)
 
 ## Validate - Ability to Chargeback to Line of Business
 

@@ -63,6 +63,51 @@ The end results will look something like this.
 
 ![Dev Namespace Output](/deploy-app/img/app_dev_namespace.png)
 
+## OPA and Gatekeeper Policy Setup
+
+In this section we will setup the AKS specific policies we want to enforce. To recap, for our given scenario that means:
+
+* Registry Whitelisting
+
+```bash
+# Allowed Repos Constraint Template
+k apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/demo/agilebank/templates/k8sallowedrepos_template.yaml
+
+# Install Constraint Based on Template
+cat <<EOF | kubectl apply -f -
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: prod-repo-is-kevingbb
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces:
+      - "production"
+  parameters:
+    repos:
+      - "kevingbb"
+EOF
+
+# Look at Created Resources
+# Check Resources
+k get crd | grep gatekeeper
+k get constrainttemplate,k8sallowedrepos,config -n gatekeeper-system
+
+# Test out Allowed Registry Policy Against production Namespace
+kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n production
+
+# Try again with Image from kevingbb
+kubectl run --generator=run-pod/v1 bobblehead --image=kevingbb/khbobble -n production
+
+# What did you notice with the last command? The main image got pulled, but the sidecar images did not :).
+
+# Try again in default Namespace
+kubectl run --generator=run-pod/v1 -it --rm centosdefault --image=centos -n default
+```
+
 ## Next Steps
 
 [Service Mesh](/service-mesh/README.md)
