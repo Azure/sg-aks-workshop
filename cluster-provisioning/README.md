@@ -2,7 +2,7 @@
 
 This lab walks your through provisioning a secure AKS cluster utilizing Terraform. We will use Terraform to deploy the cluster and Weaveworks Flux to provide some post provisioning of resources, so we we can automate the entire provisioning and post-provisioning needed to have a production cluster.
 
-You may ask "Why not utilize Azure Resource Manger Templates?"... The reason we have utilized Terraform is that it gives a multi-platform provisioning tool, that also lets us automate the provisioning of non-Azure resource, so we'll have a full production cluster setup from a single provisioning tool.
+You may ask "Why not utilize Azure Resource Manger Templates?"... The reason we have utilized Terraform is that it gives a multi-platform provisioning tool, that also lets us automate the provisioning of non-Azure resources, so we'll have a full production cluster setup from a single provisioning tool.
 
 We will first need to setup all our variables from the last lab, so we can utilize the networking infrastructure that was setup.
 
@@ -12,8 +12,6 @@ export TF_VAR_resource_group=$RG
 export TF_VAR_location=$LOC
 export TF_VAR_client_id=$APPID
 export TF_VAR_client_secret=$PASSWORD
-
-
 export TF_VAR_github_organization=Azure
 export TF_VAR_github_token=<ask_instructor>
 export TF_VAR_azure_subnet_id=$(az network vnet subnet show -g $RG --vnet-name $VNET_NAME --name $AKSSUBNET_NAME --query id -o tsv)
@@ -82,3 +80,14 @@ Weaveworks Flux was one of the first tools to enable the GitOps approach, and it
 tool we will use due to it's maturity and level of adoption. Below is a diagram that describes how the approach works.
 
 ![GitOps Diagram](./img/gitops.png "GitOps Diagram")
+
+You'll notice once your cluster is provisioned you'll also have the following deployed:
+
+* Namespaces
+* RBAC Rules
+* Network Policy Rules
+* Gatekeeper Policies
+* Falco Rules
+* Linkerd Service Mesh
+* Quotas
+* Ingress
