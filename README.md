@@ -12,11 +12,11 @@ The workshop runs over 2 days and is mean to take an outside in approach. Meanin
 
 The end goal is to take you from having a kubernetes setup that is unsecure by default, to an Enterprise ready configuration that is secure by default. To help understand what that means please see the following illustrations showing a before and after setup.
 
-**Before Picture**
+### Before Picture
 
 ![Before Configuration](img/app_before.png)
 
-**After Picture**
+### After Picture
 
 ![After Configuration](img/app_after.png)
 
