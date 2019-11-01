@@ -52,7 +52,7 @@ Reading through the Contoso Financials scenario we will be implementing the foll
 
 ## Next Steps
 
-[Control Setup](governance-security/CONTROL_SETUP.md)
+[Control Setup](/governance-security/CONTROL_SETUP.md)
 
 ## Key Links
 

@@ -55,9 +55,16 @@ AzureActivity
 
 ## Validate - Ensure Security Controls are being met (No Drifting)
 
-* Look at Flux Logs for GitOps Style Drifting
+* Look at Flux Logs for GitOps style Drift Configuration. As you can see from the screenshot it detects whether something has changed or not.
 
 ![Flux Logs)](/validate-scenarios/img/flux_logs.png)
+
+* Delete a resource and see it get re-created. Delete the Production NS and then wait upwards of 5 mins to see that Flux re-creates the resource.
+
+```bash
+kubectl delete ns production
+kubectl logs -l app=sysdig-falco -n falco -f
+```
 
 ## Validate - Monitoring and Alerting Events
 
@@ -66,6 +73,31 @@ AzureActivity
 ![Azure Security Center Compliance Dashboard)](/validate-scenarios/img/asc_compliance_dashboard.png)
 
 * Exec into a Container and get an Alert
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: centos
+spec:
+  containers:
+  - name: centoss
+    image: centos
+    ports:
+    - containerPort: 80
+    command:
+    - sleep
+    - "3600"
+EOF
+# Check that Pod is Created and then Exec In
+kubectl get po -o wide
+kubectl exec -it centos -- /bin/bash
+curl www.ubuntu.com
+exit
+```
+
+**Wait a few minutes for the log data to get processed and then go into the Azure Monitor Logs Workspace and execute the following query to see the log entry.**
 
 ```kusto
 let startTimestamp = ago(1d);
@@ -85,6 +117,8 @@ ContainerLog
 ![Azure Monitor Logs SSH Query)](/validate-scenarios/img/monitor_logs_ssh.png)
 
 * AKS Cluster missing IP Whitelisting
+
+**Similiar to the above we will run the following Azure Monitor queries against the Azure Security Center data to see which Policies are being met from a security perspective.**
 
 ```kusto
 AzureActivity
@@ -117,21 +151,38 @@ AzureActivity
 
 * View Azure Security Center Security Solutions
 
+**Go to the Azure Portal, click on Security Center, then on the Security Solutions blade.**
+
 ![Azure Security Center SIEM Integration)](/validate-scenarios/img/asc_security_solutions.png)
 
 ## Validate - Deploy into Existing VNET with Ingress and Egress Restrictions
 
 * Validate Traffic In & Out of Cluster (North/South)
 
+```bash
+kubectl exec -it centos -- /bin/bash
+curl http://superman.com
+```
+
 ![North/South)](/validate-scenarios/img/north_south.png)
 
 * Validate Traffic Restriction between Namespaces (East/West)
+
+```bash
+kubectl exec -it centos -- /bin/bash
+curl http://imageclassifierweb.dev.svc.cluster.local
+```
 
 ![East/West)](/validate-scenarios/img/east_west.png)
 
 ## Validate - Resources can only be created in specific regions due to data sovereignty
 
 * Try to create resource outside of allowed region locations
+
+```bash
+kubectl exec -it centos -- /bin/bash
+az storage account create --sku Standard_LRS --kind StorageV2 --location westus -g notinallowedregions-rg -n niarsa
+```
 
 ![Create Storage in West US (Not in East US)](/validate-scenarios/img/azure_policy_not_allowed.png)
 
@@ -144,6 +195,8 @@ AzureActivity
 ## Validate - Ability to Chargeback to Line of Business
 
 * View Chargeback Dashboard
+
+???
 
 ## Validate - Secrets Mgmt
 
@@ -170,3 +223,4 @@ AzureActivity
 ## Key Links
 
 * [Collect and Analyze Azure Activity Logs](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect)
+* [How to setup Azure Monitor for Container Alerts](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-alerts)

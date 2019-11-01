@@ -54,7 +54,7 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 
 ## Next Steps
 
-[Return to Governance and Security Setup](governance-security/README.md)
+[Return to Governance and Security Setup](/governance-security/README.md)
 
 ## Key Links
 
