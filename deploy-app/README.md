@@ -45,6 +45,20 @@ kubectl apply -f app.yaml
 kubectl get deploy,rs,po,svc,ingress -n dev
 ```
 
+### File Share Setup
+
+You will notice that some of the pods are not starting up, this is because a secret is missing, the secret to access Azure Files. Please talk to your proctors to get the proper credentials or feel free to setup your own Azure Files and upload the sample fruit images in this repo directory.
+
+**Be careful to take note of the folder name it needs to be in the Azure File Share.**
+
+```bash
+# Add Secrets for Worker Back-End
+STORAGE_ACCOUNT_NAME=""
+STORAGE_ACCOUNT_KEY=""
+k create secret generic fruit-secret --from-literal=azurestorageaccountname=<STORAGE_ACCOUNT_NAME> --from-literal=azurestorageaccountkey=<STORAGE_ACCOUNT_KEY>
+
+```
+
 The end results will look something like this.
 
 ![Dev Namespace Output](/deploy-app/img/app_dev_namespace.png)
