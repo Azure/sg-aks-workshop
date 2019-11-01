@@ -8,6 +8,18 @@ Hello, and welcome to the workshop. This is a 2-day hands-on workshop focused on
 
 The workshop runs over 2 days and is mean to take an outside in approach. Meaning, we will start from the outside and make our way inwards. It starts with focusing on Governance and Security decisions that need to get made before a single Azure resource is even provisioned. We will then focus on decisions that need to get made prior to provisioning the cluster. Next we will actually provision the cluster along with focusing on how to deploy common components post-provisioning. Now that the clsuter is configured, the next steps is to actually deploy some workloads. Once the workloads are deployed we will focus in on some Day 2 operations when it comes to managing, maintaining and provising observability into the cluster.
 
+## End Goal
+
+The end goal is to take you from having a kubernetes setup that is unsecure by default, to an Enterprise ready configuration that is secure by default. To help understand what that means please see the following illustrations showing a before and after setup.
+
+**Before Picture**
+
+![Before Configuration](img/app_before.png)
+
+**After Picture**
+
+![After Configuration](img/app_after.png)
+
 ## Lab Guides - Day 1
 
   1. [Governance and Security Setup](governance-security/README.md)
