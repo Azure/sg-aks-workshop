@@ -4,6 +4,15 @@ This lab walks your through provisioning a secure AKS cluster utilizing Terrafor
 
 You may ask "Why not utilize Azure Resource Manger Templates?"... The reason we have utilized Terraform is that it gives a multi-platform provisioning tool, that also lets us automate the provisioning of non-Azure resources, so we'll have a full production cluster setup from a single provisioning tool.
 
+Why use a GitOps approach? Adopting GitOps in your CI/CD pipelines increases the security of your application and systems. With GitOps, a reconciliation operator is installed to the cluster itself that acts on a configuration repo that uses with separate credentials. The operator reconciles the desired state as expressed in the manifest files, stored in the git repo, against the actual state of the cluster. This means that credentials and other secrets don’t ever leave the cluster. This means that continuous integration operates independently rather than on the cluster directly and that each pipeline component needs only a single read-write credential. Since cluster credentials never leave the cluster, your secrets are kept close. -WeaveWorks
+
+Pull Requests enabled on the config repo are independent of the cluster itself can be reviewed by developers. This leaves a complete audit trail of every tag update and config change, regardless of whether it was made manually or automatically. Although using git as part of your CICD pipeline adds another layer of defense, it also means that the security onus is shifted to git itself.
+
+Weaveworks Flux was one of the first tools to enable the GitOps approach, and it’s the
+tool we will use due to it's maturity and level of adoption. Below is a diagram that describes how the approach works.
+
+![GitOps Diagram](./img/gitops.png "GitOps Diagram")
+
 We will first need to setup all our variables from the last lab, so we can utilize the networking infrastructure that was setup.
 
 ```bash
@@ -76,11 +85,6 @@ state for the cluster. The practice of GitOps can apply to both application deli
 operations, but in this chapter, we focus on using it to manage clusters and operational
 tooling.
 
-Weaveworks Flux was one of the first tools to enable the GitOps approach, and it’s the
-tool we will use due to it's maturity and level of adoption. Below is a diagram that describes how the approach works.
-
-![GitOps Diagram](./img/gitops.png "GitOps Diagram")
-
 You'll notice once your cluster is provisioned you'll also have the following deployed:
 
 * Namespaces
@@ -91,3 +95,11 @@ You'll notice once your cluster is provisioned you'll also have the following de
 * Linkerd Service Mesh
 * Quotas
 * Ingress
+* Production Application
+
+***Need Diagram*** //TODO
+
+This is all done through Flux by automatically making sure that your new container images and configs are propagated to the cluster. How did we do this through the Terraform deployment? You'll find two different terraform files, one (github.tf) that created an access key for our git repo and the other (flux.tf), which uses the Kubernetes provider to deploy flux to the cluster. Flux then has access to the repo and  points to the cluster-config directory, which host all of our Kubernetes manifest. Flux automatically propagates and applies all the configs to the AKS cluster.
+
+The below diagram shows our production cluster
+
