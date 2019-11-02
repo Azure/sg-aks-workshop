@@ -229,3 +229,5 @@ kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n product
 
 * [Collect and Analyze Azure Activity Logs](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect)
 * [How to setup Azure Monitor for Container Alerts](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-alerts)
+* [How to query logs from Azure Monitor for Containers](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-log-search)
+* [How to update Azure Monitor for Containers to Enable Metrics](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-update-metrics)

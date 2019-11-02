@@ -14,7 +14,7 @@ Now that we know what controls we need to meet, how do we do that? The next sect
 
 ## Capture Azure Audit Logs (Log All Cloud API requests for Audit Reporting purposes)
 
-For those that are not aware, Azure Audit Logs are captured in something called Azure Activity Logs. The Activity Logs capture all of the Azure Resource Manager (ARM) interactions. The challenge is that the activity logs only have a certain retention lifecycle so we need to get the data out of the Activity Logs into something more permance, for the purposes of this workshop it will be Azure Monitor Logs.
+For those that are not aware, Azure Audit Logs are captured in something called [Azure Activity Logs](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-logs-overview). The Activity Logs capture all of the Azure Resource Manager (ARM) interactions. The challenge is that the activity logs only have a certain retention lifecycle so we need to get the data out of the Activity Logs into something more permance, for the purposes of this workshop it will be Azure Monitor Logs.
 
 Click [here](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect) for an article on how to get this setup for an Azure Subscription.
 
