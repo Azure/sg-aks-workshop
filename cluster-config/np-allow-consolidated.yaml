@@ -73,7 +73,7 @@ spec:
       - port: 443
       to:
         - ipBlock:
-            cidr: 52.249.207.65/32
+            cidr: 0.0.0.0/0
     - to:
       - namespaceSelector:
           matchLabels:
@@ -130,5 +130,5 @@ spec:
       - port: 443
       to:
         - ipBlock:
-            cidr: 52.249.207.65/32
+            cidr: 0.0.0.0/0
 

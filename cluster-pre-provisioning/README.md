@@ -12,7 +12,7 @@ The variables are pretty straight forward, but please note there are a few words
 PREFIX="contosofin"
 RG="${PREFIX}-rg"
 LOC="eastus"
-NAME="${PREFIX}20191021"
+NAME="${PREFIX}20191108"
 VNET_NAME="${PREFIX}vnet"
 AKSSUBNET_NAME="${PREFIX}akssubnet"
 SVCSUBNET_NAME="${PREFIX}svcsubnet"
@@ -88,7 +88,7 @@ az network vnet subnet create \
 
 This section walks through setting up Azure Firewall inbound and outbound rules. The main purpose of the firewall here is to help organizations to setup ingress and egress traffic rules so the AKS Cluster is not just open to the world and cannot reach out to everythign on the Internet at the same time.
 
-**NOTE: Completely locking down inbound and outboudn rules for AKS is not supported and will result in a broken cluster.**
+**NOTE: Completely locking down inbound and outbound rules for AKS is not supported and will result in a broken cluster.**
 
 **NOTE: There are no inbound rules required for AKS to run. The only time an inbound rule is required is to expose a workload/service.**
 
