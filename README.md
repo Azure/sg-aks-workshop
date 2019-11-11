@@ -26,16 +26,15 @@ The end goal is to take you from having a kubernetes setup that is unsecure by d
   2. [Governance and Security Setup](governance-security/README.md)
   3. [Cluster Pre-Provisioning](cluster-pre-provisioning/README.md)
   4. [Cluster Provisioning](cluster-provisioning/README.md)
-  5. [Post-Provisioning Infra-centric](post-provisioning-infra/README.md)
+  5. [Post-Provisioning](post-provisioning/README.md)
 
 ## Lab Guides - Day 2
 
-  1. [Post-Provisioning App-Centric](post-provisioning-app/README.md)
-  2. [Cost Governance](cost-governance/README.md)
-  3. [Deploy Sample App](deploy-app/README.md)
-  4. [Service Mesh - Do I need it?](service-mesh/README.md)
-  5. [Validate Scenarios](validate-scenarios/README.md)
-  6. [Thought Leadership & Next Steps](thought-leadership/README.md)
+  1. [Cost Governance](cost-governance/README.md)
+  2. [Deploy Sample App](deploy-app/README.md)
+  3. [Service Mesh - Do I need it?](service-mesh/README.md)
+  4. [Validate Scenarios](validate-scenarios/README.md)
+  5. [Thought Leadership & Next Steps](thought-leadership/README.md)
 
 ## Prerequisites
 
