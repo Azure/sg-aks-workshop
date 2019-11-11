@@ -41,6 +41,8 @@ Click [here](https://docs.microsoft.com/en-us/azure/dev-spaces/quickstart-team-d
 There is an app.yaml file in this directory so either change into this directory or copy the contents of the file to a filename of your choice. Once you have completed the previous step apply the manifest file and you will get the web and worker services deployed into the **dev** namespace.
 
 ```bash
+# Navigate to deploy-app Directory
+cd ../../deploy-app
 # Deploy the Application Resources
 kubectl apply -f app.yaml
 # Display the Application Resources
@@ -63,6 +65,20 @@ k create secret generic fruit-secret --from-literal=azurestorageaccountname=<STO
 The end results will look something like this.
 
 ![Dev Namespace Output](/deploy-app/img/app_dev_namespace.png)
+
+## Test out Application Endpoint
+
+This section will show you how to test and see if the application endpoint is up and running.
+
+```bash
+# Exec into Pod and Test Endpoint
+kubectl exec -it centos -- /bin/bash
+# Inside of the Pod test the Ingress Controller Endpoint
+curl 100.64.2.4
+# You should have seen the contents of an HTML file dumped out. If not, you will need to troubleshoot.
+# Exit out of Pod
+exit
+```
 
 ## Next Steps
 

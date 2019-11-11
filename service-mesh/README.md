@@ -67,7 +67,7 @@ linkerd routes svc/imageclassifierweb -n dev
 # Look at Top Traffic in dev Namespace
 linkerd top deploy -n dev
 
-# Look at Live Traffic in dev Namespace
+# Look at Live Traffic in dev Namespace (Ctrl + C to exit)
 linkerd tap deploy -n dev
 
 # Look at Edge Traffic and whether it is Secured via mTLS

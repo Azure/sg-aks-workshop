@@ -26,9 +26,9 @@ spec:
     - "3600"
 EOF
 # Check if Pod is Running
-k get po -o wide
+kubectl get po -o wide
 # Once Pod is Running exec into the Pod
-k exec -it centos -- /bin/bash
+kubectl exec -it centos -- /bin/bash
 # Inside of the Pod test the Ingress Controller Endpoint
 curl 100.64.2.4
 # Exit out of Pod
@@ -81,7 +81,7 @@ In this section we will setup the AKS specific policies we want to enforce. To r
 
 ```bash
 # Allowed Repos Constraint Template
-k apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/demo/agilebank/templates/k8sallowedrepos_template.yaml
+kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/demo/agilebank/templates/k8sallowedrepos_template.yaml
 
 # Install Constraint Based on Template
 cat <<EOF | kubectl apply -f -
@@ -103,8 +103,8 @@ EOF
 
 # Look at Created Resources
 # Check Resources
-k get crd | grep gatekeeper
-k get constrainttemplate,k8sallowedrepos,config -n gatekeeper-system
+kubectl get crd | grep gatekeeper
+kubectl get constrainttemplate,k8sallowedrepos,config -n gatekeeper-system
 
 # Test out Allowed Registry Policy Against production Namespace
 kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n production
@@ -116,6 +116,10 @@ kubectl run --generator=run-pod/v1 bobblehead --image=kevingbb/khbobble -n produ
 
 # Try again in default Namespace
 kubectl run --generator=run-pod/v1 -it --rm centosdefault --image=centos -n default
+# Test out Connectivity
+curl 100.64.2.4
+# Exit out of Pod
+exit
 ```
 
 ## Next Steps
