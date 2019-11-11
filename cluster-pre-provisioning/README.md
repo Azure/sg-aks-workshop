@@ -12,10 +12,10 @@ The variables are pretty straight forward, but please note there are a few words
 PREFIX="contosofin"
 RG="${PREFIX}-rg"
 LOC="eastus"
-NAME="${PREFIX}20191108"
+NAME="${PREFIX}20191111"
 VNET_NAME="${PREFIX}vnet"
 AKSSUBNET_NAME="${PREFIX}akssubnet"
-SVCSUBNET_NAME="${PREFIX}svcsubnet"
+SVCSUBNET_NAME="contosofinsvcsubnet"
 APPGWSUBNET_NAME="${PREFIX}appgwsubnet"
 # DO NOT CHANGE FWSUBNET_NAME - This is currently a requirement for Azure Firewall.
 FWSUBNET_NAME="AzureFirewallSubnet"
