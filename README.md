@@ -51,6 +51,12 @@ The following are the requirements to **start**.
   * [Install Docker for Windows](https://docs.docker.com/v17.09/docker-for-windows/install/)
 
 * Code Editor [Install VS Code](https://code.visualstudio.com/download)
+
+## Fork the Repo
+
+**It is important to Fork this repo, not just clone it. You will be creating Personal Access Tokens, which in turn will be creating SSH keys, and they will be used to make changes to a GitHub repo.**
+
+[Forking a Repository](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
   
 # Contributing
 

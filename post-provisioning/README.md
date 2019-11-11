@@ -41,13 +41,16 @@ This section sets up the connection between AKS and Azure Container Registry (AC
 
 ```bash
 # Setup ACR Permissions
-CLIENT_ID=$(az aks show --resource-group $RG --name $NAME --query "servicePrincipalProfile.clientId" --output tsv)
+CLIENT_ID=$(az aks show --resource-group $RG --name ${PREFIX}-aks --query "servicePrincipalProfile.clientId" --output tsv)
 # Get the ACR registry resource id
-ACR_ID=$(az acr show --name $ACR_NAME --resource-group "MC_${RG}_${PREFIX}-aks_${LOC}" --query "id" --output tsv)
-# Create role assignment
+ACR_ID=$(az acr show --name $ACR_NAME --resource-group ${RG} --query "id" --output tsv)
+# Look at Configuration Settings
 echo $CLIENT_ID
 echo $ACR_ID
+# Create role assignment
 az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID
+# View Service Principal Permissions
+az role assignment list --assignee $CLIENT_ID --all -o table
 ```
 
 ## Setup Cluster Metrics
@@ -71,6 +74,15 @@ This section shows how to find the Public IP (PIP) of the AKS cluster to be able
 ```bash
 # Get API-Server IP
 kubectl get endpoints --namespace default kubernetes
+```
+
+## Find Public IP of Azure Application Gateway used for WAF
+
+This setion shows how to find the Public IP Address of the Azure Application Gateway which is used as a WAF and the Ingress point for workloads into the Cluster.
+
+```bash
+# Retrieve the Public IP Address of the App Gateway.
+az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
 ```
 
 ## OPA and Gatekeeper Policy Setup
@@ -122,10 +134,29 @@ curl 100.64.2.4
 exit
 ```
 
+## Setup Flow Logs and Traffic Analytics
+
+This section walks us through setting up flow logs on the Network Security Groups (NSGs) as well as Traffic Analytics to gain additional insights.
+
+To enable the NSG flow logs and Traffic Analytics, please follow this online Tutorial:
+
+[Flow Logs and Traffic Analytics Prerequisites](https://docs.microsoft.com/en-us/azure/network-watcher/traffic-analytics#prerequisites)
+
+Here is a list of some of the key items that can be monitored for with Traffic Analytics:
+
+* View Ports and VMs Receiving Traffic from the Internet
+* Find Traffic Hot Spots
+* Visualize Traffic Distribution by Geography
+* Visualize Traffic Distribution by Virtual Networks
+* Visualize Trends in NSG Rule Hits
+
+For more details on usage scenarios click [here](https://docs.microsoft.com/en-us/azure/network-watcher/traffic-analytics#usage-scenarios).
+
 ## Next Steps
 
 [Cost Governance](/cost-governance/README.md)
 
 ## Key Links
 
-* ???
+* [Patch Management with Kured](https://docs.microsoft.com/en-us/azure/aks/node-updates-kured)
+* [Azure Traffic Analytics](https://docs.microsoft.com/en-us/azure/network-watcher/traffic-analytics)
