@@ -87,15 +87,22 @@ tooling.
 
 You'll notice once your cluster is provisioned you'll also have the following deployed:
 
-* Namespaces
-* RBAC Rules
-* Network Policy Rules
-* Gatekeeper Policies
-* Falco Rules
-* Linkerd Service Mesh
-* Quotas
-* Ingress
-* Production Application
+* __Namespaces__ - Allows logical isolation of resources and provides the ability to set RBAC,Quota, Network Policies between namespaces.
+  
+* __RBAC Policies__ - The RBAC policies are set to give pre-defined active directory groups restricted permissions to the deployed cluster. This allows different permissions to specific namespaces.
+
+* __Network Policy Rules__ - The network policies will restrict communication between different teams namespace, to limit the exposer of access between namespaces.
+
+* __Gatekeeper Policies__ - Allows custom admission control to define policies to meet the companies compliance and governance needs. For example, if you want to only allow users to deploy internal load balancers, then gatekeeper can enforce it based on the policy set.
+
+* __Falco Rules__ - Provides runtime security to enforce policy across all your Kubernetes clusters. For example, one of the policies will inform you based on users performing an "exec" command against a container.
+
+* __Linkerd Service Mesh__ - A service mesh provides a lot of features that our out of scope of this workshop, but we will focus on the security features present in a service mesh. Linkerd will provide mTLS HTTP-based communication between meshed pods, by establishing and authenticating secure, private TLS connections between Linkerd proxies.
+  
+* __Quotas__ - Quotas will allow you set resource consumption governance on a namespace to limit the amount of resources a team or user can deploy to the cluster. It gives you way to logically carve out resource of a single cluster.
+
+* __Ingress__ - Ingress will provide L& networking features for North-to-South traffic coming into the cluster. This provides SSL offloading for services exposed to end-users.
+
 
 ***Need Diagram*** //TODO
 
