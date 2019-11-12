@@ -1,0 +1,22 @@
+---
+# Source: cost-analyzer/charts/grafana/templates/configmap-dashboard-provider.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: grafana
+    chart: grafana-1.17.2
+    release: RELEASE-NAME
+    heritage: Helm
+  name: RELEASE-NAME-grafana-config-dashboards
+data:
+  provider.yaml: |-
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      options:
+        path: /tmp/dashboards

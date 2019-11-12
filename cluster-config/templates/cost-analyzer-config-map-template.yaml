@@ -1,0 +1,17 @@
+---
+# Source: cost-analyzer/templates/cost-analyzer-config-map-template.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: RELEASE-NAME-cost-analyzer
+  labels:
+    
+    app.kubernetes.io/name: cost-analyzer
+    helm.sh/chart: cost-analyzer-1.48.0
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app: cost-analyzer
+data:
+    prometheus-alertmanager-endpoint: http://RELEASE-NAME-prometheus-alertmanager.default
+    prometheus-server-endpoint: http://RELEASE-NAME-prometheus-server.default
+    kubecost-token: not-applied

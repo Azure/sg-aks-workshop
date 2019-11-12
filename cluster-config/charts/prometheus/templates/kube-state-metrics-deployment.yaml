@@ -1,0 +1,41 @@
+---
+# Source: cost-analyzer/charts/prometheus/templates/kube-state-metrics-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: "kube-state-metrics"
+    app: prometheus
+    release: RELEASE-NAME
+    chart: prometheus-8.15.0
+    heritage: Helm
+  name: RELEASE-NAME-prometheus-kube-state-metrics
+spec:
+  selector:
+    matchLabels:
+      component: "kube-state-metrics"
+      app: prometheus
+      release: RELEASE-NAME
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: "kube-state-metrics"
+        app: prometheus
+        release: RELEASE-NAME
+        chart: prometheus-8.15.0
+        heritage: Helm
+    spec:
+      serviceAccountName: RELEASE-NAME-prometheus-kube-state-metrics
+      containers:
+        - name: prometheus-kube-state-metrics
+          image: "quay.io/coreos/kube-state-metrics:v1.6.0"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - name: metrics
+              containerPort: 8080
+          resources:
+            {}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534

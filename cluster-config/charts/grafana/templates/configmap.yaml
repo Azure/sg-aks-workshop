@@ -1,0 +1,35 @@
+---
+# Source: cost-analyzer/charts/grafana/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: RELEASE-NAME-grafana
+  labels:
+    app: grafana
+    chart: grafana-1.17.2
+    release: RELEASE-NAME
+    heritage: Helm
+data:
+  grafana.ini: |
+    [analytics]
+    check_for_updates = true
+    [auth.anonymous]
+    enabled = true
+    org_name = Main Org.
+    org_role = Admin
+    [grafana_net]
+    url = https://grafana.net
+    [log]
+    mode = console
+    [paths]
+    data = /var/lib/grafana/data
+    logs = /var/log/grafana
+    plugins = /var/lib/grafana/plugins
+    provisioning = /etc/grafana/provisioning
+    [server]
+    root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana
+    - access: proxy
+      isDefault: true
+      name: Prometheus
+      type: prometheus
+      url: http://RELEASE-NAME-prometheus-server.default.svc.cluster.local

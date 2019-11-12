@@ -103,14 +103,11 @@ You'll notice once your cluster is provisioned you'll also have the following de
 
 * __Ingress__ - Ingress will provide L& networking features for North-to-South traffic coming into the cluster. This provides SSL offloading for services exposed to end-users.
 
-
-***Need Diagram*** //TODO
-
 This is all done through Flux by automatically making sure that your new container images and configs are propagated to the cluster. How did we do this through the Terraform deployment? You'll find two different terraform files, one (github.tf) that created an access key for our git repo and the other (flux.tf), which uses the Kubernetes provider to deploy flux to the cluster. Flux then has access to the repo and  points to the cluster-config directory, which host all of our Kubernetes manifest. Flux automatically propagates and applies all the configs to the AKS cluster.
 
 The below diagram shows our production cluster
 
-
+![Prod Diagram](img/app_after.png "Prod Cluster")
 
 ## Next Steps
 
@@ -118,4 +115,5 @@ The below diagram shows our production cluster
 
 ## Key Links
 
-* ???
+* Flux Docs - <https://docs.fluxcd.io/en/stable/>
+* Terraform AKS Docs - <https://www.terraform.io/docs/providers/azurerm/r/kubernetes_cluster.html>

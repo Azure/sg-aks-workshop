@@ -1,0 +1,159 @@
+---
+# Source: cost-analyzer/templates/cost-analyzer-deployment-template.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-cost-analyzer
+  labels:
+    
+    app.kubernetes.io/name: cost-analyzer
+    helm.sh/chart: cost-analyzer-1.48.0
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app: cost-analyzer
+spec:
+  selector:
+    matchLabels:
+
+        app.kubernetes.io/name: cost-analyzer
+        app.kubernetes.io/instance: RELEASE-NAME
+        app: cost-analyzer
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        
+        app.kubernetes.io/name: cost-analyzer
+        app.kubernetes.io/instance: RELEASE-NAME
+        app: cost-analyzer
+    spec:
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      restartPolicy: Always
+      serviceAccountName: RELEASE-NAME-cost-analyzer
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: default.conf
+        - name: persistent-configs
+          persistentVolumeClaim: 
+            claimName: RELEASE-NAME-cost-analyzer
+      initContainers:
+        - name: config-perms-fix
+          image: busybox
+          command: ["/bin/chmod", "-R", "777", "/var/configs"]
+          volumeMounts:
+            - name: persistent-configs
+              mountPath: /var/configs
+          securityContext:
+            runAsUser: 0
+
+        - image: ajaytripathy/kubecost-init:prod-1.48.0
+          name: cost-analyzer-init
+          imagePullPolicy: Always
+          env:
+            - name: PROMETHEUS_SERVER_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: RELEASE-NAME-cost-analyzer
+                  key: prometheus-server-endpoint
+      containers:
+        - image: ajaytripathy/kubecost-frontend:prod-1.48.0
+          env:
+            - name: GET_HOSTS_FROM
+              value: dns
+          name: cost-analyzer-frontend
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/
+          resources:
+            requests:
+              cpu: 10m
+              memory: 55Mi
+          imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9003
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 200
+        - image: ajaytripathy/kubecost:prod-1.48.0
+          resources:
+            requests:
+              cpu: 100m
+              memory: 55Mi
+          name: cost-analyzer-server
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9003
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 200
+          volumeMounts:
+            - name: persistent-configs
+              mountPath: /var/configs
+          env:
+            - name: PROMETHEUS_SERVER_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: RELEASE-NAME-cost-analyzer
+                  key: prometheus-server-endpoint
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/configs/key.json
+            - name: KUBECOST_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: RELEASE-NAME-cost-analyzer
+                  key: kubecost-token
+        - image: ajaytripathy/kubecost-cost-model:prod-1.48.0
+          name: cost-model
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 200m
+              memory: 55Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9003
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 200
+          volumeMounts:
+            - name: persistent-configs
+              mountPath: /var/configs
+          env:
+            - name: PROMETHEUS_SERVER_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: RELEASE-NAME-cost-analyzer
+                  key: prometheus-server-endpoint
+            - name: CLOUD_PROVIDER_API_KEY
+              value: "AIzaSyDXQPG_MHUEy9neR7stolq6l0ujXmjJlvk" # The GCP Pricing API requires a key.
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/configs/key.json
+            - name: CONFIG_PATH
+              value: /var/configs/
+            - name: REMOTE_WRITE_PASSWORD
+              value: admin
+            - name: CLUSTER_ID
+              value: cluster-one
+            - name: SQL_ADDRESS
+              value: pgprometheus
+
+            - name: KUBECOST_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: RELEASE-NAME-cost-analyzer
+                  key: kubecost-token

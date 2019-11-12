@@ -1,0 +1,24 @@
+---
+# Source: cost-analyzer/templates/grafana-datasource-template.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasource
+  labels:
+    
+    app.kubernetes.io/name: cost-analyzer
+    helm.sh/chart: cost-analyzer-1.48.0
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app: cost-analyzer
+    grafana_datasource: "1"
+data:
+  datasource.yaml: |-
+    # config file version
+    apiVersion: 1
+    datasources:
+    - access: proxy
+      isDefault: true
+      name: Prometheus
+      type: prometheus
+      url: http://RELEASE-NAME-prometheus-server.default.svc.cluster.local

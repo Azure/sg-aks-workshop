@@ -1,0 +1,18 @@
+---
+# Source: cost-analyzer/charts/prometheus/templates/alertmanager-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    component: "alertmanager"
+    app: prometheus
+    release: RELEASE-NAME
+    chart: prometheus-8.15.0
+    heritage: Helm
+  name: RELEASE-NAME-prometheus-alertmanager
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "2Gi"
