@@ -12,6 +12,7 @@ metadata:
   labels:
     linkerd.io/is-control-plane: "true"
     config.linkerd.io/admission-webhooks: disabled
+    control-plane: controller-manager
 ---
 ###
 ### Identity Controller Service RBAC
@@ -3245,4 +3246,3 @@ spec:
       - name: tls
         secret:
           secretName: linkerd-tap-tls
----
