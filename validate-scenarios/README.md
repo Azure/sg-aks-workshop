@@ -123,7 +123,7 @@ ContainerLog
 ```kusto
 AzureActivity
 | where CategoryValue == 'Policy' and Level != 'Informational'
-| where ResourceProvider == "Microsoft.ContainerService" 
+| where ResourceProvider == "Microsoft.ContainerService"
 | extend p=todynamic(Properties)
 | extend policies=todynamic(tostring(p.policies))
 | mvexpand policy = policies
@@ -209,7 +209,24 @@ kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n product
 
 ## Validate - Container Image Mgmt
 
-* ???
+* Check that container images in ACR are passing image scanning policy check.
+
+```bash
+# Wait for all images to be "analyzed"
+anchore-cli image list
+
+# Check for Active Subscriptions
+anchore-cli subscription list
+
+# Get Policies
+anchore-cli policy list
+
+# Evaluate against Policy (Pass or Fail)
+anchore-cli evaluate check $ACR_NAME/imageclassifierweb:v1
+anchore-cli evaluate check $ACR_NAME/imageclassifierworker:v1
+```
+
+![Anchore Pass or Fail](/validate-scenarios/img/anchore_scan.png)
 
 ## Validate - Implement & Deploy Image Processing Application
 
