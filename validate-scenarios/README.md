@@ -201,7 +201,14 @@ kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n product
 
 * View Chargeback Dashboard
 
-???
+```bash
+# Do a port-forward to see Kubecost Dashboard
+kubectl port-forward deployment/kubecost-cost-analyzer -n kubecost 9090
+# Open in Browser
+open "http://localhost:9090"
+```
+
+![Sample Kubecost Dashboard](/validate-scenarios/img/kubecost.png)
 
 ## Validate - Secrets Mgmt
 

@@ -73,7 +73,7 @@ helm init --tiller-namespace kube-system --service-account tiller-sa
 helm version
 # Install Anchore
 kubectl create ns anchore
-helm install --name anchore --namespace anchore stable/anchore-engine
+helm install anchore stable/anchore-engine --namespace anchore
 ```
 
 > Note: It may take a few minutes for all of the pods to start and for the CVE data to be loaded into the database. 

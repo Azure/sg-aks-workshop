@@ -26,10 +26,10 @@ spec:
         resources:
           limits:
             memory: 250Mi
-            cpu: 250m
+            cpu: 100m
           requests:
             memory: 100Mi
-            cpu: 100m
+            cpu: 50m
       dnsPolicy: ClusterFirst
 ---
 apiVersion: v1
@@ -103,10 +103,10 @@ spec:
           resources:
             limits:
               memory: 1G
-              cpu: 1000m
+              cpu: 500m
             requests:
               memory: 500Mi
-              cpu: 500m
+              cpu: 250m
       volumes: 
         - name: fruitshare
           azureFile:
