@@ -35,10 +35,12 @@ spec:
         protocol: UDP
       - port: 53
         protocol: TCP
-    - to:
-      ports:
+    - ports:
       - port: 445
         protocol: TCP
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -72,8 +74,8 @@ spec:
     - ports:
       - port: 443
       to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
+      - ipBlock:
+          cidr: 0.0.0.0/0
     - to:
       - namespaceSelector:
           matchLabels:
@@ -129,6 +131,5 @@ spec:
     - ports:
       - port: 443
       to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-
+      - ipBlock:
+          cidr: 0.0.0.0/0

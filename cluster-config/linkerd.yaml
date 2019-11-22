@@ -816,7 +816,7 @@ metadata:
   name: linkerd-identity
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: identity
@@ -1084,7 +1084,7 @@ metadata:
   name: linkerd-controller
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: controller
@@ -1367,7 +1367,7 @@ metadata:
   name: linkerd-destination
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: destination
@@ -2515,7 +2515,7 @@ metadata:
   name: linkerd-proxy-injector
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: proxy-injector
@@ -2782,7 +2782,7 @@ metadata:
   name: linkerd-sp-validator
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: sp-validator
@@ -3028,7 +3028,7 @@ metadata:
   name: linkerd-tap
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: tap
