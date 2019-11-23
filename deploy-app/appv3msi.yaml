@@ -36,16 +36,16 @@ spec:
           protocol: TCP
         readinessProbe:
           httpGet:
-            path: /health
+            path: /health/ready
             port: 5000
           initialDelaySeconds: 10
-          periodSeconds: 5
+          periodSeconds: 15
         livenessProbe:
           httpGet:
-            path: /health
+            path: /health/live
             port: 5000
           initialDelaySeconds: 10
-          periodSeconds: 5
+          periodSeconds: 15
         resources:
           limits:
             memory: 500Mi
@@ -92,6 +92,18 @@ spec:
           serviceName: imageclassifierweb
           servicePort: 80
         path: /
+      - backend:
+          serviceName: imageclassifierweb
+          servicePort: 80
+        path: /switch
+      - backend:
+          serviceName: imageclassifierweb
+          servicePort: 80
+        path: /health/ready
+      - backend:
+          serviceName: imageclassifierweb
+          servicePort: 80
+        path: /health/live
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -133,16 +145,16 @@ spec:
           protocol: TCP
         readinessProbe:
           httpGet:
-            path: /health
+            path: /health/ready
             port: 5000
           initialDelaySeconds: 10
-          periodSeconds: 10
+          periodSeconds: 15
         livenessProbe:
           httpGet:
-            path: /health
+            path: /health/live
             port: 5000
           initialDelaySeconds: 10
-          periodSeconds: 10
+          periodSeconds: 15
         resources:
           limits:
             memory: 1.25G
