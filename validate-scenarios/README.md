@@ -32,17 +32,36 @@ The rest of these sections shows how we can validate the requirements above:
 
 * Log into AKS Cluster with Azure AD Credentials
 
+Pull down cluster configuration file and try to execute a command, you should get prompted to authenticate to Azure AD.
+
+```bash
+# Grab K8s Config
+az aks get-credentials -g $RG -n $PREFIX-aks
+
+# Execute a Command
+kubectl get nodes
+```
+
 ![Azure AD Authentication)](/validate-scenarios/img/aad_authentication.png)
 
 ## Validate - Implement Security Least Privilege Principle
 
 * Validate Cluster Reader cannot Create Resources
 
+Authenticate to AKS using the cluster reader credentials and then try and execute a create command.
+
+```bash
+# Try to create a pod in the default namespace
+kubectl run --generator=run-pod/v1 -it --rm centos2 --image=centos
+```
+
 ![Cluster Reader)](/validate-scenarios/img/cluster_reader.png)
 
 ## Validate - Log Everything for Audit Reporting purposes
 
 * Run log analytics query against AzureActivity table
+
+Go into Azure Monitor for Containers -> Logs and get a summary of activity logs by Resource Provider.
 
 ```kusto
 AzureActivity
@@ -212,7 +231,52 @@ open "http://localhost:9090"
 
 ## Validate - Secrets Mgmt
 
-* ???
+* Check that there is no sensitive data stored in the container image or in a configuration file in plain text.
+
+* The first place to start is looking at the application manifest file and we can see from looking at it that it is not storing credentials, it simply points to a Azure Key Vault Name.
+
+```yaml
+      containers:
+      - name: imageclassifierweb
+        image: kevingbb/imageclassifierweb:v3
+        imagePullPolicy: Always
+        env:
+        - name: KeyVault__Vault
+          valueFrom:
+            secretKeyRef:
+              name: image-akv-secret
+              key: KeyVault__Vault
+```
+
+* The next step is to look inside the container to see if there is any configuration information.
+
+```bash
+# Exec into Web Container for Example
+kubectl get pods -n dev
+# Grab Pod Name and use to exec into Pod
+kubectl exec -it imageclassifierweb-754f6d7b56-cx4hk -c imageclassifierweb /bin/sh
+# OR
+kubectl exec -it $(k get po -l=app=imageclassifierweb -o jsonpath="{.items[0].metadata.name}") /bin/sh
+# Once inside of Pod Look Around
+ls -al
+# Exit Out
+exit
+```
+
+![Secrets in Container](/validate-scenarios/img/secrets_exec.png)
+
+* Check for Sensitive values in Key Vault
+
+```bash
+# Look at Secret Value in Key Vault
+az keyvault secret show --name "AppSecret" --vault-name "contosofinakv"
+```
+
+![AppSecret in Key Vault](/validate-scenarios/img/secrets_akv.png)
+
+![AppSecret in App](/validate-scenarios/img/secrets_app.png)
+
+* So how does the secret get into the application then? Great question, it relies on Azure AD Pod Identity, or what we like to call Managed Pod Identity. Click [here](https://github.com/Azure/aad-pod-identity) for more details.
 
 ## Validate - Container Image Mgmt
 
@@ -243,7 +307,22 @@ anchore-cli evaluate check $ACR_NAME/imageclassifierworker:v1
 
 ## Validate - Easily rollout new versions of Application
 
-* ???
+* Ensure the app successfully rolls out a new version of the application and does not cause any downtime.
+
+```bash
+# Check Deployment History
+kubectl rollout history deploy imageclassifierweb -n dev
+# Apply a new version of the application
+kubectl apply -f appv3msi.yaml
+# Watch the Rollout
+kubectl rollout status deploy imageclassifierweb -n dev
+# Check Deployment History Again
+kubectl rollout history deploy imageclassifierweb -n dev
+```
+
+![Deployment Rollout](/validate-scenarios/img/rollout_app.png)
+
+* Test the app to make sure it continues to work.
 
 ## Next Steps
 
