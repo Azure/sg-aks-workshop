@@ -55,7 +55,33 @@ terraform plan
 After running this command you'll see output like the following that will show what is going to be provisioned.
 
 ```bash
-add example output
+# azurerm_application_insights.demo will be created
+  + resource "azurerm_application_insights" "demo" {
+      + app_id              = (known after apply)
+      + application_type    = "web"
+      + id                  = (known after apply)
+      + instrumentation_key = (sensitive value)
+      + location            = "eastus"
+      + name                = "contosofin-ai"
+      + resource_group_name = "contosofin-rg"
+      + tags                = (known after apply)
+    }
+
+  # azurerm_container_registry.acr will be created
+  + resource "azurerm_container_registry" "acr" {
+      + admin_enabled       = false
+      + admin_password      = (sensitive value)
+      + admin_username      = (known after apply)
+      + id                  = (known after apply)
+      + location            = "eastus"
+      + login_server        = (known after apply)
+      + name                = "contosofinacr"
+      + network_rule_set    = (known after apply)
+      + resource_group_name = "contosofin-rg"
+      + sku                 = "Standard"
+      + tags                = (known after apply)
+    }
+.....omitted.....
 ```
 
 Now that we have verified what will be deployed we can execute the `terraform apply` command, which will provision all our resources to Azure.
