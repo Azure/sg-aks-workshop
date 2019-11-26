@@ -121,6 +121,21 @@ variable "github_organization" {
   description = "Name of the Github Organisation"
 }
 
+variable "azure_aag_subnet_id" {
+  default = ""
+  description = "Subnet ID For App Gateway"
+}
+
+variable "agname" {
+  default = ""
+  description = "App Gateway Name"
+}
+
+variable "agpublicip_name" {
+  default = ""
+  description = "Public IP For App Gateway"
+}
+
 variable "github_repository" {
   default = "sg-aks-workshop"
   description = "Name of the Github repository for Flux"
