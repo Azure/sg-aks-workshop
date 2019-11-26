@@ -116,9 +116,20 @@ variable "docker_bridge_cidr" {
   default     = "172.22.0.1/29"
   description = "The IP address CIDR block to be assigned to the Docker container bridge on each node. If connecting to another peer or to you On-Premises network this CIDR block SHOULD NOT overlap with existing BGP learned routes"
 }
+
+variable "azure_vnet_name" {
+  default = ""
+  description = "VNET Name for K8s networking"
+}
+
 variable "github_organization" {
   default     = "Azure"
   description = "Name of the Github Organisation"
+}
+
+variable "azure_aag_subnet_name" {
+  default = ""
+  description = "Subnet ID For App Gateway"
 }
 
 variable "azure_aag_subnet_id" {
@@ -126,12 +137,12 @@ variable "azure_aag_subnet_id" {
   description = "Subnet ID For App Gateway"
 }
 
-variable "agname" {
+variable "azure_aag_name" {
   default = ""
   description = "App Gateway Name"
 }
 
-variable "agpublicip_name" {
+variable "azure_aag_public_ip" {
   default = ""
   description = "Public IP For App Gateway"
 }
