@@ -1,4 +1,5 @@
 # Cost Governance
+
 Cost Governance is the continuous process of implementing policies to control costs. In the context of Kubernetes, there are a number of ways organizations can control and optimize their costs. These include native Kubernetes tooling to manage and govern resource usage and consumption as well as proactive monitoring and optimize the underlying infrastructure.
 
 In this section we will use [KubeCost](https://kubecost.com/) monitor and govern our AKS clyster cost. Cost allocation can be scoped to a deployment, service, label, pod, and namespace, which will give you flexibility in how you chargeback/showback users of the cluster.
@@ -8,10 +9,13 @@ In this section we will use [KubeCost](https://kubecost.com/) monitor and govern
 We will first need to get KubeCost deployed to our cluster:
 
 ```bash
+# Create Kubecost Namespace
+kubectl create namespace kubecost
+# Install KubeCost into AKS Cluster
 kubectl apply -f https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/master/kubecost.yaml --namespace kubecost
-```
-
-```bash
+# Check to see that Everything is up and running
+kubectl get pods -n kubecost
+# Connect to the KubeCost Dashboard (UI)
 kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090:9090
 ```
 
@@ -40,11 +44,10 @@ Now if you select  __Savings__ on the left side you can dig down into cost savin
 
 Take some time to navigate around the different views and features KubeCost provides.
 
-
 ## Next Steps
 
 [Deploy Application](/deploy-app/README.md)
 
 ## Key Links
 
-* ???
+* [KubeCost](https://kubecost.com/)

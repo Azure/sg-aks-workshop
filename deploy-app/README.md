@@ -45,11 +45,15 @@ This section grabs the container images from Docker Hub and then pushes them to 
 docker pull kevingbb/imageclassifierweb:v1
 docker pull kevingbb/imageclassifierworker:v1
 
+# Authenticate to ACR
+az acr list -o table
+az acr login -g $RG -n ${PREFIX}acr
+
 # Push Images to ACR
-docker tag kevingbb/imageclassifierweb:v1 $ACR_NAME.azurecr.io/imageclassifierweb:v1
-docker tag kevingbb/imageclassifierworker:v1 $ACR_NAME.azurecr.io/imageclassifierworker:v1
-docker push $ACR_NAME.azurecr.io/imageclassifierweb:v1
-docker push $ACR_NAME.azurecr.io/imageclassifierworker:v1
+docker tag kevingbb/imageclassifierweb:v1 ${PREFIX}acr.azurecr.io/imageclassifierweb:v1
+docker tag kevingbb/imageclassifierworker:v1 ${PREFIX}acr.azurecr.io/imageclassifierworker:v1
+docker push ${PREFIX}acr.azurecr.io/imageclassifierweb:v1
+docker push ${PREFIX}acr.azurecr.io/imageclassifierworker:v1
 ```
 
 ## Image Vulnerability Scanning and Management
@@ -65,15 +69,16 @@ One of the most important things an organization can do when adopting Containers
 * Install anchore with Helm.
 
 ```bash
-# Setup Helm
-kubectl create serviceaccount --namespace kube-system tiller-sa
-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller-sa
-helm init --tiller-namespace kube-system --service-account tiller-sa
-# Check Helm is Working, Client and Server
+# Check Helm Client Version (Assumes >= v3.0.0)
 helm version
 # Install Anchore
-kubectl create ns anchore
+kubectl create namespace anchore
 helm install anchore stable/anchore-engine --namespace anchore
+# Check Status
+helm status anchore --namespace anchore
+helm list --namespace anchore
+# Ensure all Pods are running
+kubectl get po -n anchore
 ```
 
 > Note: It may take a few minutes for all of the pods to start and for the CVE data to be loaded into the database. 
@@ -89,6 +94,10 @@ anchore-demo-anchore-engine-analyzer-974d7479d-7nkgp   1/1     Running   0      
 ```
 
 ```bash
+# Before Exec'ing into Pod, Grab these Variables (Needed Later)
+echo APPID=$APPID
+echo PASSWORD=$PASSWORD
+echo ACR_NAME=${PREFIX}acr.azurecr.io
 # Now Exec into Pod
 kubectl exec -it $(kubectl get po -l app=anchore-anchore-engine -l component=analyzer -n anchore -o jsonpath='{.items[0].metadata.name}') -n anchore bash
 ```
@@ -120,12 +129,13 @@ Engine Code Version: 0.5.1
 * Connect Anchore to ACR (you will need to set these variables since they are not in the container profile)
 
 ```bash
-APPID=
-PASSWORD=
-ACR_NAME=
-
+# Grab Echoed Variables from Above
+APPID=...
+PASSWORD=...
+ACR_NAME=...
+# Add ACR to Anchore Registry List
 anchore-cli registry add --registry-type docker_v2 $ACR_NAME $APPID $PASSWORD
-
+# Sample Output
 Registry: youracr.azurecr.io
 User: 59343209-9d9e-464d-8508-068a3d331fb9
 Type: docker_v2
@@ -142,6 +152,8 @@ anchore-cli image add $ACR_NAME/imageclassifierweb:v1
 anchore-cli image add $ACR_NAME/imageclassifierworker:v1
 ```
 
+* Wait for Images to be "Analyzed" (Last Column Status). This will take a few mins so be patient.
+
 ```bash
 # Wait for all images to be "analyzed"
 anchore-cli image list
@@ -153,12 +165,15 @@ anchore-cli image vuln $ACR_NAME/imageclassifierworker:v1 all
 # Show OS Packages
 anchore-cli image content $ACR_NAME/imageclassifierweb:v1 os
 anchore-cli image content $ACR_NAME/imageclassifierworker:v1 os
+```
 
+* Add the repositories to the watch list so that each time a new image is added it will be automatically scanned.
+
+```bash
 # Add Repositories to Watch List
 anchore-cli repo add $ACR_NAME/imageclassifierweb --lookuptag v1
 anchore-cli repo add $ACR_NAME/imageclassifierworker --lookuptag v1
 anchore-cli repo list
-
 # Check for Active Subscriptions
 anchore-cli subscription list
 # Activate Vulnerability Subscription
@@ -167,11 +182,11 @@ anchore-cli subscription activate vuln_update $ACR_NAME/imageclassifierweb:v1
 anchore-cli subscription activate vuln_update $ACR_NAME/imageclassifierworker:v1
 # Check for Activation
 anchore-cli subscription list
+```
 
-# Test out Anchore API to get a Feel for Automation
-kubectl port-forward svc/anchore-anchore-engine-api -n anchore 8228:8228
-open "http://localhost:8228/v1/ui/"
+* Take a look at the policies that Anchore puts into place by default and see if the images pass the policy.
 
+```bash
 # Working with Policies
 # Get Policies
 anchore-cli policy list
@@ -180,8 +195,23 @@ anchore-cli policy get 2c53a13c-1765-11e8-82ef-23527761d060 --detail
 anchore-cli evaluate check $ACR_NAME/imageclassifierweb:v1
 anchore-cli evaluate check $ACR_NAME/imageclassifierworker:v1
 
+# Sample Output
+Image Digest: sha256:6340b28aac68232d28e5ff1c0a425176408ce85fdb408fba1f0cecba87aec062
+Full Tag: contosofinacr.azurecr.io/imageclassifierworker:v1
+Status: pass
+Last Eval: 2019-11-27T22:19:27Z
+Policy ID: 2c53a13c-1765-11e8-82ef-23527761d060
+
 # Exit out of Container
 exit
+```
+
+* Explore Anchore API via UI
+
+```bash
+# Test out Anchore API to get a Feel for Automation (Requires New Command Line)
+kubectl port-forward svc/anchore-anchore-engine-api -n anchore 8228:8228
+open "http://localhost:8228/v1/ui/"
 ```
 
 ## Deploy Application
@@ -207,7 +237,12 @@ You will notice that some of the pods are not starting up, this is because a sec
 # Add Secrets for Worker Back-End
 STORAGE_ACCOUNT_NAME=""
 STORAGE_ACCOUNT_KEY=""
-k create secret generic fruit-secret --from-literal=azurestorageaccountname=<STORAGE_ACCOUNT_NAME> --from-literal=azurestorageaccountkey=<STORAGE_ACCOUNT_KEY>
+k create secret generic fruit-secret \
+  --from-literal=azurestorageaccountname=<STORAGE_ACCOUNT_NAME> \
+  --from-literal=azurestorageaccountkey=<STORAGE_ACCOUNT_KEY> \
+  -n dev
+# Check to see Worker Pod is now Running
+kubectl get deploy,rs,po,svc,ingress -n dev
 ```
 
 The end results will look something like this.
@@ -226,9 +261,12 @@ curl 100.64.2.4
 # You should have seen the contents of an HTML file dumped out. If not, you will need to troubleshoot.
 # Exit out of Pod
 exit
+```
 
-# Now Test with the WAF Ingress Point
-open "http://$(az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv)"
+* Now Test with the WAF Ingress Point
+
+```bash
+az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
 ```
 
 ## Next Steps

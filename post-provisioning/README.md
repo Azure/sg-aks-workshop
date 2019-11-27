@@ -6,7 +6,15 @@ This section walks us through steps that need to get performed after the cluster
 
 This is a quick test to make sure that Pods can be created and the Ingress Controller default backend is setup correctly.
 
+* First we need to grab AKS cluster credentials so we can access the api-server endpoint and run some commands.
+* Second we will do a quick check via get nodes.
+* Lastly, we will spin up a Pod, exec into it, and test our F/W rules.
+
 ```bash
+# List out AKS Cluster(s) in a Table
+az aks list -o table
+# Get Cluster Admin Credentials
+az aks get-credentials -g $RG -n $PREFIX-aks --admin
 # Check Nodes
 kubectl get nodes
 # Test via a Pod
@@ -31,6 +39,8 @@ kubectl get po -o wide
 kubectl exec -it centos -- /bin/bash
 # Inside of the Pod test the Ingress Controller Endpoint
 curl 100.64.2.4
+# This should be blocked by F/W
+curl www.superman.com
 # Exit out of Pod
 exit
 ```
@@ -40,10 +50,12 @@ exit
 This section sets up the connection between AKS and Azure Container Registry (ACR).
 
 ```bash
+# List Azure Container Registries (ACR) in a Table
+az acr list -o table
 # Setup ACR Permissions
 CLIENT_ID=$(az aks show --resource-group $RG --name ${PREFIX}-aks --query "servicePrincipalProfile.clientId" --output tsv)
 # Get the ACR registry resource id
-ACR_ID=$(az acr show --name $ACR_NAME --resource-group ${RG} --query "id" --output tsv)
+ACR_ID=$(az acr show --name ${PREFIX}acr --resource-group $RG --query "id" --output tsv)
 # Look at Configuration Settings
 echo $CLIENT_ID
 echo $ACR_ID
@@ -92,7 +104,7 @@ In this section we will setup the AKS specific policies we want to enforce. To r
 * Registry Whitelisting
 
 ```bash
-# Allowed Repos Constraint Template
+# Create Allowed Repos Constraint Template
 kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/demo/agilebank/templates/k8sallowedrepos_template.yaml
 
 # Install Constraint Based on Template
@@ -142,7 +154,7 @@ To enable the NSG flow logs and Traffic Analytics, please follow this online Tut
 
 [Flow Logs and Traffic Analytics Prerequisites](https://docs.microsoft.com/en-us/azure/network-watcher/traffic-analytics#prerequisites)
 
-Here is a list of some of the key items that can be monitored for with Traffic Analytics:
+**Here is a list of some of the key items that can be monitored for with Traffic Analytics:**
 
 * View Ports and VMs Receiving Traffic from the Internet
 * Find Traffic Hot Spots

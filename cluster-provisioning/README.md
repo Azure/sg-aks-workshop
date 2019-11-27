@@ -25,7 +25,7 @@ export TF_VAR_azure_subnet_id=$(az network vnet subnet show -g $RG --vnet-name $
 export TF_VAR_azure_aag_subnet_id=$(az network vnet subnet show -g $RG --vnet-name $VNET_NAME --name $APPGWSUBNET_NAME --query id -o tsv)
 export TF_VAR_azure_subnet_name=$APPGWSUBNET_NAME
 export TF_VAR_azure_aag_name=$AGNAME
-export TF_VAR_azure_aag_public_ip=$AGPUBLICIP_NAME
+export TF_VAR_azure_aag_public_ip=$(az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query id -o tsv)
 export TF_VAR_azure_vnet_name=$VNET_NAME
 export TF_VAR_github_organization=Azure
 export TF_VAR_github_token=<ask_instructor>
@@ -133,6 +133,10 @@ You'll notice once your cluster is provisioned you'll also have the following de
 * __Quotas__ - Quotas will allow you set resource consumption governance on a namespace to limit the amount of resources a team or user can deploy to the cluster. It gives you way to logically carve out resource of a single cluster.
 
 * __Ingress__ - Ingress will provide L& networking features for North-to-South traffic coming into the cluster. This provides SSL offloading for services exposed to end-users.
+
+* __Kured__ - Kured will assist with rebooting the nodes when needed as part of the shared responsibility between customer and Microsoft for the worker nodes. It will cordon and drain the worker nodes 1 by 1 in an orderly fashion.
+
+* __AAD Pod Identity__ - This namespace contains the controllers and daemonset for being to use Managed Pod Identity to access other Azure resources like Azure Key Vault (AKV) without having to manage/deploy secrets and keys.
 
 This is all done through Flux by automatically making sure that your new container images and configs are propagated to the cluster. How did we do this through the Terraform deployment? You'll find two different terraform files, one (github.tf) that created an access key for our git repo and the other (flux.tf), which uses the Kubernetes provider to deploy flux to the cluster. Flux then has access to the repo and  points to the cluster-config directory, which host all of our Kubernetes manifest. Flux automatically propagates and applies all the configs to the AKS cluster.
 

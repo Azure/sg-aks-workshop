@@ -61,7 +61,7 @@ These are sample screenshots of the flow you will go through:
 
 ![Assign Policy Create](/governance-security/img/AssignPolicyCreate.png)
 
-![Azure Policy Assignments](/governance-security/img/PolicyAssignments.png)
+![Azure Policy Assignments](/governance-security/img/PolicyAssignment.png)
 
 ## Wrapping Up
 

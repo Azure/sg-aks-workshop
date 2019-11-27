@@ -121,15 +121,14 @@ az network route-table route create -g $RG --name $FWROUTE_NAME --route-table-na
 # Add the Azure Firewall extension to Azure CLI in case you do not already have it.
 az extension add --name azure-firewall
 # Create the Outbound Network Rule from Worker Nodes to Control Plane
-az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr' -n 'ssh' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 9000 443 --action allow --priority 100
+az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr1' -n 'ssh' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 9000 443 --action allow --priority 100
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr2' -n 'dns' --protocols 'UDP' --source-addresses '*' --destination-addresses '*' --destination-ports 53 --action allow --priority 200
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr3' -n 'gitssh' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 22 --action allow --priority 300
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr4' -n 'fileshare' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 445 --action allow --priority 400
 # Add Application FW Rules
-az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar' -n 'AKS' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns '*.hcp.eastus.azmk8s.io' '*.tun.eastus.azmk8s.io' 'aksrepos.azurecr.io' '*blob.core.windows.net' 'mcr.microsoft.com' '*cdn.mscr.io' 'management.azure.com' 'login.microsoftonline.com' 'packages.microsoft.com' 'acs-mirror.azureedge.net' '*.ubuntu.com' 'api.snapcraft.io' '*auth.docker.io' 'gcr.io' 'storage.googleapis.com' '*cloudflare.docker.io' '*cloudflare.docker.com' '*registry-1.docker.io' 'dc.services.visualstudio.com' '*.ods.opinsights.azure.com' '*.oms.opinsights.azure.com' '*.monitoring.azure.com' 'apt.dockerproject.org' 'nvidia.github.io' '*.azurecr.io' '*.gk.azmk8s.io' 'raw.githubusercontent.com' 'gov-prod-policy-data.trafficmanager.net'  --action allow --priority 100
+az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar1' -n 'AKS' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns '*.hcp.eastus.azmk8s.io' '*.tun.eastus.azmk8s.io' 'aksrepos.azurecr.io' '*blob.core.windows.net' 'mcr.microsoft.com' '*cdn.mscr.io' 'management.azure.com' 'login.microsoftonline.com' 'packages.microsoft.com' 'acs-mirror.azureedge.net' '*.ubuntu.com' 'api.snapcraft.io' '*auth.docker.io' 'gcr.io' 'storage.googleapis.com' '*cloudflare.docker.io' '*cloudflare.docker.com' '*registry-1.docker.io' 'dc.services.visualstudio.com' '*.ods.opinsights.azure.com' '*.oms.opinsights.azure.com' '*.monitoring.azure.com' 'apt.dockerproject.org' 'nvidia.github.io' '*.azurecr.io' '*.gk.azmk8s.io' 'raw.githubusercontent.com' 'gov-prod-policy-data.trafficmanager.net'  --action allow --priority 100
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar2' -n 'GitHub' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns '*.github.com' --action allow --priority 200
-az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar3' -n 'KeyVault' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns 'contosofinakv.vault.azure.net' --action allow --priority 300
-<vault-name>.vault.azure.net
+az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar3' -n 'KeyVault' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns '*.vault.azure.net' --action allow --priority 300
 # Associate AKS Subnet to FW
 az network vnet subnet update -g $RG --vnet-name $VNET_NAME --name $AKSSUBNET_NAME --route-table $FWROUTE_TABLE_NAME
 # OR if you know the Subnet ID and would prefer to do it that way.
@@ -157,6 +156,15 @@ VNETID=$(az network vnet show -g $RG --name $VNET_NAME --query id -o tsv)
 az role assignment create --assignee $APPID --scope $VNETID --role Contributor
 # View Role Assignment
 az role assignment list --assignee $APPID --all -o table
+```
+
+## Create Public IP Address for Azure Application Gateway
+
+This section walks through creatiing a Public IP address for use with a Web Application Firewall (WAF). For the purposes of this workshop we will be using Azure Application Gateway as the WAF and it will be created as part of the AKS provisioning process.
+
+```bash
+# Create Public IP for use with WAF (Azure Application Gateway)
+az network public-ip create -g $RG -n $AGPUBLICIP_NAME -l $LOC --sku "Basic"
 ```
 
 ## Next Steps
