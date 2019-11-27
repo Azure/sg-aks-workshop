@@ -16,7 +16,7 @@ resource "azurerm_application_gateway" "network" {
 
   sku {
     name     = "WAF_Medium"
-    tier     = "WAF"
+    tier     = "WAF_V2"
     capacity = 2
   }
 
