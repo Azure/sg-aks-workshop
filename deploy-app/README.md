@@ -73,7 +73,7 @@ helm init --tiller-namespace kube-system --service-account tiller-sa
 helm version
 # Install Anchore
 kubectl create ns anchore
-helm install --name anchore --namespace anchore stable/anchore-engine
+helm install anchore stable/anchore-engine --namespace anchore
 ```
 
 > Note: It may take a few minutes for all of the pods to start and for the CVE data to be loaded into the database. 
@@ -148,9 +148,37 @@ anchore-cli image list
 
 # View results (there are none in these images thankfully)
 anchore-cli image vuln $ACR_NAME/imageclassifierweb:v1 all
+anchore-cli image vuln $ACR_NAME/imageclassifierworker:v1 all
 
 # Show OS Packages
 anchore-cli image content $ACR_NAME/imageclassifierweb:v1 os
+anchore-cli image content $ACR_NAME/imageclassifierworker:v1 os
+
+# Add Repositories to Watch List
+anchore-cli repo add $ACR_NAME/imageclassifierweb --lookuptag v1
+anchore-cli repo add $ACR_NAME/imageclassifierworker --lookuptag v1
+anchore-cli repo list
+
+# Check for Active Subscriptions
+anchore-cli subscription list
+# Activate Vulnerability Subscription
+#anchore-cli subscription activate SUBSCRIPTION_TYPE SUBSCRIPTION_KEY
+anchore-cli subscription activate vuln_update $ACR_NAME/imageclassifierweb:v1
+anchore-cli subscription activate vuln_update $ACR_NAME/imageclassifierworker:v1
+# Check for Activation
+anchore-cli subscription list
+
+# Test out Anchore API to get a Feel for Automation
+kubectl port-forward svc/anchore-anchore-engine-api -n anchore 8228:8228
+open "http://localhost:8228/v1/ui/"
+
+# Working with Policies
+# Get Policies
+anchore-cli policy list
+anchore-cli policy get 2c53a13c-1765-11e8-82ef-23527761d060 --detail
+# Evaluate against Policy (Pass or Fail)
+anchore-cli evaluate check $ACR_NAME/imageclassifierweb:v1
+anchore-cli evaluate check $ACR_NAME/imageclassifierworker:v1
 
 # Exit out of Container
 exit

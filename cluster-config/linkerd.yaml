@@ -816,7 +816,7 @@ metadata:
   name: linkerd-identity
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: identity
@@ -879,10 +879,10 @@ spec:
             port: 9990
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "10Mi"
         securityContext:
           runAsUser: 2103
@@ -973,10 +973,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -1084,7 +1084,7 @@ metadata:
   name: linkerd-controller
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: controller
@@ -1150,10 +1150,10 @@ spec:
             port: 9995
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 2103
@@ -1186,10 +1186,10 @@ spec:
             port: 9996
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 2103
@@ -1278,10 +1278,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -1367,7 +1367,7 @@ metadata:
   name: linkerd-destination
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: destination
@@ -1433,10 +1433,10 @@ spec:
             port: 9996
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 2103
@@ -1525,10 +1525,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -1621,10 +1621,10 @@ spec:
             - "-log-level=info"
             resources:
               limits:
-                cpu: "1"
+                cpu: "500m"
                 memory: "250Mi"
               requests:
-                cpu: "100m"
+                cpu: "50m"
                 memory: "50Mi"
             securityContext:
               runAsUser: 2103
@@ -1711,10 +1711,10 @@ spec:
             port: 9994
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 2103
@@ -1803,10 +1803,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -2150,10 +2150,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -2341,10 +2341,10 @@ spec:
             port: 3000
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "1024Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 472
@@ -2436,10 +2436,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -2515,7 +2515,7 @@ metadata:
   name: linkerd-proxy-injector
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: proxy-injector
@@ -2576,10 +2576,10 @@ spec:
             port: 9995
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 2103
@@ -2671,10 +2671,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -2782,7 +2782,7 @@ metadata:
   name: linkerd-sp-validator
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: sp-validator
@@ -2843,10 +2843,10 @@ spec:
             port: 9997
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 2103
@@ -2936,10 +2936,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false
@@ -3028,7 +3028,7 @@ metadata:
   name: linkerd-tap
   namespace: linkerd
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       linkerd.io/control-plane-component: tap
@@ -3094,10 +3094,10 @@ spec:
             port: 9998
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "50Mi"
         securityContext:
           runAsUser: 2103
@@ -3189,10 +3189,10 @@ spec:
           initialDelaySeconds: 2
         resources:
           limits:
-            cpu: "1"
+            cpu: "500m"
             memory: "250Mi"
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "20Mi"
         securityContext:
           allowPrivilegeEscalation: false

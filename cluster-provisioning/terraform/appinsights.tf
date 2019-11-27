@@ -5,7 +5,7 @@ resource "azurerm_application_insights" "demo" {
   resource_group_name = "${var.resource_group}"
   application_type    = "web"
 
-depends_on = [
+  depends_on = [
     "azurerm_resource_group.demo",
   ]
 }

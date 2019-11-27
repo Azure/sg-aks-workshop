@@ -48,3 +48,10 @@ metadata:
     app: ingress
   annotations:
     linkerd.io/inject: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aadpodidentity
+  labels:
+    app: aadpodidentity

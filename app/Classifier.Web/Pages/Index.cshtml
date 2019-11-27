@@ -1,0 +1,109 @@
+﻿@page
+@model IndexModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Home page";
+}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>TensorFlow Image Classifier</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="~/css/site.min.css">
+  </head>
+
+  <body>
+      <div id="app">
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container">
+          <span class="navbar-brand" href="#">TensorFlow Fruit Classifier</span>
+          <span class="navbar-brand" href="#">AKV Secret: @Model.Message </span>
+          <span class="navbar-brand" href="#">{{ processingRate }} images/sec ({{ numberOfWorkers }} workers)</span>
+        </div>
+      </nav>
+
+      <main role="main" class="container">
+        <transition-group name="slide-fade" tag="div">
+          <div class="jumbotron" v-for="result in results" v-bind:key="result.id">
+            <!-- <h1>Navbar example</h1>
+            <p class="lead">This example is a quick exercise to illustrate how fixed to top navbar works. As you scroll, it will remain fixed to the top of your browser's viewport.</p>
+            <a class="btn btn-lg btn-primary" href="../../components/navbar/" role="button">View navbar docs &raquo;</a> -->
+            <div class="row">
+              <div class="col">
+                <img v-bind:src="result.image.thumbnailUrl" />
+              </div>
+              <div class="col">
+                <span v-if="result.label === 'grapes'" class="emoji">🍇 Grapes</span>
+                <span v-if="result.label === 'banana'" class="emoji">🍌 Banana</span>
+                <span v-if="result.label === 'apple'" class="emoji">🍎 Apple</span>
+              </div>
+            </div>
+          </div>
+        </transition-group>
+      </main>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="~/js/site.min.js"></script>
+    <script>
+    const results = []
+    const data = {
+      results,
+      processingRate: '-',
+      numberOfWorkers: '-'
+    }
+    const app = new Vue({
+      el: '#app',
+      data
+    })
+
+    const imagesSubject = new Rx.Subject()
+
+    const timeWindow = 12000
+    imagesSubject.bufferTime(timeWindow, 1000).subscribe(results => {
+      data.processingRate = (results.length / timeWindow * 1000).toFixed(2)
+      const workers = {}
+      results.forEach(r => workers[r.workerId] = 1)
+      data.numberOfWorkers = Object.keys(workers).length
+    })
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl('/imageshub')
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+    connection.on('imageProcessed', imageProcessed)
+    connection.onclose(() => {
+      setTimeout(() => startConnection(connection), 2000)
+    })
+    startConnection(connection)
+
+    function startConnection(connection) {
+      connection.start()
+        .then(() => {
+          console.log('connected')
+        })
+        .catch(() => {
+          setTimeout(() => startConnection(connection), 2000)
+        })
+    }
+
+    function imageProcessed(result) {
+      console.log(JSON.stringify(result))
+      results.unshift(result)
+      if (results.length > 50) {
+        results.length = 50
+      }
+      imagesSubject.next(result);
+    }
+    </script>
+  </body>
+</html>
