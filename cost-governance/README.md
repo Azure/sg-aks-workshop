@@ -5,17 +5,31 @@ In this section we will use [KubeCost](https://kubecost.com/) monitor and govern
 
 ## Setup
 
-Kubecost has already been deployed to the cluster through your cluster-config GitOps repo. We will just need to connect to the UI to get started. Run the following command to port-ford the service to your local machine.
+We will first need to get KubeCost deployed to our cluster:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/master/kubecost.yaml --namespace kubecost
+```
 
 ```bash
 kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090:9090
-```bash
+```
 
 You now can open your browser and point to <http://127.0.0.1:9090> to open the Kubecost UI. In the Kubecost UI you should see a screen like below, so go ahead and select your cluster to view cost allocation information.
 
+## Navigating KubeCost
 
-???
-```
+KubeCost will break down resources into the following catagories:
+
+* Monthly Cluster Cost
+* Namespace Cost
+* Deployment Resource Cost
+* Cost Efficiency
+
+You'll see a dashboard like the one below when selecting your cluster
+
+![kubecost-admin](img/cost-admin.png)
+
 
 ## Next Steps
 

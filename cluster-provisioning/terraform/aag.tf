@@ -1,33 +1,3 @@
-resource "azurerm_subnet" "frontend" {
-  name                 = "frontend"
-  resource_group_name  = "${azurerm_resource_group.sg-aag.name}"
-  virtual_network_name = "${var.azure_vnet_name}"
-  address_prefix       = "10.254.0.0/24"
-}
-
-resource "azurerm_subnet" "backend" {
-  name                 = "backend"
-  resource_group_name  = "${azurerm_resource_group.sg-aag.name}"
-  virtual_network_name = "${var.azure_vnet_name}"
-  address_prefix       = "10.254.2.0/24"
-}
-
-data "azurerm_virtual_network" "sg-aag" {
-  name                = "${var.azure_subnet_id}"
-  resource_group_name = "${var.resource_group}"
-}
-
-output "virtual_network_id" {
-  value = "${data.azurerm_virtual_network.sg-aag.id}"
-}
-
-resource "azurerm_public_ip" "sg-aag" {
-  name                = "sg-aag-pip"
-  resource_group_name = "${var.resource_group}"
-  location            = "${var.location}"
-  allocation_method   = "Dynamic"
-}
-
 # since these variables are re-used - a locals block makes this more maintainable
 locals {
   backend_address_pool_name      = "${var.azure_vnet_name}-beap"
