@@ -122,7 +122,7 @@ variable "github_organization" {
 }
 
 variable "github_repository" {
-  default = "sg-aks-workshop"
+  default     = "sg-aks-workshop"
   description = "Name of the Github repository for Flux"
 }
 
