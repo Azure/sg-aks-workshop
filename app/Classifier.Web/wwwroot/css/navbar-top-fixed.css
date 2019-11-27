@@ -1,0 +1,31 @@
+/* Show it is fixed to the top */
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
+
+.em, .emoji {
+  font-size: 60px;
+}
+
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all .5s ease;
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  /* transform: translateX(60px); */
+  height: 0px;
+  overflow-y: hidden;
+  opacity: 0;
+}
+
+.jumbotron img {
+  max-height: 200px;
+}
+
+.jumbotron {
+  padding: 2rem;
+}
+
+.navbar-brand {
+  font-size: 2rem;
+}
