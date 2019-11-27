@@ -30,6 +30,16 @@ You'll see a dashboard like the one below when selecting your cluster
 
 ![kubecost-admin](img/cost-admin.png)
 
+If you select __Allocation__ on the left side you can dig down into the namespace cost of your resources. It will show the cost for CPU, Memory, Persistent Volumes, and Network. It gets the data from Azure pricing, but you can also set custom cost of the resources.
+
+![kubecost-allocation](img/allocation.png)
+
+Now if you select  __Savings__ on the left side you can dig down into cost saving for under utilized resources. It will give you info back on under utilized nodes, pods, ans abandoned resources. It will also identify resources request that have been over provisioned within the cluster. You can see a sample below of the overview:
+
+![kubecost-savings](img/savings.png)
+
+Take some time to navigate around the different views and features KubeCost provides.
+
 
 ## Next Steps
 
