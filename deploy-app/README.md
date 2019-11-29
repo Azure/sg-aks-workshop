@@ -269,6 +269,174 @@ exit
 az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
 ```
 
+## Adding in Secrets Mgmt
+
+This section will take a look at the same application, but add in some more capabilities and storing the sensitive information to turn on those capabilities securely.
+
+Here is a small list of things that will be added:
+
+* Health Checks via Liveness and Readiness Probes.
+* Application Instrumentation with Instrumentation Key securely stored in Azure Key Vault (AKV).
+* Add a Title to the App with that Title stored in AKV for illustration purposes only.
+
+When dealing with secrets we typically need to store some type of bootstrapping credential(s) or connection string to be able to access the secure store.
+
+**What if there was another way?**
+
+There is, it is called AAD Pod Identity, or Managed Pod Identity. We are going to assign an Azure Active Directory Identity to a running Pod which will automatically grab an Azure AD backed Token which we can then use to securely access Azure Key Vault.
+
+**Pretty Cool!**
+
+### Create Azure Key Vault (AKV) & Secrets
+
+* In this section we will create the secrets backing store which will be Azure Key Vault and populate it with the secrets information.
+
+```bash
+# Create Azure Key Vault Instance
+az keyvault create -g $RG -n ${PREFIX}akv -l $LOC --enabled-for-template-deployment true
+# Retrieve Application Insights Instrumentation Key
+az resource show \
+    --resource-group $RG \
+    --resource-type "Microsoft.Insights/components" \
+    --name ${PREFIX}-ai \
+    --query "properties.InstrumentationKey" -o tsv
+INSTRUMENTATION_KEY=$(az resource show -g $RG --resource-type "Microsoft.Insights/components" --name ${PREFIX}-ai --query "properties.InstrumentationKey" -o tsv)
+# Populate AKV Secrets
+az keyvault secret set --vault-name ${PREFIX}akv --name "AppSecret" --value "MySecret"
+az keyvault secret show --name "AppSecret" --vault-name ${PREFIX}akv
+az keyvault secret set --vault-name ${PREFIX}akv --name "AppInsightsInstrumentationKey" --value $INSTRUMENTATION_KEY
+az keyvault secret show --name "AppInsightsInstrumentationKey" --vault-name ${PREFIX}akv
+```
+
+### Create Azure AD Identity
+
+* Now that we have AKV and the secrets setup, we need to create the Azure AD Identity and permissions to AKV.
+
+```bash
+# Create Azure AD Identity
+AAD_IDENTITY="contosofinidentity"
+az identity create -g $RG -n $AAD_IDENTITY -o json
+# Sample Output
+{
+  "clientId": "CLIENTID",
+  "clientSecretUrl": "https://control-eastus.identity.azure.net/subscriptions/SUBSCRIPTION_ID/resourcegroups/contosofin-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosofinidentity/credentials?tid=TID&aid=AID",
+  "id": "/subscriptions/SUBSCRIPTION_ID/resourcegroups/contosofin-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosofinidentity",
+  "location": "eastus",
+  "name": "contosofinidentity",
+  "principalId": "PRINCIPALID",
+  "resourceGroup": "contosofin-rg",
+  "tags": {},
+  "tenantId": "TENANT_ID",
+  "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+}
+# Grab PrincipalID & ClientID & TenantID from Above
+AAD_IDENTITY_PRINCIPALID=$(az identity show -g $RG -n $AAD_IDENTITY --query "principalId" -o tsv)
+AAD_IDENTITY_CLIENTID=$(az identity show -g $RG -n $AAD_IDENTITY --query "clientId" -o tsv)
+AAD_TENANTID=$(az identity show -g $RG -n $AAD_IDENTITY --query "tenantId" -o tsv)
+echo $AAD_IDENTITY_PRINCIPALID
+echo $AAD_IDENTITY_CLIENTID
+echo $AAD_TENANTID
+# Assign AKV Permissions to Azure AD Identity
+az role assignment create \
+    --role Reader \
+    --assignee $AAD_IDENTITY_PRINCIPALID \
+    --scope /subscriptions/$SUBID/resourcegroups/$RG
+# Grant AAD Identity access permissions to AKS Cluster SP
+az role assignment create \
+    --role "Managed Identity Operator" \
+    --assignee $APPID \
+    --scope /subscriptions/$SUBID/resourcegroups/contosofin-rg/providers/Microsoft.ManagedIdentity/UserAssignedIdentities/$AAD_IDENTITY
+```
+
+* Now that we have the Azure AD Identity setup, the next step is to setup the access policy (RBAC) in AKV to allow or deny certain permissions to the data.
+
+```bash
+# Setup Access Policy (Permissions) in AKV
+az keyvault set-policy \
+    --name contosofinakv \
+    --secret-permissions list get \
+    --object-id $AAD_IDENTITY_PRINCIPALID
+```
+
+### Create Azure AD Identity Resources in AKS
+
+* Now that we have all the Azure AD Identity and AKS Cluster SP permissions setup. The next step is to setup and configure the AAD Pod Identities in AKS.
+
+```bash
+# Create AAD Identity
+cat <<EOF | kubectl apply -f -
+apiVersion: "aadpodidentity.k8s.io/v1"
+kind: AzureIdentity
+metadata:
+  name: akv-identity
+  namespace: dev
+spec:
+  type: 0
+  ResourceID: /subscriptions/$SUBID/resourcegroups/contosofin-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$AAD_IDENTITY
+  ClientID: $AAD_IDENTITY_CLIENTID
+EOF
+# Create AAD Identity Binding
+cat <<EOF | kubectl apply -f -
+apiVersion: "aadpodidentity.k8s.io/v1"
+kind: AzureIdentityBinding
+metadata:
+  name: akv-identity-binding
+  namespace: dev
+spec:
+  AzureIdentity: akv-identity
+  Selector: bind-akv-identity
+EOF
+# Take a look at AAD Resources
+kubectl get azureidentity,azureidentitybinding -n dev
+```
+
+### Deploy Updated Version of Application which accesses AKV
+
+* Now that the bindings are setup, we are ready to test it out by deploying our application and see if it is able to read everything it needs from AKV.
+
+**NOTE: It is the following label, configured via above, that determines whether or not the Identity Controller tries to assign an AzureIdentity to a specific Pod.**
+
+metadata:
+  labels:
+    **aadpodidbinding: bind-akv-identity**
+  name: my-pod
+
+```bash
+# Remove Existing Application
+kubectl delete -f app.yaml
+
+# Pull Images from Docker Hub to Local Workstation
+docker pull kevingbb/imageclassifierweb:v3
+docker pull kevingbb/imageclassifierworker:v3
+
+# Push Images to ACR
+docker tag kevingbb/imageclassifierweb:v3 ${PREFIX}acr.azurecr.io/imageclassifierweb:v3
+docker tag kevingbb/imageclassifierworker:v3 ${PREFIX}acr.azurecr.io/imageclassifierworker:v3
+docker push ${PREFIX}acr.azurecr.io/imageclassifierweb:v3
+docker push ${PREFIX}acr.azurecr.io/imageclassifierworker:v3
+
+# Create Secret for Name of Azure Key Vault for App Bootstrapping
+kubectl create secret generic image-akv-secret \
+  --from-literal=KeyVault__Vault=${PREFIX}akv \
+  -n dev
+
+# Deploy v3 of the Application
+kubectl apply -f appv3msi.yaml
+
+# Check to see that AAD Pod Identity was Assigned (You should see 2)
+kubectl get AzureAssignedIdentities -n dev
+
+# Display the Application Resources
+kubectl get deploy,rs,po,svc,ingress -n dev
+```
+
+* Once the pods are up and running, check via the WAF Ingress Point
+
+```bash
+# Get Public IP Address of Azure App Gateway
+az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
+```
+
 ## Next Steps
 
 [Service Mesh](/service-mesh/README.md)
