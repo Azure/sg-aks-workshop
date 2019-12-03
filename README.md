@@ -24,9 +24,10 @@ The end goal is to take you from having a kubernetes setup that is unsecure by d
 
   1. [Customer Scenario](customer-scenario/README.md)
   2. [Governance and Security Setup](governance-security/README.md)
-  3. [Cluster Pre-Provisioning](cluster-pre-provisioning/README.md)
-  4. [Cluster Provisioning](cluster-provisioning/README.md)
-  5. [Post-Provisioning](post-provisioning/README.md)
+  3. [Cluster Design](cluster-design/README.md)
+  4. [Cluster Pre-Provisioning](cluster-pre-provisioning/README.md)
+  5. [Cluster Provisioning](cluster-provisioning/README.md)
+  6. [Post-Provisioning](post-provisioning/README.md)
 
 ## Lab Guides - Day 2
 
