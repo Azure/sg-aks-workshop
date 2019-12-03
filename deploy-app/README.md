@@ -62,9 +62,9 @@ One of the most important things an organization can do when adopting Containers
 
 * It is critical to scan images for vulnerabilities in your environment. We recommending using a Enterprise grade tool such as [Aqua Security](https://www.aquasec.com/products/aqua-container-security-platform) or [Twistlock](https://www.twistlock.com/why-twistlock) or [SysDig Secure](https://sysdig.com/products/secure/).
 
-* These tools should be integrated into the CI/CD pipeline, Container Registry, and container runtimes to provide end-to-end protection. Review full guidance here: https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-container-image-management
+* These tools should be integrated into the CI/CD pipeline, Container Registry, and container runtimes to provide end-to-end protection. Review full guidance here: [https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-container-image-management](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-container-image-management)
 
-* For the purposes of this workshop we will be using Anchore for some quick testing. https://anchore.com/opensource
+* For the purposes of this workshop we will be using Anchore for some quick testing. [https://anchore.com/opensource](https://anchore.com/opensource)
 
 * Install anchore with Helm.
 
@@ -81,7 +81,7 @@ helm list --namespace anchore
 kubectl get po -n anchore
 ```
 
-> Note: It may take a few minutes for all of the pods to start and for the CVE data to be loaded into the database. 
+> Note: It may take a few minutes for all of the pods to start and for the CVE data to be loaded into the database.
 
 * Exec into the analyzer pod to access the CLI
 
