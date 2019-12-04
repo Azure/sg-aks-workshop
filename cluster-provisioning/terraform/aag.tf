@@ -15,7 +15,7 @@ resource "azurerm_application_gateway" "network" {
   location            = "${var.location}"
 
   sku {
-    name     = "WAF_Medium"
+    name     = "WAF_V2"
     tier     = "WAF_V2"
     capacity = 2
   }
@@ -43,7 +43,7 @@ resource "azurerm_application_gateway" "network" {
   }
 
   backend_address_pool {
-    name = "${local.backend_address_pool_name}"
+    name         = "${local.backend_address_pool_name}"
     ip_addresses = ["100.64.2.4"]
   }
 

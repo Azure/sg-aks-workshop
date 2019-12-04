@@ -1,5 +1,5 @@
 variable "prefix" {
-  default     = "sg"
+  default     = "sgchili"
   description = "A prefix used for all resources"
 }
 
@@ -118,7 +118,7 @@ variable "docker_bridge_cidr" {
 }
 
 variable "azure_vnet_name" {
-  default = ""
+  default     = ""
   description = "VNET Name for K8s networking"
 }
 
@@ -128,22 +128,22 @@ variable "github_organization" {
 }
 
 variable "azure_aag_subnet_name" {
-  default = ""
+  default     = ""
   description = "Subnet ID For App Gateway"
 }
 
 variable "azure_aag_subnet_id" {
-  default = ""
+  default     = ""
   description = "Subnet ID For App Gateway"
 }
 
 variable "azure_aag_name" {
-  default = ""
+  default     = ""
   description = "App Gateway Name"
 }
 
 variable "azure_aag_public_ip" {
-  default = ""
+  default     = ""
   description = "Public IP For App Gateway"
 }
 
