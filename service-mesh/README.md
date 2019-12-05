@@ -2,7 +2,9 @@
 
 This section talks a bit about what a Service Mesh is, but what is a Service Mesh, and **do we need one?**
 
-A service mesh is a dedicated infrastructure layer that controls service-to-service communication over a network. It provides a method in which separate parts of an application can communicate with each other. Service meshes appear commonly in concert with cloud-based applications, containers and microservices
+A service mesh is a dedicated infrastructure layer that controls service-to-service communication over a network. It provides a method in which separate parts of an application can communicate with each other. Service meshes appear commonly in concert with cloud-based applications, containers and microservices.
+
+For more details about Service Meshes and common scenarios, read the following [About Service Meshes](https://docs.microsoft.com/en-us/azure/aks/servicemesh-about).
 
 ## Do I need a Service Mesh
 
@@ -12,33 +14,36 @@ So why that guidance? Simply put, if you don't have to add complexity then don't
 
 Now we will get down off the soapbox.
 
-## Service Mesh Overview & Typical Reasons
+## So "Why?" Service Mesh in Workshop
 
-So why even have a Service Mesh in the workshop, after all the statement above was about keeping it simple? That is true, but we also wanted to provide a perspective around Service Mesh when it comes to Governance and Security and where we think it might come into play.
+So why even have a Service Mesh in the workshop, after all the statement above was about keeping it simple? That is true, but the workshop is also focused around Governance + Security. Preventing attacks such as, man in the middle, is a common ask and needs to be protected against. For that reason, we are looking at how to bring secure communication between all of our services automatically across the cluster versus implementing it on a per service basis.
 
-Here are a few of the common reasons we hear from users as to why they need Service Mesh:
+Let's dig a bit deeper on some of the common Service Mesh scenarios highlighted from the article above.
 
-### mTLS between Services
+### Encrypte Traffic Across the Cluster (mTLS between Services)
 
-This is usually near the top of the list. Some of the questions we typically ask are do you do this today? The typical response is no, so why all of a sudden then? Which the typical response is to improve security. Ahhh, now we are getting somewhere. Instead of relying on infrastructure to secure your service, what about having the service do it? This way no matter where the service/code goes, IaaS, PaaS, in a Container, Serverless, **security travels with the application versus depending on something to be implemented.**
+This is usually near the top of the list in terms of asks. And is also one of the key **scenarios** that Service Meshes provide. Some of the questions we typically ask are do you do this today? The typical response is no, so why all of a sudden then? Which the typical response is to improve security. Ahhh, now we are getting somewhere. Instead of relying on infrastructure to secure your service, what about having the service do it? This way no matter where the service/code goes, IaaS, PaaS, in a Container, Serverless, **security travels with the application versus depending on something to be implemented.** Ok, that is great, but what about existing services or applications that need to be migrated as is. How can we do this across the entire cluster?
 
-### East/West Traffic Enforcement
+### Canary and Phased Rollouts
 
-It is definitely important to be able to govern and secure which services can talk to which services, but you don't need a Service Mesh for that. In the majority of cases this requirement can be met by simply **using NetworkPolicy which is built right into kubernetes itself.**
+Having the ability to do a rollout of a new version of an application/service is definitely important. However, do you really need a Service Mesh for that or does something as simple as the existing Ingress Controller or Cloud Gateway service provide this capability already? There is a good chance you are already using some type of Reverse Proxy technology already. Be sure to take a look at those existing capabiliteis before adding more complexity that is not warranted.
 
-### Service Observability
+### Traffic Management & Manipulation
 
-Again, we would not argue that service observability is not important, but do you need a Service Mesh for that? Similar to the mTLS argument above, what about if this was just baked into the service itself so that no matter where or how the service got deployed the observability would travel with it? There are a number of application telemetry tools out there, they are not all the same though. So evaluate the tools against your organization's requirements and find the best fit. **The key is to use one as having one in place is better than none at all.**
+It is definitely important to be able to manage traffic, but make sure you are doing it for the right reasons. If you want to do something as simple as govern and secure which services can talk to which services, you don't necessarily need a Service Mesh for that. In the majority of cases this requirement can be met by simply **using NetworkPolicy which is built right into kubernetes itself.**
 
-## Linkerd
+### Observability
+
+Again, we would not argue that service observability is not important, but do you need a Service Mesh for that? Similar to the mTLS argument above, what about if this was just baked into the service itself so that no matter where or how the service got deployed the observability would travel with it? There are a number of application telemetry tools out there, they are not all the same though. So evaluate the tools against your organization's requirements and find the best fit. **The key is to use one. Having one in place is better than none at all.**
+
+## So "Why?" Linkerd
 
 So you did not buy into the statements above, or maybe your organization has bought into some of the hype, or maybe there is a valid reason. Whichever it happens to be, there are a number of Service Meshes out there, which one is right for our organization? We are not going to get into a comparision or breakdown of all the different Service Meshes out there, that is an evaluation your organization will have to do, and make sure it is against requirements.
 
-For the purposes of this workshop we will be demonstrating Linkerd as we have found it straight forward, easy to use, and able to get it up in minutes.
+**For the purposes of this workshop, our focus is around securing communication between services, nothing else. Given that is our requirement, Linkerd was chosen for its focus on performance and minimizing impact on cluster resources.** The folllowing sections will demonstrate Linkerd as we have found it straight forward, easy to use, and able to get up and running in minutes.
 
-**Click [here](https://linkerd.io/2/getting-started/) to get the linkerd cli installed if you have not already.**
-
-**Click [here](https://linkerd.io/2/reference/architecture/)for an architectural overview.**
+* Click [here](https://linkerd.io/2/getting-started/) to get the linkerd cli installed if you have not already.
+* Click [here](https://linkerd.io/2/reference/architecture/) for an architectural overview.
 
 ### Quick Dive into Linkerd
 
@@ -88,4 +93,4 @@ linkerd dashboard
 
 ## Key Links
 
-* ???
+* [About Service Meshes](https://docs.microsoft.com/en-us/azure/aks/servicemesh-about)

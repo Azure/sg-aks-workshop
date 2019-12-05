@@ -80,4 +80,3 @@ Ok, now that we have the governance and security controls in place we are not re
 * [Azure Security Center (ASC)](https://docs.microsoft.com/en-us/azure/security-center/security-center-intro)
 * [Detecting Threats Targeting Containers with ASC](https://azure.microsoft.com/en-us/blog/detecting-threats-targeting-containers-with-azure-security-center/)
 * [Understand Azure Security Center Container Recommendations](https://docs.microsoft.com/en-us/azure/security-center/security-center-container-recommendations)
-* [Enable Kubernetes Logs](https://docs.microsoft.com/en-us/azure/aks/view-master-logs)

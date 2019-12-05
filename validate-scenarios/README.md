@@ -6,29 +6,50 @@ Now that we have implemented everything, let's go back and revisit our requireme
 
 This is a quick recap of the requirements:
 
-* Leverage Existing Identity Mgmt Solution
-* Implement Security Least Privilege Principle
-* Log Everything for Audit Reporting purposes
-* Ensure Security Controls are being met (No Drifting)
-* Monitoring and Alerting Events
+1. Leverage Existing Identity Mgmt Solution
+2. Implement Security Least Privilege Principle
+3. Log Everything for Audit Reporting purposes
+4. Ensure Security Controls are being met (No Drifting)
+5. Monitoring and Alerting Events
 
-  * Alert when SSH into Container
-  * AKS Cluster has IP whitelisting set
+    - Alert when SSH into Container
+    - Alert AKS Cluster has IP whitelisting set
 
-* Integrate with Existing SIEM
-* Deploy into Existing VNET with Ingress and Egress Restrictions
-* Resources can only be created in specific regions due to data sovereignty
-* Container Registry Whitelisting
-* Ability to Chargeback to Line of Business
-* Secrets Mgmt
-* Container Image Mgmt
-* Restrict Creation of Public IPs
-* Implement & Deploy Image Processing Application
-* Easily rollout new versions of Application
+6. Integrate with Existing SIEM
+7. Deploy into Existing VNET with Ingress and Egress Restrictions
+8. Resources can only be created in specific regions due to data sovereignty
+9. Container Registry Whitelisting
+10. Ability to Chargeback to Line of Business
+11. Secrets Mgmt
+12. Container Image Mgmt
+13. Restrict Creation of Public IPs
+14. Implement & Deploy Image Processing Application
+15. Easily rollout new versions of Application
 
-The rest of these sections shows how we can validate the requirements above:
+## Requirements to Technology Matrix
 
-## Validate - Leverage Existing Identity Mgmt Solution
+| Requirement                                                                  | Technology Used                                    | Encryption at Rest | Secure Communication in Transit |
+|------------------------------------------------------------------------------|----------------------------------------------------|--------------------|---------------------------------|
+| 1. Leverage Existing Identity Mgmt Solution                                  | Azure AD                                           | Yes                | Yes                             |
+| 2. Implement Security Least Privilege Principle                              | K8s RBAC per Namespace                             | N/A                | Yes                             |
+| 3. Log Everything for Audit Reporting purposes                               | Azure Monitor for Containers, Azure Storage        | Yes                | No                              |
+| 4. Ensure Security Controls are being met (No Drifting)                      | Flux, Git Repo                                     | No                 | No                              |
+| 5a. Alert when SSH into Container                                            | Falco                                              | N/A                | No                              |
+| 5b. Alert AKS Cluster has IP whitelisting set                                | Azure Security Center                              | Yes                | Yes                             |
+| 6. Integrate with Existing SIEM                                              | Azure Security Center                              | Yes                | Yes                             |
+| 7. Deploy into Existing VNET with Ingress and Egress Restrictions            | Azure VNET, Azure Firewall                         | N/A                | Yes                             |
+| 8. Resources can only be created in specific regions due to data sovereignty | Azure Policy                                       | N/A                | ???                             |
+| 9. Container Registry Whitelisting                                           | Open Policy Agent + Gatekeeper                     | Yes                | Yes                             |
+| 10. Ability to Chargeback to Line of Business                                | KubeCost                                           | No                 | No                              |
+| 11. Secrets Mgmt                                                             | Azure AD Pod Identity, Azure Key Vault             | Yes                | Yes                             |
+| 12. Container Image Mgmt                                                     | Anchore                                            | Yes                | ???                             |
+| 13. Restrict Creation of Public IPs                                          | Azure Policy                                       | N/A                | N/A                             |
+| 14. Implement & Deploy Image Processing Application                          | Azure Monitor for Containers, Application Insights | Yes                | Yes                             |
+| 15. Easily rollout new versions of Application                               | Kubernetes                                         | ???                | ???                             |
+
+The rest of these sections shows how we can validate the requirements above.
+
+## 1. Validate - Leverage Existing Identity Mgmt Solution
 
 * Log into AKS Cluster with Azure AD Credentials
 
@@ -44,7 +65,7 @@ kubectl get nodes
 
 ![Azure AD Authentication)](/validate-scenarios/img/aad_authentication.png)
 
-## Validate - Implement Security Least Privilege Principle
+## 2. Validate - Implement Security Least Privilege Principle
 
 * Validate Cluster Reader cannot Create Resources
 
@@ -57,7 +78,7 @@ kubectl run --generator=run-pod/v1 -it --rm centos2 --image=centos
 
 ![Cluster Reader)](/validate-scenarios/img/cluster_reader.png)
 
-## Validate - Log Everything for Audit Reporting purposes
+## 3. Validate - Log Everything for Audit Reporting purposes
 
 * Run log analytics query against AzureActivity table
 
@@ -72,7 +93,7 @@ AzureActivity
 
 ![Azure Monitor Logs Activity Log Query)](/validate-scenarios/img/monitor_logs_activity_logs.png)
 
-## Validate - Ensure Security Controls are being met (No Drifting)
+## 4. Validate - Ensure Security Controls are being met (No Drifting)
 
 * Look at Flux Logs for GitOps style Drift Configuration. As you can see from the screenshot it detects whether something has changed or not.
 
@@ -85,7 +106,7 @@ kubectl delete ns production
 kubectl logs -l app=sysdig-falco -n falco -f
 ```
 
-## Validate - Monitoring and Alerting Events
+## 5. Validate - Monitoring and Alerting Events
 
 * View Azure Security Center Compliance Dashboard
 
@@ -166,7 +187,7 @@ AzureActivity
 
 ![Azure Monitor Logs Authorized IP Query)](/validate-scenarios/img/monitor_logs_authorizedip.png)
 
-## Validate - Integrate with Existing SIEM
+## 6. Validate - Integrate with Existing SIEM
 
 * View Azure Security Center Security Solutions
 
@@ -174,7 +195,7 @@ AzureActivity
 
 ![Azure Security Center SIEM Integration)](/validate-scenarios/img/asc_security_solutions.png)
 
-## Validate - Deploy into Existing VNET with Ingress and Egress Restrictions
+## 7. Validate - Deploy into Existing VNET with Ingress and Egress Restrictions
 
 * Validate Traffic In & Out of Cluster (North/South)
 
@@ -194,7 +215,7 @@ curl http://imageclassifierweb.dev.svc.cluster.local
 
 ![East/West)](/validate-scenarios/img/east_west.png)
 
-## Validate - Resources can only be created in specific regions due to data sovereignty
+## 8. Validate - Resources can only be created in specific regions due to data sovereignty
 
 * Try to create resource outside of allowed region locations
 
@@ -205,7 +226,7 @@ az storage account create --sku Standard_LRS --kind StorageV2 --location westus 
 
 ![Create Storage in West US (Not in East US)](/validate-scenarios/img/azure_policy_not_allowed.png)
 
-## Validate - Container Registry Whitelisting
+## 9. Validate - Container Registry Whitelisting
 
 * Try to pull from a non-whitelisted Container Registry
 
@@ -216,7 +237,7 @@ kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n product
 
 ![Gatekeeper Allowed Registries](/validate-scenarios/img/gatekeeper_allowed_registries.png)
 
-## Validate - Ability to Chargeback to Line of Business
+## 10. Validate - Ability to Chargeback to Line of Business
 
 * View Chargeback Dashboard
 
@@ -229,7 +250,7 @@ open "http://localhost:9090"
 
 ![Sample Kubecost Dashboard](/validate-scenarios/img/kubecost.png)
 
-## Validate - Secrets Mgmt
+## 11. Validate - Secrets Mgmt
 
 * Check that there is no sensitive data stored in the container image or in a configuration file in plain text.
 
@@ -278,7 +299,7 @@ az keyvault secret show --name "AppSecret" --vault-name "contosofinakv"
 
 * So how does the secret get into the application then? Great question, it relies on Azure AD Pod Identity, or what we like to call Managed Pod Identity. Click [here](https://github.com/Azure/aad-pod-identity) for more details.
 
-## Validate - Container Image Mgmt
+## 12. Validate - Container Image Mgmt
 
 * Check that container images in ACR are passing image scanning policy check.
 
@@ -299,13 +320,17 @@ anchore-cli evaluate check $ACR_NAME/imageclassifierworker:v1
 
 ![Anchore Pass or Fail](/validate-scenarios/img/anchore_scan.png)
 
-## Validate - Implement & Deploy Image Processing Application
+## 13. Validate - Restrict Creation of Public IPs
+
+This is similar to #8 in that Azure Policy can be used to restrict the creation of Public IPs exception in certain Resource Groups. This was not implemented in the workshop so that Public IPs were possible to be able to test and see endpoints.
+
+## 14. Validate - Implement & Deploy Image Processing Application
 
 * Does the Application Run, Visit Public IP
 
 ![Running Application)](/validate-scenarios/img/app_running.png)
 
-## Validate - Easily rollout new versions of Application
+## 15. Validate - Easily rollout new versions of Application
 
 * Ensure the app successfully rolls out a new version of the application and does not cause any downtime.
 
