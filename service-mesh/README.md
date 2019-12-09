@@ -20,7 +20,7 @@ So why even have a Service Mesh in the workshop, after all the statement above w
 
 Let's dig a bit deeper on some of the common Service Mesh scenarios highlighted from the article above.
 
-### Encrypte Traffic Across the Cluster (mTLS between Services)
+### Encrypt Traffic Across the Cluster (mTLS between Services)
 
 This is usually near the top of the list in terms of asks. And is also one of the key **scenarios** that Service Meshes provide. Some of the questions we typically ask are do you do this today? The typical response is no, so why all of a sudden then? Which the typical response is to improve security. Ahhh, now we are getting somewhere. Instead of relying on infrastructure to secure your service, what about having the service do it? This way no matter where the service/code goes, IaaS, PaaS, in a Container, Serverless, **security travels with the application versus depending on something to be implemented.** Ok, that is great, but what about existing services or applications that need to be migrated as is. How can we do this across the entire cluster?
 
@@ -89,7 +89,7 @@ linkerd dashboard
 
 ## Next Steps
 
-[Validate Scenarios](/validate-scenarios/README.md)
+[Day 2 Operations](/day2-operations/README.md)
 
 ## Key Links
 

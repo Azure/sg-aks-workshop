@@ -24,7 +24,7 @@ The end goal is to take you from having a kubernetes setup that is unsecure by d
 
   1. [Customer Scenario](customer-scenario/README.md)
   2. [Governance and Security Setup](governance-security/README.md)
-  3. [Cluster Design](cluster-design/README.md)
+  3. [Design Thoughts](design-thoughts/README.md)
   4. [Cluster Pre-Provisioning](cluster-pre-provisioning/README.md)
   5. [Cluster Provisioning](cluster-provisioning/README.md)
   6. [Post-Provisioning](post-provisioning/README.md)
@@ -34,8 +34,9 @@ The end goal is to take you from having a kubernetes setup that is unsecure by d
   1. [Cost Governance](cost-governance/README.md)
   2. [Deploy Sample App](deploy-app/README.md)
   3. [Service Mesh - Do I need it?](service-mesh/README.md)
-  4. [Validate Scenarios](validate-scenarios/README.md)
-  5. [Thought Leadership & Next Steps](thought-leadership/README.md)
+  4. [Day 2 Operations](day2-operations/README.md)
+  5. [Validate Scenarios](validate-scenarios/README.md)
+  6. [Thought Leadership & Next Steps](thought-leadership/README.md)
 
 ## Prerequisites
 

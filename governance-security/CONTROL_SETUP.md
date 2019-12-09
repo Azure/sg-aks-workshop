@@ -69,7 +69,7 @@ Ok, now that we have the governance and security controls in place we are not re
 
 ## Next Steps
 
-[Cluster Pre-Provisioning](/cluster-design/README.md)
+[Cluster Pre-Provisioning](/design-thoughts/README.md)
 
 ## Key Links
 

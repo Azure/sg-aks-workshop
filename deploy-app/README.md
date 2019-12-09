@@ -12,7 +12,7 @@ The end result on the front-end should display what type of fruit image was proc
 
 Before we get into setting up the application, let's have a quick discussion on what container development looks like for the customer. No development environment is the same as it is not a one size fits all when it comes to doing development. Computers, OS, languages and IDEs to name a few things are hardly ever the same configuration/setup. And if you through the developer themselves in that mix it is definitely not the same.
 
-As a result, different users work in different ways. The following are just a few of the **innter devops loop** tools that we are seeing in this eco-system, feel free to try any of them out and let us know what you think. And if it hits the mark.
+As a result, different users work in different ways. The following are just a few of the **inner devops loop** tools that we are seeing in this eco-system, feel free to try any of them out and let us know what you think. And if it hits the mark.
 
 ### Tilt
 
