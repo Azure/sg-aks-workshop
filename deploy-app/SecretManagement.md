@@ -6,7 +6,7 @@ There are different options for storing, managing and integrating secrets like c
 3. Using the plain Kubernetes secrets but storing encrypted values in the Kubernetes secrets which are only encrypted at runtime
 4. Using Azure KeyVault for storing secrets and certificates and mounting them into a Kubernetes volume using the KeyVault FlexVolume driver.
 
-1. Native Kubernetes secrets
+## Native Kubernetes secrets
 While the first option of using kubernetes native secret management has the obvious advantage of simplified operations it incurs the risk of credential leakage if your cluster is breached or someone with existing cluster access uses his privileges to access to retrieve connections strings and secrets. Therefore this approach requires the lockdown of access to secrets via RBAC and a good way of recycling and upgrading secret information on a regular basis. It assumes that RBAC is turned on and all workloads are deployed into dedicated namespaces, while users and service accounts are configured to use minimal privileges within their scope. Since secrets and certificates should not be part of the normal source control repository it requires an additional process to deploy and upgrade secret values and certificates.
 
 Tradeoffs to be made:
@@ -15,7 +15,7 @@ Tradeoffs to be made:
 - native Kubernetes secretes hard to implement in a secure process involving continous deployment and upgrading
 - native Kubernetes secrets have no audit trail on secret usage
 
-2. KMS plugin for Azure KeyVault
+## KMS plugin for Azure KeyVault
 The KMS plugin for Azure KeyVault allows encryption of data at rest that is stored in etcd. This scenario enabled the encryption of secrets and certifcates with an encryption key that is stored in an instance of Azure KeyVault which is under the control of the customer. It ensures that normal Kubernetes objects can be used and does not make any assumptions on implementation patterns for the applications. While AKS ensures encryption at rest of the data in etcd, it does not allow the usage of a customer managed key. Since AKS does not support the usage of the KMS plugin, this means that the usage of KMS plugin forces the deployment of a cluster on unmanged IaaS or AKS-Engine, where customer can fully control and own the configuration of etcd.
 For further documentation see: https://github.com/Azure/kubernetes-kms
 
@@ -25,7 +25,7 @@ Tradeoffs to be made:
 - KMS plugin is not supported with managed AKS
 - KMS plugin does not support key ration scenarios.
 
-3. Sealed Secrets 
+## Sealed Secrets 
 The objective for using sealed secrets is to allow for an automated process to frequently replace secret values in Kubernetes. Therefore the cleartext values are encrypted before deployment into a Kubernetes custom resource and deployed into the right namespaces in the cluster in encrypted format. After deployment a custom controller will read the encrypted value and create an unencrypted secret within the same namespace that can now be used as expected by the pods. This process allows a decoupling of responsibilities and a secure deliver mechanism for the deployment of secrets while ensuring compatibilitiy with the Kubernetes object model.
 For further documentation see: https://github.com/bitnami-labs/sealed-secrets
 
@@ -34,7 +34,7 @@ Tradeoffs to be made:
 + Sealed secrets uses automatable tools that are only handling encrypted values
 - Sealed secrets requires a custom resource definition and custom tools to handle de/encryption
 
-4. Azure KeyVault FlexVolume
+## Azure KeyVault FlexVolume
 The usage of the Azure KeyVault Flexvolume ensures that all secret values are stored outside of the Kubernetes cluster and can be updated through an external process independant of the application deployments. All secret values will be retrieved for each pod after it has successfully authentication to the KeyVault and mounted into a memory drive which will not be persisted inside the the cluster. In combination with the AAD Pod Identity this allows for a very fine granular process of granting permissions to individual applications and changing them frequently. Since only memory values can be mounted into a pod this does not allow the usage of environment variables that are injected from Azure KeyVault values.
 
 For further documentation see: https://github.com/Azure/kubernetes-keyvault-flexvol
