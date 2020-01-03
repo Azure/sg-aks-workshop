@@ -444,5 +444,5 @@ az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
 ## Key Links
 
 * [Tilt](https://github.com/windmilleng/tilt)
-* [Telepresence](https://telepresene.io)
+* [Telepresence](https://telepresence.io)
 * [Azure Dev Spaces](https://docs.microsoft.com/en-us/azure/dev-spaces/about)
