@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "imageclassifierweb.fullname" . }}-test-connection"
+  labels:
+{{ include "imageclassifierweb.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "imageclassifierweb.fullname" . }}:{{ .Values.web.service.port }}']
+  restartPolicy: Never

@@ -164,7 +164,7 @@ This section walks through creatiing a Public IP address for use with a Web Appl
 
 ```bash
 # Create Public IP for use with WAF (Azure Application Gateway)
-az network public-ip create -g $RG -n $AGPUBLICIP_NAME -l $LOC --sku "Basic"
+az network public-ip create -g $RG -n $AGPUBLICIP_NAME -l $LOC --sku "Standard"
 ```
 
 ## Next Steps

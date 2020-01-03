@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "imageclassifierweb.fullname" . }}
+  labels:
+    {{- include "imageclassifierweb.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "imageclassifierweb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "imageclassifierweb.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "imageclassifier.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.web.image.repository }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            limits:
+              memory: 250Mi
+              cpu: 100m
+            requests:
+              memory: 100Mi
+              cpu: 50m

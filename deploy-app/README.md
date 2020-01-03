@@ -242,7 +242,7 @@ k create secret generic fruit-secret \
   --from-literal=azurestorageaccountkey=<STORAGE_ACCOUNT_KEY> \
   -n dev
 # Check to see Worker Pod is now Running
-kubectl get deploy,rs,po,svc,ingress -n dev
+kubectl get deploy,rs,po,svc,ingress,secrets -n dev
 ```
 
 The end results will look something like this.

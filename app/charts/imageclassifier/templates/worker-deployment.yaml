@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "imageclassifierworker.fullname" . }}
+  labels:
+    {{- include "imageclassifierworker.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "imageclassifierworker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "imageclassifierworker.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "imageclassifier.serviceAccountName" . }}
+      securityContext:
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.worker.image.repository }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          env:
+            - name: API_BASE_URL
+              value: http://imageclassifierweb
+          volumeMounts:
+            - mountPath: /app/assets/images
+              name: fruitshare
+          resources:
+            limits:
+              memory: 1G
+              cpu: 500m
+            requests:
+              memory: 500Mi
+              cpu: 250m
+      volumes: 
+        - name: fruitshare
+          azureFile:
+            secretName: fruit-secret
+            shareName: fruit
+            readOnly: false

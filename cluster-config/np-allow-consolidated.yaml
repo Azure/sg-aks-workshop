@@ -26,7 +26,7 @@ spec:
     - to:
       - namespaceSelector:
           matchLabels:
-            app: kube-system
+            kubernetes.io/cluster-service: "true"
         podSelector:
           matchLabels:
             k8s-app: kube-dns
@@ -71,15 +71,15 @@ spec:
       - namespaceSelector:
           matchLabels:
             app: dev
-    - ports:
-      - port: 443
-      to:
+    - to:
       - ipBlock:
           cidr: 0.0.0.0/0
+      ports:
+      - port: 443
     - to:
       - namespaceSelector:
           matchLabels:
-            app: kube-system
+            kubernetes.io/cluster-service: "true"
         podSelector:
           matchLabels:
             k8s-app: kube-dns
@@ -89,7 +89,7 @@ spec:
       - port: 53
         protocol: TCP
 ---
-kind: NetworkPolicy
+kind: NetworkPolicy 
 apiVersion: networking.k8s.io/v1
 metadata:
   name: allow-linkerd
@@ -103,23 +103,25 @@ spec:
     - from:
       - namespaceSelector: {}
         podSelector:
-          matchExpressions:
-          - key: linkerd.io/proxy-deployment
-            operator: Exists
+          matchLabels:
+            linkerd.io/control-plane-ns: linkerd
       - podSelector: {}
       - namespaceSelector:
           matchLabels:
-            app: kube-system
+            kubernetes.io/cluster-service: "true"
   egress:
     - to:
       - podSelector: {}
       - namespaceSelector:
-          matchExpressions:
-            - {key: app, operator: In, values: [dev,ingress]}
+          matchLabels:
+            app: dev
+      - namespaceSelector:
+          matchLabels:
+            app: ingress
     - to:
       - namespaceSelector:
           matchLabels:
-            app: kube-system
+            kubernetes.io/cluster-service: "true"
         podSelector:
           matchLabels:
             k8s-app: kube-dns
@@ -128,8 +130,8 @@ spec:
         protocol: UDP
       - port: 53
         protocol: TCP
-    - ports:
-      - port: 443
-      to:
+    - to:
       - ipBlock:
           cidr: 0.0.0.0/0
+      ports:
+      - port: 443
