@@ -242,7 +242,7 @@ k create secret generic fruit-secret \
   --from-literal=azurestorageaccountkey=<STORAGE_ACCOUNT_KEY> \
   -n dev
 # Check to see Worker Pod is now Running
-kubectl get deploy,rs,po,svc,ingress -n dev
+kubectl get deploy,rs,po,svc,ingress,secrets -n dev
 ```
 
 The end results will look something like this.
@@ -444,5 +444,5 @@ az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
 ## Key Links
 
 * [Tilt](https://github.com/windmilleng/tilt)
-* [Telepresence](https://telepresene.io)
+* [Telepresence](https://telepresence.io)
 * [Azure Dev Spaces](https://docs.microsoft.com/en-us/azure/dev-spaces/about)
