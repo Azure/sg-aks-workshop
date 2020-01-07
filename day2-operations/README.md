@@ -19,7 +19,11 @@ We will implement some of the topics throughout this lab where others we will ta
 
 ## Resource Management
 
-* Importance of not Starving the Cluster
+One of the important task of day 2 operations is resource management. Resource Management consist of maintaining adequate resources to serve your workloads. Kubernetes provides built in mechanisms to provide both soft and hard limits on deployed workloads. 
+
+
+
+![QoS](./img/qos.png)
 
 ## Metrics Alerts
 
