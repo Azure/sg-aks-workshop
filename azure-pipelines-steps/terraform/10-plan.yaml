@@ -1,0 +1,6 @@
+steps:
+- script: |
+    terraform plan \
+      -input=false \
+      -out=$(TF_PLAN_NAME)
+  displayName: 'Terraform Plan'

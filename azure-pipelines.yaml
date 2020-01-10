@@ -1,0 +1,67 @@
+trigger:
+- dev
+
+variables:
+  - group: dev-environment-settings
+  - group: terraform-dev-credentials
+  - name: TERRAFORM_VERSION
+    value: 0.12.13
+  - name: ARM_PROVIDER_STRICT
+    value: true
+
+stages:
+- stage: TerraformPlan
+  displayName: 'Terraform Plan'
+  jobs:
+  - job: Plan
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: $(TERRAFORM_VERSION)
+    - template: steps/terraform/00-init.yaml
+    - template: steps/terraform/10-plan.yaml
+    - publish: $(System.DefaultWorkingDirectory)/$(TF_PLAN_NAME)
+      artifact: Terraform
+
+- stage: TerraformApply
+  displayName: 'Terraform Apply'
+  jobs:
+  - deployment: Apply
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: demo
+    strategy: 
+        runOnce:
+            deploy:
+              steps:
+              - checkout: self
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  artifactName: 'Terraform'
+                  targetPath: '$(System.DefaultWorkingDirectory)'
+              - task: TerraformInstaller@0
+                inputs:
+                  terraformVersion: $(TERRAFORM_VERSION)
+              - template: steps/terraform/00-init.yaml
+              - template: steps/terraform/20-apply.yaml
+
+
+# - stage: CleanUpDevEnvironment
+#   displayName: 'Terraform Destroy'
+#   jobs:
+#   - deployment: Destroy
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     environment: demo
+#     strategy: 
+#         runOnce:
+#             deploy:
+#               steps:
+#               - checkout: self
+#               - task: TerraformInstaller@0
+#                 inputs:
+#                   terraformVersion: $(TERRAFORM_VERSION)
+#               - template: steps/terraform/00-init.yaml
+#               - template: steps/terraform/99-destroy.yaml

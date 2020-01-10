@@ -1,0 +1,13 @@
+steps:
+- script: |
+    terraform init \
+      -input=false \
+      -backend-config="client_id=$(BACKEND_CLIENT_ID)" \
+      -backend-config="client_secret=$(BACKEND_CLIENT_SECRET)" \
+      -backend-config="subscription_id=$(BACKEND_SUBSCRIPTION_ID)" \
+      -backend-config="tenant_id=$(BACKEND_TENANT_ID)" \
+      -backend-config="resource_group_name=$(BACKEND_RESOURCE_GROUP_NAME)" \
+      -backend-config="storage_account_name=$(BACKEND_STORAGE_ACCOUNT_NAME)" \
+      -backend-config="container_name=$(BACKEND_CONTAINER_NAME)" \
+      -backend-config="key=$(BACKEND_KEY)"
+  displayName: 'Terraform Init'

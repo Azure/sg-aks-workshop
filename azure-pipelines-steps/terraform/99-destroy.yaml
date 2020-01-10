@@ -1,0 +1,6 @@
+steps:
+- script: |
+    terraform destroy \
+      -input=false \
+      -auto-approve
+  displayName: 'Terraform Destroy'

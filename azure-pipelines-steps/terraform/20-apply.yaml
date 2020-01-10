@@ -1,0 +1,7 @@
+steps:
+- script: |
+    terraform apply \
+      -input=false \
+      -auto-approve \
+      $(TF_PLAN_NAME)
+  displayName: 'Terraform Apply'
