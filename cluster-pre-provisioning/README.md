@@ -205,6 +205,7 @@ az network firewall application-rule create -g $RG -f $FWNAME \
         '*.microsoftonline.com' \
         '*.monitoring.azure.com'
 
+## Optional/Required for Reaching Public Cotnainer Registries
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'AKS_Required_For_Public_Container_Registries' \
     --action allow \
@@ -240,8 +241,7 @@ az network firewall application-rule create -g $RG -f $FWNAME \
     --target-fqdns \
         '*.github.com' 
 
-# Required if using Azure DevSpaces
-## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-dev-spaces-enabled
+# Required if using Azure Key Vault over Public Internet
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'Azure_Services_Required' \
     --action allow \
@@ -252,6 +252,8 @@ az network firewall application-rule create -g $RG -f $FWNAME \
     --target-fqdns \
         '*.vault.azure.net'
 
+# Required if using Azure DevSpaces
+## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-dev-spaces-enabled
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'Azure_DevSpaces_Optional' \
     --action allow \
