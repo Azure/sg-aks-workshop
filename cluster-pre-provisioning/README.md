@@ -159,7 +159,7 @@ az network firewall application-rule create -g $RG -f $FWNAME \
     --protocols 'http=80' 'https=443' \
     --target-fqdns \
         '*.hcp.eastus.azmk8s.io' \
-        '*.tun.eastus.azmk8s.io' \
+        '*.tun.eastus.azmk8s.io'
 
 ## Optional/Recommended for AKS
 ## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#optional-recommended-addresses-and-ports-for-aks-clusters
