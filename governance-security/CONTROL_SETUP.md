@@ -1,14 +1,30 @@
-# Control Setup
+# Azure Security Controls Setup
 
-In this section we will walk through setting up the overarching security controls that we want in place regardless of technology.
+In this section we will walk through setting up the overarching security control framework specific to Azure. This section assumes organization security controls have already been established, defining those security controls is outside of the scope of this content. The focus here is on security control implementation specific to Microsoft Azure.
 
-## Quick recap of Security Controls to be Implemented
+## Azure Security Control Architecture
 
-Just a quick refresher so you don't have to navigate between pages:
+All security controls in Microsoft Azure start with and build on top of the Azure Resource Manager (ARM) api. As we can see from the diagram below, there is a service in Azure called **Azure Policy** that helps enforce policies regardless of the channel that they come in from.
+
+![Security Control Architecture](/governance-security/img/EnterpriseControlPlaneArchitecture.png)
+
+**This is important because it means organizations do not have to define policies in multiple places which helps to reduce errors when duplicating logic in multiple places.**
+
+## Security Control Governance
+
+One of the key benefits of leveraging a security control framework and architecture is it's incorporation of governance and controls auditing. For Azure, in addition to Azure Policy, this also includes Azure Security Center and its Secure Score & Compliance Dashboard features. Compliance is all about the ability to see how compliant your environment is compared to the security controls that need to be adhered too. In other words, governance observability. The following is a sample screenshot of what a Governance Compliance dashboard could look like.
+
+![Security Control Governance](/governance-security/img/EnterpriseControlPlaneGovernance.png)
+
+## Implementing Security Controls using Security Controls Lifecycle
+
+In the interests of time with respect to the workshop, we are not going to implement every security control as part of a full Azure deployment nor the Azure policies that would be used to audit the environment to ensure those controls are in place.  We are just going to implement a few so you get a feel for the flow of things. Once the process is understood it is just a matter of rising and repeating for additional security controls that align to an organization's needs.
+
+Reading through the Contoso Financials scenario we will be implementing the following to meet requirements from security:
 
 * Log All Cloud API requests for Audit Reporting purposes
-* AKS Cluster has IP whitelisting set
 * AKS Clusters can only be created in certain regions
+* AKS Cluster has IP whitelisting set
 
 Now that we know what controls we need to meet, how do we do that? The next sections will talk through implementing each of these controls.
 
