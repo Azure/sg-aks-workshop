@@ -425,6 +425,10 @@ webhooks:
       operator: NotIn
       values:
       - disabled
+    - key: control-plane
+      operator: NotIn
+      values:
+      - "true"
   clientConfig:
     service:
       name: linkerd-proxy-injector
