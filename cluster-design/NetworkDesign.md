@@ -6,13 +6,14 @@ There are different design decisions and tradeoffs that need to be evaluated for
 
 Objective:
 - Decide on the number of VNETs, subnets, IP ranges and NSGs and their configuration.
+- Decide on ingress and egress routes and ip adresses
 
 ![Network design](img/vnet-design.png)
 
 Assumptions:
 
 - We have internal peered networks that are not trustworthy
-- We have no requirements for filtering egress traffic
+- We can accept public ip adresses
 
 The key design decisions for network topology are the following:
 
@@ -20,7 +21,6 @@ The key design decisions for network topology are the following:
 - How to prevent SSH access to worker nodes from other internal networks
 - How to define an internal ingress path to applications inside the cluster
 - How to define an explicit egress path for worker nodes to the internet
-
 
 Technologies used:
 - Azure VNET
@@ -33,6 +33,7 @@ Technologies used:
 Objective:
 - Decide on the path of incoming traffic 
 - Decide on if and how you want to encrypt incoming traffic
+- Decide if an azure managed service should be used for ingress
 
 ![AppGateway Ingress](img/cluster-ingress.png)
 
@@ -51,12 +52,14 @@ Technologies used:
 Objective:
 - Decide on the need for filtering egress traffic 
 - Decide on the required egress communication paths
+- Decide on the the firewall technology
 
 ![Firewall](img/cluster-egress.png)
 
 Assumptions:
 
 - We want all egress traffic from host and pods to be subject to application and network level filtering 
+- We have a process for maintaining the list of external dependencies
 
 For deploying a fully private cluster the following design decissions have to be made:
 
@@ -66,7 +69,7 @@ For deploying a fully private cluster the following design decissions have to be
 
 Technologies used:
 
-- Azure Firewall
+- Azure Firewall or third party NVA
 - User Defined Routes
 - Azure NSG
 
