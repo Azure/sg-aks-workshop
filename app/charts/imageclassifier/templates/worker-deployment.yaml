@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
           env:
             - name: API_BASE_URL
-              value: http://imageclassifierweb
+              value: {{ .Values.worker.image.apibaseurl }}
           volumeMounts:
             - mountPath: /app/assets/images
               name: fruitshare
