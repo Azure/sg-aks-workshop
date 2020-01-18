@@ -6,7 +6,7 @@ This repo is a **WORK IN PROGRESS**.
 
 Hello, and welcome to the workshop. This is a 2-day hands-on workshop focused on setting up AKS along with additional technologies to make it adhere to the governance and security needs of highly regulated customers.
 
-The workshop runs over 2 days and is meant to take an outside in approach. Meaning, we will start from the outside of the architecture and make our way inwards. It starts with focusing on Governance and Security decisions that need to be made before a single Azure resource is  provisioned. We will then focus on decisions that need to get made prior to provisioning the cluster. Next, we will  provision the cluster along with focusing on how to deploy common components post-provisioning. Once the cluster is configured, the next steps are to actually deploy workloads. Finally when the workloads are deployed, we will focus in on Day 2 operations when it comes to managing, maintaining and provising observability into the cluster.
+The workshop runs over 2 days and is meant to take an outside in approach. Meaning, we will start from the outside of the architecture and make our way inwards. It starts with focusing on Governance and Security decisions that need to be made before a single Azure resource is provisioned. We will then focus on decisions that need to get made prior to provisioning the cluster. Next, we will  provision the cluster along with focusing on how to deploy common components post-provisioning. Once the cluster is configured, the next steps are to actually deploy workloads. Finally when the workloads are deployed, we will focus in on Day 2 operations when it comes to managing, maintaining and provising observability into the cluster.
 
 ## End Goal
 
@@ -23,8 +23,8 @@ The end goal is to take you from having a kubernetes setup that is unsecure by d
 ## Lab Guides - Day 1
 
   1. [Customer Scenario](customer-scenario/README.md)
-  2. [Governance and Security Setup](governance-security/README.md)
-  3. [Design Thoughts](design-thoughts/README.md)
+  2. [Governance and Azure Security Setup](governance-security/README.md)
+  3. [Cluster Design](cluster-design/README.md)
   4. [Cluster Pre-Provisioning](cluster-pre-provisioning/README.md)
   5. [Cluster Provisioning](cluster-provisioning/README.md)
   6. [Post-Provisioning](post-provisioning/README.md)

@@ -42,6 +42,7 @@ worker:
   image:
     repository: kevingbb/imageclassifierworker:v1
     pullPolicy: Always
+    apibaseurl: http://imageclassifierweb
   nameOverride: "imageclassifierworker"
   fullnameOverride: "imageclassifierworker"
   azurestorageaccountkey: ""

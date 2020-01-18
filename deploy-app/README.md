@@ -345,7 +345,7 @@ az role assignment create \
 az role assignment create \
     --role "Managed Identity Operator" \
     --assignee $APPID \
-    --scope /subscriptions/$SUBID/resourcegroups/contosofin-rg/providers/Microsoft.ManagedIdentity/UserAssignedIdentities/$AAD_IDENTITY
+    --scope /subscriptions/$SUBID/resourcegroups/$RG/providers/Microsoft.ManagedIdentity/UserAssignedIdentities/$AAD_IDENTITY
 ```
 
 * Now that we have the Azure AD Identity setup, the next step is to setup the access policy (RBAC) in AKV to allow or deny certain permissions to the data.
@@ -353,7 +353,7 @@ az role assignment create \
 ```bash
 # Setup Access Policy (Permissions) in AKV
 az keyvault set-policy \
-    --name contosofinakv \
+    --name ${PREFIX}akv \
     --secret-permissions list get \
     --object-id $AAD_IDENTITY_PRINCIPALID
 ```
@@ -370,9 +370,11 @@ kind: AzureIdentity
 metadata:
   name: akv-identity
   namespace: dev
+  annotations:
+    aadpodidentity.k8s.io/Behavior: namespaced
 spec:
   type: 0
-  ResourceID: /subscriptions/$SUBID/resourcegroups/contosofin-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$AAD_IDENTITY
+  ResourceID: /subscriptions/$SUBID/resourcegroups/$RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$AAD_IDENTITY
   ClientID: $AAD_IDENTITY_CLIENTID
 EOF
 # Create AAD Identity Binding

@@ -352,7 +352,8 @@ ASALocalRun/
 *.out
 
 # Plain Text Files
-*.txt
+missing.txt
+terraform.txt
 
 # App Specific
 **/keyvaultsettings.json

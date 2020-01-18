@@ -28,24 +28,24 @@ This is a quick recap of the requirements:
 
 ## Requirements to Technology Matrix
 
-| Requirement                                                                  | Technology Used                                    | Encryption at Rest | Secure Communication in Transit |
-|------------------------------------------------------------------------------|----------------------------------------------------|--------------------|---------------------------------|
-| 1. Leverage Existing Identity Mgmt Solution                                  | Azure AD                                           | Yes                | Yes                             |
-| 2. Implement Security Least Privilege Principle                              | K8s RBAC per Namespace                             | N/A                | Yes                             |
-| 3. Log Everything for Audit Reporting purposes                               | Azure Monitor for Containers, Azure Storage        | Yes                | No                              |
-| 4. Ensure Security Controls are being met (No Drifting)                      | Flux, Git Repo                                     | No                 | No                              |
-| 5a. Alert when SSH into Container                                            | Falco                                              | N/A                | No                              |
-| 5b. Alert AKS Cluster has IP whitelisting set                                | Azure Security Center                              | Yes                | Yes                             |
-| 6. Integrate with Existing SIEM                                              | Azure Security Center                              | Yes                | Yes                             |
-| 7. Deploy into Existing VNET with Ingress and Egress Restrictions            | Azure VNET, Azure Firewall                         | N/A                | Yes                             |
-| 8. Resources can only be created in specific regions due to data sovereignty | Azure Policy                                       | N/A                | ???                             |
-| 9. Container Registry Whitelisting                                           | Open Policy Agent + Gatekeeper                     | Yes                | Yes                             |
-| 10. Ability to Chargeback to Line of Business                                | KubeCost                                           | No                 | No                              |
-| 11. Secrets Mgmt                                                             | Azure AD Pod Identity, Azure Key Vault             | Yes                | Yes                             |
-| 12. Container Image Mgmt                                                     | Anchore                                            | Yes                | ???                             |
-| 13. Restrict Creation of Public IPs                                          | Azure Policy                                       | N/A                | N/A                             |
-| 14. Implement & Deploy Image Processing Application                          | Azure Monitor for Containers, Application Insights | Yes                | Yes                             |
-| 15. Easily rollout new versions of Application                               | Kubernetes                                         | ???                | ???                             |
+| Requirement                                                                  | Technology Used                                      |
+|------------------------------------------------------------------------------|------------------------------------------------------|
+| 1. Leverage Existing Identity Mgmt Solution                                  | Azure AD (AAD)                                       |
+| 2. Implement Security Least Privilege Principle                              | AAD + ARM RBAC + K8s RBAC per Namespace              |
+| 3. Log Everything for Audit Reporting purposes                               | Azure Monitor for Containers, Azure Storage          |
+| 4. Ensure Security Controls are being met (No Drifting)                      | Flux, Git Repo                                       |
+| 5a. Alert when SSH into Container                                            | Falco + Azure Monitor for Containers                 |
+| 5b. Alert AKS Cluster has IP whitelisting set                                | Azure Security Center + Azure Monitor for Containers |
+| 6. Integrate with Existing SIEM                                              | Azure Security Center or Azure Sentinel              |
+| 7. Deploy into Existing VNET with Ingress and Egress Restrictions            | Azure VNET, Azure Firewall                           |
+| 8. Resources can only be created in specific regions due to data sovereignty | Azure Policy                                         |
+| 9. Container Registry Whitelisting                                           | Open Policy Agent + OSS Version of Gatekeeper        |
+| 10. Ability to Chargeback to Line of Business                                | KubeCost                                             |
+| 11. Secrets Mgmt                                                             | Azure AD Pod Identity + Azure Key Vault              |
+| 12. Container Image Mgmt                                                     | Anchore                                              |
+| 13. Restrict Creation of Public IPs                                          | Azure Policy                                         |
+| 14. Implement & Deploy Image Processing Application                          | Azure Monitor for Containers, Application Insights   |
+| 15. Easily rollout new versions of Application                               | Kubernetes Built-in                                  |
 
 The rest of these sections shows how we can validate the requirements above.
 

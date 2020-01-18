@@ -1,20 +1,134 @@
 # Secure Network Design for AKS cluster
 
-## Network Topology
+There are different design decisions and tradeoffs that need to be evaluated for coming up with an appropriate network topology. The following sections should allow you to make decisions based on given assumptions to come up with an architecture that is combinable with other topics.
+
+## What is your subnet topology?
+
+Objective:
+- Decide on the number of VNETs, subnets, IP ranges and NSGs and their configuration.
+- Decide on ingress and egress routes and ip adresses
+
+![Network design](img/vnet-design.png)
+
+Assumptions:
+
+- We have internal peered networks that are not trustworthy
+- We can accept public ip adresses
+
 The key design decisions for network topology are the following:
-- Preventing undesired acces to the AKS API Server through the network
-- Adding an NSG on the worker nodes subnet to prevent SSH access from other internal networks
-- Adding a dedicated subnet for internal ingress load balancers
 
+- How to preventing undesired acces to the AKS API Server through the internet 
+- How to prevent SSH access to worker nodes from other internal networks
+- How to define an internal ingress path to applications inside the cluster
+- How to define an explicit egress path for worker nodes to the internet
 
-## Lockdown of API Server
-There are two options for preventing undesired access to the AKS API Server:
-- API Server Whitelisting: https://docs.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges
-- API Server using Private Link: https://docs.microsoft.com/en-gb/azure/aks/private-clusters
+Technologies used:
+- Azure VNET
+- Azure NSG
+- AKS API Server Authorized IP Ranges
+- Azure Standard Load Balancer Outbound rules
 
-## Lockdown of Ingress and Egress Traffic
-The following options for locking down ingress and egress traffic are available:
-- Forcing the egress traffic through an firewall appliance like Azure Firewall on a network level
-- Deploying an ingress controller with an integrated Web Application firewall like AppGateway on a network level
-- Using a service mesh for locking down egress on a container level
-- Using cillium to lock down egress traffic on a container level
+## Do you want to lock down ingress traffic?
+
+Objective:
+- Decide on the path of incoming traffic 
+- Decide on if and how you want to encrypt incoming traffic
+- Decide if an azure managed service should be used for ingress
+
+![AppGateway Ingress](img/cluster-ingress.png)
+
+Assumptions:
+
+- We have internal peered networks that are not trustworthy
+- We have no requirements for filtering egress traffic
+- We want to terminate SSL on the application gateway
+
+Technologies used:
+
+- Azure Application Gateway
+
+## Do you want to lock down egress traffic?
+
+Objective:
+- Decide on the need for filtering egress traffic 
+- Decide on the required egress communication paths
+- Decide on the the firewall technology
+
+![Firewall](img/cluster-egress.png)
+
+Assumptions:
+
+- We want all egress traffic from host and pods to be subject to application and network level filtering 
+- We have a process for maintaining the list of external dependencies
+
+For deploying a fully private cluster the following design decissions have to be made:
+
+- How to ensure the reachability of required azure services from the Kubernetes infrastructure
+- How to force and filter all egress traffic through a firewall appliance
+- How to expose services internally
+
+Technologies used:
+
+- Azure Firewall or third party NVA
+- User Defined Routes
+- Azure NSG
+
+## Do you want to build a fully private infrastructure?
+
+Objective:
+- Do you want to controll all control plane communictions
+- Do you want to avoid internet facing exposure
+
+![Fully private Clusters](img/private-cluster.png)
+
+Assumptions:
+
+- We do not want direct internet egress access for containerized applications
+- We have on prem resources that should communicate with the containerized apps throught a private network
+- We do not want to expose applications or control plane traffic to the internet
+
+For deploying a fully private cluster the following design decissions have to be made:
+
+- How to ensure the reachability of required azure services from the Kubernetes infrastructure
+- How to force and filter all egress traffic through a firewall appliance
+- How to ensure resolutions of private services through DNS
+
+Technologies used:
+
+- Azure firewall
+- Azure private DNS Zone
+- User Defined Routes
+
+For more detailed documentation on how to set it up see here: https://docs.microsoft.com/en-gb/azure/aks/private-clusters
+
+## Do you want to isolate multiple internal workloads against each other?
+
+Objective:
+- How to prevent internal workloads from reaching internal or internet endpoints
+
+![Pod egress limitations](img/pod-egress.png)
+
+Assumption:
+
+- We are running multiple workloads in the same cluster and want to isolate them
+- We want to control which pods can communicate inside the cluster
+- We want to control which pods can communicate with which external azure services
+- We do not want to block the host but the pods based on their labels
+
+For deploying isolated pods the following design decissions have to be made:
+
+- How do we want to define the network policy rules for internal communiation between pods
+- How do we want to define the network policy for layer 7 rules to targets outside of the cluster
+
+Technologies used:
+
+- Calico Network policies
+- Cillium Network policies
+
+## Next Steps
+
+[Cluster Design](/cluster-design/README.md)
+
+## Key Links
+
+* ???
