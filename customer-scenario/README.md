@@ -6,7 +6,6 @@ ContosoFinancial, a large Financial Services organization, provides banking and 
 
 ContosoFinancial is a mature Azure customer with the majority of their existing workloads spanning their on-prem datacenters and Cloud, mostly leveraging IaaS VMs today. They are looking to take the next step in their Azure journey and achieve a greater level of agility and flexibility through the adoption of Microservices and Containers. They also recognize that there is huge momentum in the industry towards containers and Kubernetes as the container orchestrator. They want to take advantage of that momentum while at the same time look to see if they can reduce some of the management and operations overhead that currently exists with their IaaS VMs today. This is the main reason that ContosoFinancial is looking at Azure Kubernetes Service (AKS) as it aligns to their container strategy vision and is also a managed service which will help them reduce some of their existing technical debt around management and operations.
 
-
 ## Background
 
 * Global Presence – Their customer base exists around the world so they will need presence in multiple countries/locations.
@@ -32,7 +31,9 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 * Blue/Green Deployments – ContosoFinancial wants to know the recommended practices with respect to AKS around doing blue/green deployment.
 * Phased Rollouts – ContosoFinancial  wants to know the how to implement blue/green deployment with phased rollouts and rollback capabilities?
 
-## TQNOTE:  I would describe their cloud/app/IT/security/operations setup including areas of responsibility (just top level).  This might go under background.  Will set context for who does what in the organization (e.g. who is using DataDog and why, who is using the SIEM, does the cloud architecture team review and bless an architecture and ensure it complies with internal policies/compliance requirements as set forth by the security/compliance team).  The reason I think this is important as it is the primary area where customers are incurring risk and could use a good example of how to structure a governance/security system for their organization.  I would propose the following:  
+## Areas of Responsibility
+
+This section describes who does what in the organization (e.g. who is using DataDog and why, who is using the SIEM, does the cloud architecture team review and bless an architecture and ensure it complies with internal policies/compliance requirements as set forth by the security/compliance team).
 
 * Organization - ContosoFinancial has a cloud architecture team that works closely with IT, security, secops, compliance, identity, networking and application teams as Lines of business wish to deploy systems into Azure.  The responsibilities are structured as follows:
 * Cloud architecture team: Responsible for understanding all of the Azure components - their function, integration, controls, and monitoring capabilities and how they can be integrated to meet both functional and security/compliance requirements.  They coordinate with and have representation from the IT, security, secops, compliance, identity and networking teams.  They work with lines of business from idea through deployment into production.  Their workflow aligns to Contoso's SDL process.
@@ -42,8 +43,6 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 * Compliance team:  Responsible for ensuring regulatory and industry compliance standards are met.  They work closely with the Security team and Cloud architecture team to flow down control and monitoring/auditing requirements and review designs to ensure they can be met.
 * Identity team:  Responsible for Identity and Access Management for the Azure environment, working closely with the Security and Cloud Architecture team for use of AAD, Role Based Access Controls, IAM segmentation, use of and monitoring service principles for service access, application level access (Internal, B2B, and B2C), and VM level access/Roles.  They work closely with the security and secops team to ensure requirements and appropriate controls/monitoring are in place acros their responsible areas.
 * Networking team:  Responsible for all networking for Contoso including control/monitoring of physcial and virtual networking systems.  They are solely responsbile for VNETs in Azure, Azure networking services (both first and third party) as well as connectivity to/from Corpnet.
-
-
 
 ## Requirements
 
@@ -72,4 +71,4 @@ ContosoFinancial is a mature Azure customer with the majority of their existing 
 
 ## Key Links
 
-* ???
+* [Azure Blueprints for CIS Benchmark](https://azure.microsoft.com/en-ca/blog/new-azure-blueprint-for-cis-benchmark/)
