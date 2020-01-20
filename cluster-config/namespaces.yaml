@@ -47,3 +47,10 @@ metadata:
   name: aadpodidentity
   labels:
     app: aadpodidentity
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dummy-ns
+  labels:
+    app: dummy-ns
