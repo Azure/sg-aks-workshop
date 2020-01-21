@@ -106,6 +106,10 @@ __Azure Monitor for Containers__ allows you to collect metrics, live logs, and l
 * Metrics - Typically a time series of numbers over a specific amount time
 * Logs - Used for exploratory analysis of a system or application
 
+The following screenshot describes how monitoring can be done.
+
+![Azure Monitor](./img/azuremonitoroverview.png)
+
 In the next section we'll dive into how to view live logs, create log query, and how to create an alert from the query.
 
 ## Live Logs
@@ -125,6 +129,67 @@ This is a great way of identifying error messages.
 Now in Insights 
 
 ### Creating Alerts Based on Log Query
+
+Microsoft uses a query language called Kusto, which can be used to create dashboards based on a query. The following screenshot describes these functions and how to use them:
+
+![Azure Monitor](./img/kusto.png)
+
+Now if we want to create a custom kusto query we can do the following search, but remember to change the clustername:
+
+```bash
+// **************************
+// CPU consumption
+// **************************
+KubePodInventory
+| where ClusterName == **change-me-to-my-clustername** 
+| where isnotempty(Computer) // eliminate unscheduled pods
+| where PodStatus in ('Running','Unknown')
+| summarize by bin(TimeGenerated, 1m), Computer, ClusterId, ContainerName, Namespace
+| project TimeGenerated, InstanceName = strcat(ClusterId, '/', ContainerName), Namespace
+| join (
+Perf
+| where ObjectName == 'K8SContainer'
+| where CounterName == 'cpuUsageNanoCores'
+| summarize UsageValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
+| project-away CounterName
+| join kind = fullouter 
+(Perf
+| where ObjectName == 'K8SContainer'
+| where CounterName == 'cpuRequestNanoCores'
+| summarize RequestValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
+| project-away CounterName
+) on Computer, InstanceName, TimeGenerated
+| project TimeGenerated = iif(isnotempty(TimeGenerated), TimeGenerated, TimeGenerated1), 
+          Computer = iif(isnotempty(Computer), Computer, Computer1),
+          InstanceName = iif(isnotempty(InstanceName), InstanceName, InstanceName1),
+          UsageValue = iif(isnotempty(UsageValue), UsageValue, 0.0), 
+          RequestValue = iif(isnotempty(RequestValue), RequestValue, 0.0)
+| extend ConsumedValue = iif(UsageValue > RequestValue, UsageValue, RequestValue)
+) on InstanceName, TimeGenerated
+| summarize TotalCpuConsumedCores = sum(ConsumedValue) / 60 / 1000000 by bin(TimeGenerated, 1h), Namespace
+```
+
+If we run that query with the changed clustername you should see something a la the following. In case you have multi namespaces it will also be shown.
+
+![Kusto cpu overview](./img/kusto-showing-cpu-overview.png)
+
+Here is another example where we do it based on Memory per namespace
+
+![Kusto memory overview](./img/kusto-showing-memory-based-on-namespace.png)
+
+Often we also want to create an easy way to see the state of running pods; for example if they are running or failed.
+
+The following kusto query gives you the following:
+
+```bash
+ContainerInventory
+| where TimeGenerated >= ago(30m)
+| summarize AggregatedValue = dcount(ContainerID) by ContainerState, Image
+| render columnchart 
+```
+
+![Kusto state overview](./img/kusto-showing-state-running-vs-failed.png)
+
 
 * SSH into Pod
 
