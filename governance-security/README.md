@@ -25,3 +25,4 @@ The big take-a-way from the diagram is that security controls should be treated 
 ## Key Links
 
 * [NIST 800-53 Database](https://nvd.nist.gov/800-53)
+* [Azure Blueprints for CIS Benchmark](https://azure.microsoft.com/en-ca/blog/new-azure-blueprint-for-cis-benchmark/)

@@ -429,7 +429,7 @@ kubectl apply -f appv3msi.yaml
 kubectl get AzureAssignedIdentities -n dev
 
 # Display the Application Resources
-kubectl get deploy,rs,po,svc,ingress -n dev
+kubectl get deploy,rs,po,svc,ingress,secrets -n dev
 ```
 
 * Once the pods are up and running, check via the WAF Ingress Point
