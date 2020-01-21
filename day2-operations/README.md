@@ -128,7 +128,168 @@ Now in Insights
 ## Metrics
 
 * Low Disk Space
-* Disk throttling 
+* Disk throttling
+
+## Cluster Upgrade With Node Pools
+
+With nodepools available in AKS, we have the ability to decouple the Control Plane upgrade from the nodes upgrade, and we will start by upgrading our control plane. 
+
+**Note** Before we start, at this stage you should:
+1- Be fully capable of spinning up your cluster and restore your data in case of any failure (check the backup and restore section)
+2- Know that control plane upgrades don't impact the application as its running on the nodes
+3- You know that your risk is a failure on the Control Plane and in case this happened you should go and spin up a new cluster and migrate then open a support case to understand what went wrong.
+
+
+```shell
+$ az aks upgrade -n $clustername -g $rg -k 1.14.8 --control-plane-only
+Kubernetes may be unavailable during cluster upgrades.
+Are you sure you want to perform this operation? (y/n): y
+Since control-plane-only argument is specified, this will upgrade only the control plane to 1.14.8. Node pool will not change. Continue? (y/N): y
+{
+  "aadProfile": null,
+  "addonProfiles": null,
+  "agentPoolProfiles": [
+    {
+      "availabilityZones": null,
+      "count": 1,
+      "enableAutoScaling": null,
+      "enableNodePublicIp": null,
+      "maxCount": null,
+      "maxPods": 110,
+      "minCount": null,
+      "name": "node1311",
+      "nodeTaints": null,
+      "orchestratorVersion": "1.13.11",
+      "osDiskSizeGb": 100,
+      "osType": "Linux",
+      "provisioningState": "Succeeded",
+      "scaleSetEvictionPolicy": null,
+      "scaleSetPriority": null,
+      "type": "VirtualMachineScaleSets",
+      "vmSize": "Standard_DS2_v2",
+      "vnetSubnetId": null
+    }
+  ],
+  "apiServerAccessProfile": null,
+  "dnsPrefix": "aks-nodepo-ignite-2db664",
+  "enablePodSecurityPolicy": false,
+  "enableRbac": true,
+  "fqdn": "aks-nodepo-ignite-2db664-6e9c6763.hcp.westeurope.azmk8s.io",
+  "id": "/subscriptions/2db66428-abf9-440c-852f-641430aa8173/resourcegroups/ignite/providers/Microsoft.ContainerService/managedClusters/aks-nodepools-upgrade",
+  "identity": null,
+  "kubernetesVersion": "1.14.8",
+ ....
+```
+
+**Note** The Control Plane can support N-2 kubelet on the nodes, which means 1.14 Control Plane supports 1.14,1.12, and 1.11 Kubelet. Kubelet can't be *newer* than the Control Plane. more information can be found [here](https://kubernetes.io/docs/setup/release/version-skew-policy/#kube-apiserver)
+
+Lets add a new node pool with the desired version "1.14.8"
+
+```shell
+#Warring confusing parameters :) 
+$ az aks nodepool add \
+    --cluster-name $clustername \
+    --resource-group $rg \
+    --name node1418 \
+    --node-count $node_count \
+    --node-vm-size $vmsize \
+    --kubernetes-version 1.14.8
+
+#Lets see how our nodes look like (we should 2 see 2 nodes with different K8s versions)
+$ kubectl get nodes 
+NAME                               STATUS   ROLES   AGE   VERSION
+aks-node1311-64268756-vmss000000   Ready    agent   40m   v1.13.11
+aks-node1418-64268756-vmss000000   Ready    agent   75s   v1.14.8
+```
+
+
+TEST TEST TEST, in whatever way you need to test to verify that your application will run on the new node pool, normally you will spin up a test version of your application, if things are in order then proceed to 8.
+
+Deploy your application, different options are available 
+
+* Migrate off the old nodes using cordon and drain 
+
+```shell
+#deploy a new version of your application on the new nodes, you can target the new node  pool using the "agentpool=" label which was added from AKS
+$ kubectl get nodes --show-labels
+NAME                               STATUS   ROLES   AGE   VERSION    LABELS
+aks-node1311-64268756-vmss000000   Ready    agent   57m   v1.13.11   agentpool=node1311,...
+aks-node1418-64268756-vmss000000   Ready    agent   17m   v1.14.8    agentpool=node1418,...
+```
+
+#open another shell and run the below script to see the impact of the upgrade process
+$ while true;do curl -I 51.145.184.112 2>/dev/null | head -n 1 | cut -d$' ' -f2;  done
+200
+200
+...
+
+Deploy the new app, we will change the name only and keep the labels and add node affinity
+
+```bash
+$ kubectl apply -f myapp-v2.yaml
+```
+
+Check if the pods are running, note that all the new pods are in the new node
+
+```bash
+kubectl get pods -o wide
+```
+
+```bash
+NAME                        READY   STATUS    RESTARTS   AGE   IP            NODE                               NOMINATED NODE   READINESS GATES
+myapp-v1-7bc994fccc-4wg8c   1/1     Running   0          51m   10.244.0.11   aks-node1311-64268756-vmss000000   <none>           <none>
+myapp-v1-7bc994fccc-6q65q   1/1     Running   0          51m   10.244.0.10   aks-node1311-64268756-vmss000000   <none>           <none>
+myapp-v1-7bc994fccc-g5jjz   1/1     Running   0          51m   10.244.0.8    aks-node1311-64268756-vmss000000   <none>           <none>
+myapp-v1-7bc994fccc-zpdw6   1/1     Running   0          51m   10.244.0.9    aks-node1311-64268756-vmss000000   <none>           <none>
+myapp-v2-9c8b897c7-bdtpk    1/1     Running   0          25s   10.244.1.4    aks-node1418-64268756-vmss000000   <none>           <none>
+myapp-v2-9c8b897c7-dc6bc    1/1     Running   0          25s   10.244.1.3    aks-node1418-64268756-vmss000000   <none>           <none>
+myapp-v2-9c8b897c7-kg56v    1/1     Running   0          25s   10.244.1.2    aks-node1418-64268756-vmss000000   <none>           <none>
+myapp-v2-9c8b897c7-pwfx2    1/1     Running   0          25s   10.244.1.5    aks-node1418-64268756-vmss000000   <none>           <none> 
+```
+
+Check the endpoints, note now we have 8 instead of 4
+
+```bash
+kubectl get endpoints myapp
+
+NAME    ENDPOINTS                                                 AGE
+myapp   10.244.0.10:80,10.244.0.11:80,10.244.0.8:80 + 5 more...   18m
+```
+
+Delete the old version of your application
+
+```bash
+kubectl delete -f myapp-v1.yaml
+```
+
+Check the pods, you should only see the v2.
+
+```bash
+kubectl get pods -o wide
+
+NAME                       READY   STATUS    RESTARTS   AGE    IP           NODE                               NOMINATED NODE   READINESS GATES
+myapp-v2-9c8b897c7-bdtpk   1/1     Running   0          4m1s   10.244.1.4   aks-node1418-64268756-vmss000000   <none>           <none>
+myapp-v2-9c8b897c7-dc6bc   1/1     Running   0          4m1s   10.244.1.3   aks-node1418-64268756-vmss000000   <none>           <none>
+myapp-v2-9c8b897c7-kg56v   1/1     Running   0          4m1s   10.244.1.2   aks-node1418-64268756-vmss000000   <none>           <none>
+myapp-v2-9c8b897c7-pwfx2   1/1     Running   0          4m1s   10.244.1.5   aks-node1418-64268756-vmss000000   <none>           <none>
+```
+
+You're good to cordon and drain the old node pool 
+
+```bash
+kubectl delete -f myapp-v1.yaml
+deployment.apps "myapp-v1" deleted
+```
+
+```bash
+kubectl drain aks-node1311-64268756-vmss000000 --ignore-daemonsets  --delete-local-data
+```
+
+You should see only 200s responses from the curl script running, now you  can exit the script
+
+* Deploy your application with a new service, then switch the endpoints in your DNS
+* you may not care about a slight down time, then you just cordon and drain the nodes
+
 
 ## Backup/DR
 
