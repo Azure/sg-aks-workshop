@@ -116,6 +116,10 @@ To access the live logs you will need to navigate to the Insights section of the
 
 Portal->Azure Kubernetes Service->Cluster->Insights
 
+![livelogs](./img/livelogs.png)
+
+This is a great way of identifying error messages. 
+
 [Navigation](./imglivelogsnav.png)
 
 Now in Insights 
