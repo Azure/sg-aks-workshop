@@ -196,8 +196,37 @@ ContainerInventory
 
 ## Metrics
 
-* Low Disk Space
-* Disk throttling 
+AKS also provides an out of the box metrics dashboard create. This is handy if you want a quick overview of cluster health. The following screenshot illustrates how to utilize Insights --> Health (which is still in a preview state of current writing)
+This is especially useful when identify why your cluster health is in a critical state. 
+
+![Cluster health overview](./img/cluster-health-preview.png)
+
+By clicking the Nodes tab in under Insights it also gives you the possibility to drill down the tree and expand nodes that where you might have a pod running high on CPU. In this case i 'forgot' to add limits in my manifest file during the busybox pod creation and is now using all the CPU it is asking for.
+
+![Cluster health overview](./img/identifyingpodcpuusage.png)
+
+
+
+
+
+Low Disk Space
+
+Monitoring diskspace a critital part of keeping any Kubernetes cluster alive. Enabling and selecting workbooks you get a out of box dashboard that can help you.
+
+![iops metrics](./img/metric-for-nodes.png)
+
+Here is an example of disk capacity
+![iops metrics](./img/diskcapacity.png)
+
+Disk throttling 
+
+From the Insights portal you can also view the node disk capacity. 
+
+![iops metrics](./img/dropdownmenu.png)
+
+Here is an example of bytes being written per sec.
+
+![iops metrics](./img/bytespersec.png)
 
 ## Backup/DR
 
