@@ -196,7 +196,6 @@ ContainerInventory
 
 ## Metrics
 
-<<<<<<< HEAD
 * Low Disk Space
 * Disk throttling
 
@@ -360,7 +359,6 @@ You should see only 200s responses from the curl script running, now you  can ex
 * Deploy your application with a new service, then switch the endpoints in your DNS
 * you may not care about a slight down time, then you just cordon and drain the nodes
 
-=======
 AKS also provides an out of the box metrics dashboard create. This is handy if you want a quick overview of cluster health. The following screenshot illustrates how to utilize Insights --> Health (which is still in a preview state of current writing)
 This is especially useful when identify why your cluster health is in a critical state. 
 
@@ -392,7 +390,6 @@ From the Insights portal you can also view the node disk capacity.
 Here is an example of bytes being written per sec.
 
 ![iops metrics](./img/bytespersec.png)
->>>>>>> 12c0e8dad1ecb40d75e4854d527a489dadd210a9
 
 ## Backup/DR
 
