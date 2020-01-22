@@ -239,7 +239,7 @@ az network firewall application-rule create -g $RG -f $FWNAME \
     --source-addresses '*' \
     --protocols 'https=443' \
     --target-fqdns \
-        '*.github.com' 
+        '*.github.com'
 
 # Required if using Azure Key Vault over Public Internet
 az network firewall application-rule create -g $RG -f $FWNAME \
