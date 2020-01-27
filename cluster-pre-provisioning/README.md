@@ -113,6 +113,7 @@ echo $FWPRIVATE_IP
 # Create UDR & Routing Table for Azure Firewall
 az network route-table create -g $RG --name $FWROUTE_TABLE_NAME
 az network route-table route create -g $RG --name $FWROUTE_NAME --route-table-name $FWROUTE_TABLE_NAME --address-prefix 0.0.0.0/0 --next-hop-type VirtualAppliance --next-hop-ip-address $FWPRIVATE_IP --subscription $SUBID
+
 # Add Network FW Rules
 # TCP - * - * - 9000
 # TCP - * - * - 443
@@ -125,10 +126,10 @@ az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aks
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr2' -n 'dns' --protocols 'UDP' --source-addresses '*' --destination-addresses '*' --destination-ports 53 --action allow --priority 200
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr3' -n 'gitssh' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 22 --action allow --priority 300
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr4' -n 'fileshare' --protocols 'TCP' --source-addresses '*' --destination-addresses '*' --destination-ports 445 --action allow --priority 400
-# Add Application FW Rules
 
-## Requried AKS FW Rules for Azure Global
-## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-ports-and-addresses-for-aks-clusters
+# Add Application FW Rules
+# Required AKS FW Rules
+# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-ports-and-addresses-for-aks-clusters
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'AKS_Global_Required' \
     --action allow \
@@ -147,13 +148,13 @@ az network firewall application-rule create -g $RG -f $FWNAME \
         'packages.microsoft.com' \
         'acs-mirror.azureedge.net'
 
-## Azure Public Cloud Specific
-## Change FQDN based on your Cluster's DC Location (eg. *.hcp.<location>.azmk8s.io where <location> is something like 'eastus')
-## ***NOTE:*** Azure US Gov and China will have different FQDNs
+# Azure Public Cloud Specific
+# Change FQDN based on your Cluster's DC Location (eg. *.hcp.<location>.azmk8s.io where <location> is something like 'eastus')
+# ***NOTE:*** Azure US Gov and China will have different FQDNs
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'AKS_Cloud_Specific_Required' \
     --action allow \
-    --priority 110 \
+    --priority 200 \
     -n 'required' \
     --source-addresses '*' \
     --protocols 'http=80' 'https=443' \
@@ -161,12 +162,12 @@ az network firewall application-rule create -g $RG -f $FWNAME \
         '*.hcp.eastus.azmk8s.io' \
         '*.tun.eastus.azmk8s.io'
 
-## Optional/Recommended for AKS
-## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#optional-recommended-addresses-and-ports-for-aks-clusters
+# Required for AKS Updates
+# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#optional-recommended-addresses-and-ports-for-aks-clusters
 az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_Optional_Recommended' \
+    --collection-name 'AKS_Update_Required' \
     --action allow \
-    --priority 400 \
+    --priority 300 \
     -n 'ubuntu' \
     --source-addresses '*' \
     --protocols 'http=80' 'https=443' \
@@ -175,12 +176,12 @@ az network firewall application-rule create -g $RG -f $FWNAME \
         'azure.archive.ubuntu.com' \
         'changelogs.ubuntu.com'
 
-## Optional/Required only for GPU
-## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-for-gpu-enabled-aks-clusters
+# Only Required for GPU
+# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-for-gpu-enabled-aks-clusters
 az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_Optional_GPU' \
+    --collection-name 'AKS_GPU_Optional' \
     --action allow \
-    --priority 500 \
+    --priority 400 \
     -n 'nvidia' \
     --source-addresses '*' \
     --protocols 'https=443' \
@@ -189,13 +190,13 @@ az network firewall application-rule create -g $RG -f $FWNAME \
         'us.download.nvidia.com' \
         'apt.dockerproject.org'
 
-## Optional/Required for Azure Monitor for Containers
-## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-monitor-for-containers-enabled
+# Only Required for Azure Monitor for Containers
+# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-monitor-for-containers-enabled
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'AKS_Azure_Monitor_Required' \
     --action allow \
-    --priority 600 \
-    -n 'azure_montior' \
+    --priority 500 \
+    -n 'azure_monitor' \
     --source-addresses '*' \
     --protocols 'https=443' \
     --target-fqdns \
@@ -205,9 +206,9 @@ az network firewall application-rule create -g $RG -f $FWNAME \
         '*.microsoftonline.com' \
         '*.monitoring.azure.com'
 
-## Optional/Required for Reaching Public Cotnainer Registries
+# Only Required for Reaching Public Container Registries
 az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_Required_For_Public_Container_Registries' \
+    --collection-name 'AKS_For_Public_Container_Registries_Required' \
     --action allow \
     --priority 600 \
     -n 'registries' \
@@ -252,8 +253,8 @@ az network firewall application-rule create -g $RG -f $FWNAME \
     --target-fqdns \
         '*.vault.azure.net'
 
-# Required if using Azure DevSpaces
-## https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-dev-spaces-enabled
+# Only Required if using Azure DevSpaces
+# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-dev-spaces-enabled
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'Azure_DevSpaces_Optional' \
     --action allow \
@@ -262,7 +263,7 @@ az network firewall application-rule create -g $RG -f $FWNAME \
     --source-addresses '*' \
     --protocols 'https=443' \
     --target-fqdns \
-        'azds-..azds.io'
+        '*.azds.io'
 
 # Associate AKS Subnet to FW
 az network vnet subnet update -g $RG --vnet-name $VNET_NAME --name $AKSSUBNET_NAME --route-table $FWROUTE_TABLE_NAME
