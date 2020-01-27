@@ -5,34 +5,32 @@ kind: ServiceAccount
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
-    heritage: Tiller
+    chart: nginx-ingress-1.29.5
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress
   namespace: ingress
 ---
 # Source: nginx-ingress/templates/default-backend-serviceaccount.yaml
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
-    heritage: Tiller
+    chart: nginx-ingress-1.29.5
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress-backend
   namespace: ingress
-
 ---
 # Source: nginx-ingress/templates/clusterrole.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
-    heritage: Tiller
+    chart: nginx-ingress-1.29.5
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress
 rules:
@@ -87,13 +85,13 @@ rules:
       - update
 ---
 # Source: nginx-ingress/templates/clusterrolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
-    heritage: Tiller
+    chart: nginx-ingress-1.29.5
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress
 roleRef:
@@ -106,13 +104,13 @@ subjects:
     namespace: ingress
 ---
 # Source: nginx-ingress/templates/controller-role.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
-    heritage: Tiller
+    chart: nginx-ingress-1.29.5
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress
   namespace: ingress
@@ -191,13 +189,13 @@ rules:
       - patch
 ---
 # Source: nginx-ingress/templates/controller-rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
-    heritage: Tiller
+    chart: nginx-ingress-1.29.5
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress
   namespace: ingress
@@ -211,7 +209,6 @@ subjects:
     namespace: ingress
 ---
 # Source: nginx-ingress/templates/controller-service.yaml
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -221,9 +218,9 @@ metadata:
     service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "contosofinsvcsubnet"
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
+    chart: nginx-ingress-1.29.5
     component: "controller"
-    heritage: Tiller
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress-controller
   namespace: ingress
@@ -244,18 +241,16 @@ spec:
     component: "controller"
     release: nginx-ingress
   type: "LoadBalancer"
-
 ---
 # Source: nginx-ingress/templates/default-backend-service.yaml
-
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
+    chart: nginx-ingress-1.29.5
     component: "default-backend"
-    heritage: Tiller
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress-default-backend
   namespace: ingress
@@ -270,21 +265,21 @@ spec:
     component: "default-backend"
     release: nginx-ingress
   type: "ClusterIP"
-
 ---
 # Source: nginx-ingress/templates/controller-deployment.yaml
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
+    chart: nginx-ingress-1.29.5
     component: "controller"
-    heritage: Tiller
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress-controller
   namespace: ingress
+  annotations:
+    {}
 spec:
   selector:
     matchLabels:
@@ -294,7 +289,6 @@ spec:
   revisionHistoryLimit: 10
   strategy:
     {}
-    
   minReadySeconds: 0
   template:
     metadata:
@@ -306,7 +300,7 @@ spec:
       dnsPolicy: ClusterFirst
       containers:
         - name: nginx-ingress-controller
-          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1"
+          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.27.1"
           imagePullPolicy: "IfNotPresent"
           args:
             - /nginx-ingress-controller
@@ -320,7 +314,7 @@ spec:
                 - ALL
                 add:
                 - NET_BIND_SERVICE
-            runAsUser: 33
+            runAsUser: 101
             allowPrivilegeEscalation: true
           env:
             - name: POD_NAME
@@ -365,25 +359,21 @@ spec:
             requests:
               cpu: 50m
               memory: 300Mi
-            
       hostNetwork: false
       nodeSelector:
         beta.kubernetes.io/os: linux
-        
       serviceAccountName: nginx-ingress
       terminationGracePeriodSeconds: 60
-
 ---
 # Source: nginx-ingress/templates/default-backend-deployment.yaml
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: nginx-ingress
-    chart: nginx-ingress-1.24.4
+    chart: nginx-ingress-1.29.5
     component: "default-backend"
-    heritage: Tiller
+    heritage: Helm
     release: nginx-ingress
   name: nginx-ingress-default-backend
   namespace: ingress
@@ -439,111 +429,7 @@ spec:
             requests:
               cpu: 50m
               memory: 100Mi
-            
       nodeSelector:
         beta.kubernetes.io/os: linux
-        
       serviceAccountName: nginx-ingress-backend
       terminationGracePeriodSeconds: 60
-
----
-# Source: nginx-ingress/templates/addheaders-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/clusterrole.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/clusterrolebinding.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/job-createSecret.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/job-patchWebhook.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/psp.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/role.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/rolebinding.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/job-patch/serviceaccount.yaml
-
-
----
-# Source: nginx-ingress/templates/admission-webhooks/validating-webhook.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-daemonset.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-hpa.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-metrics-service.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-poddisruptionbudget.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-prometheusrules.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-psp.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-servicemonitor.yaml
-
-
----
-# Source: nginx-ingress/templates/controller-webhook-service.yaml
-
-
----
-# Source: nginx-ingress/templates/default-backend-poddisruptionbudget.yaml
-
-
----
-# Source: nginx-ingress/templates/default-backend-psp.yaml
-
----
-# Source: nginx-ingress/templates/default-backend-role.yaml
-
----
-# Source: nginx-ingress/templates/default-backend-rolebinding.yaml
-
----
-# Source: nginx-ingress/templates/proxyheaders-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/tcp-configmap.yaml
-
-
----
-# Source: nginx-ingress/templates/udp-configmap.yaml
-
-
