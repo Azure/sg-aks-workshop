@@ -53,8 +53,7 @@ resource "azurerm_application_gateway" "network" {
     path                  = "/"
     port                  = 80
     protocol              = "Http"
-<<<<<<< HEAD
-    request_timeout       = 1
+    request_timeout       = 10
     probe_name            = "IngressControllerHealthy"
   }
 
@@ -72,9 +71,6 @@ resource "azurerm_application_gateway" "network" {
       "404"
     ] 
    }
-=======
-    request_timeout       = 10
->>>>>>> a86acd8597c0fcc245ab3a8235733ffab457ae92
   }
 
   http_listener {
