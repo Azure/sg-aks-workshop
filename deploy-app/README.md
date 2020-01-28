@@ -441,7 +441,7 @@ az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
 
 ## Next Steps
 
-[Service Mesh](/service-mesh/README.md)
+[Day 2 Operations](/day2-operations/README.md)
 
 ## Key Links
 

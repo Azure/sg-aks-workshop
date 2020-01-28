@@ -23,20 +23,21 @@ The end goal is to take you from having a kubernetes setup that is unsecure by d
 ## Lab Guides - Day 1
 
   1. [Customer Scenario](customer-scenario/README.md)
-  2. [Governance and Azure Security Setup](governance-security/README.md)
+  2. [Security, Governance & Azure Security Setup](governance-security/README.md)
   3. [Cluster Design](cluster-design/README.md)
   4. [Cluster Pre-Provisioning](cluster-pre-provisioning/README.md)
   5. [Cluster Provisioning](cluster-provisioning/README.md)
   6. [Post-Provisioning](post-provisioning/README.md)
+  7. [Cost Governance](cost-governance/README.md)
+  8. [Deploy App](deploy-app/README.md)
 
 ## Lab Guides - Day 2
 
-  1. [Cost Governance](cost-governance/README.md)
-  2. [Deploy Sample App](deploy-app/README.md)
+  1. [Deploy App](deploy-app/README.md)
+  2. [Day 2 Operations](day2-operations/README.md)
   3. [Service Mesh - Do I need it?](service-mesh/README.md)
-  4. [Day 2 Operations](day2-operations/README.md)
-  5. [Validate Scenarios](validate-scenarios/README.md)
-  6. [Thought Leadership & Next Steps](thought-leadership/README.md)
+  4. [Validate Scenarios](validate-scenarios/README.md)
+  5. [Thought Leadership](thought-leadership/README.md)
 
 ## Prerequisites
 

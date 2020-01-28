@@ -89,7 +89,7 @@ linkerd dashboard
 
 ## Next Steps
 
-[Day 2 Operations](/day2-operations/README.md)
+[Validate Scenarios](/validate-scenarios/README.md)
 
 ## Key Links
 
