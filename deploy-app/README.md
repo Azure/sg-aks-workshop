@@ -122,8 +122,8 @@ Service apiext (anchore-demo-anchore-engine-api-7866dc7fcc-nk2l7, http://anchore
 Service policy_engine (anchore-demo-anchore-engine-policy-578f59f48d-7bk9v, http://anchore-demo-anchore-engine-policy:8087): up
 Service simplequeue (anchore-demo-anchore-engine-simplequeue-5b5b89977c-nzg8r, http://anchore-demo-anchore-engine-simplequeue:8083): up
 
-Engine DB Version: 0.0.11
-Engine Code Version: 0.5.1
+Engine DB Version: 0.0.12
+Engine Code Version: 0.6.0
 ```
 
 * Connect Anchore to ACR (you will need to set these variables since they are not in the container profile)
@@ -174,12 +174,15 @@ anchore-cli image content $ACR_NAME/imageclassifierworker:v1 os
 anchore-cli repo add $ACR_NAME/imageclassifierweb --lookuptag v1
 anchore-cli repo add $ACR_NAME/imageclassifierworker --lookuptag v1
 anchore-cli repo list
+
 # Check for Active Subscriptions
 anchore-cli subscription list
+
 # Activate Vulnerability Subscription
 #anchore-cli subscription activate SUBSCRIPTION_TYPE SUBSCRIPTION_KEY
 anchore-cli subscription activate vuln_update $ACR_NAME/imageclassifierweb:v1
 anchore-cli subscription activate vuln_update $ACR_NAME/imageclassifierworker:v1
+
 # Check for Activation
 anchore-cli subscription list
 ```
@@ -191,6 +194,7 @@ anchore-cli subscription list
 # Get Policies
 anchore-cli policy list
 anchore-cli policy get 2c53a13c-1765-11e8-82ef-23527761d060 --detail
+
 # Evaluate against Policy (Pass or Fail)
 anchore-cli evaluate check $ACR_NAME/imageclassifierweb:v1
 anchore-cli evaluate check $ACR_NAME/imageclassifierworker:v1
@@ -256,8 +260,8 @@ This section will show you how to test and see if the application endpoint is up
 ```bash
 # Exec into Pod and Test Endpoint
 kubectl exec -it centos -- /bin/bash
-# Inside of the Pod test the Ingress Controller Endpoint
-curl 100.64.2.4
+# Inside of the Pod test the Ingress Controller Endpoint (Tensorflow in the page Title)
+curl -sSk 100.64.2.4 | grep -i 'TensorFlow'
 # You should have seen the contents of an HTML file dumped out. If not, you will need to troubleshoot.
 # Exit out of Pod
 exit
@@ -441,7 +445,7 @@ az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query "ipAddress" -o tsv
 
 ## Next Steps
 
-[Service Mesh](/service-mesh/README.md)
+[Day 2 Operations](/day2-operations/README.md)
 
 ## Key Links
 

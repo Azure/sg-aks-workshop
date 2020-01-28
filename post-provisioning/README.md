@@ -119,9 +119,9 @@ In this section we will setup the AKS specific policies we want to enforce. To r
 
 ```bash
 # Create Allowed Repos Constraint Template
-kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/demo/agilebank/templates/k8sallowedrepos_template.yaml
+kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/library/general/allowedrepos/template.yaml
 
-# Install Constraint Based on Template
+# Install Constraint Based on Constraint Template
 cat <<EOF | kubectl apply -f -
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sAllowedRepos

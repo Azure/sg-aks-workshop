@@ -6,14 +6,36 @@ In this section we will use [KubeCost](https://kubecost.com/) monitor and govern
 
 ## Setup
 
-We will first need to get KubeCost deployed to our cluster:
+We will first need to get KubeCost deployed to our cluster. We have the choice to install directly or using the Helm charts as documented [here](https://kubecost.com/install?ref=home).
+
+### Install directly
 
 ```bash
 # Create Kubecost Namespace
 kubectl create namespace kubecost
 # Install KubeCost into AKS Cluster
 kubectl apply -f https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/master/kubecost.yaml --namespace kubecost
-# Check to see that Everything is up and running
+```
+
+### Install with Helm
+
+```bash
+## Helm 2
+helm repo add kubecost https://kubecost.github.io/cost-analyzer/
+helm install kubecost/cost-analyzer --namespace kubecost --name kubecost --set kubecostToken="YWxnaWJib25AbWljcm9zb2Z0LmNvbQ==xm343yadf98"
+```
+
+```bash
+## Helm 3
+kubectl create namespace kubecost
+helm repo add kubecost https://kubecost.github.io/cost-analyzer/
+helm install kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostToken="YWxnaWJib25AbWljcm9zb2Z0LmNvbQ==xm343yadf98"
+```
+
+### Check your deployment
+
+```bash
+# After a few minutes check to see that everything is up and running
 kubectl get pods -n kubecost
 # Connect to the KubeCost Dashboard (UI)
 kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090:9090

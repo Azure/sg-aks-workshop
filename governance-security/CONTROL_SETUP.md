@@ -46,7 +46,7 @@ The ability to monitor whether or not an AKS Cluster has IP Whitelisting (Author
 
 A word of caution here, not all security controls that an organization wants will be able to be implemented by the Cloud Provider. The key to success here is to look at what is provided so you are not reinventing the wheel, leverage what is there to reduce technical debt. And for the pieces that are not there, you will need to build that out.
 
-Click [here](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect) for an article on how to enable Security Center Standard for an Azure Subscription.
+Click [here](https://docs.microsoft.com/en-us/azure/security-center/security-center-get-started) for an article on how to enable Security Center Standard for an Azure Subscription.
 
 This is a sample screenshot of what it looks like when completed:
 

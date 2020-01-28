@@ -16,9 +16,10 @@ This section walks us through the key considerations that need to be taken into 
 We will implement some of the topics throughout this lab where others we will talk about the different approaches you can use for day 2 Operations.
 
 ## GitOps Approach For Managing Multiple Clusters
+
 GitOps was popularized by the folks at Weaveworks, and the idea and fundamentals were based on their experience of running Kubernetes in production. GitOps takes the concepts of the software development life cycle and applies them to operations. With GitOps, yourGit repository becomes your source of truth, and your cluster is synchronized to the configured Git repository. For example, if you update a Kubernetes Deployment manifest, those configuration changes are automatically reflected in the cluster state.
 
-By using this method, you can make it easier to maintain multiple clusters that are consistent and avoid configuration drift across the fleet.GitOps allows you to declaratively describe your clusters for multiple environments and drives to maintain that state for the cluster.The practice of GitOps can apply to both application delivery and operations, but in this chapter, we focus on using it to manage clusters and operational tooling. 
+By using this method, you can make it easier to maintain multiple clusters that are consistent and avoid configuration drift across the fleet.GitOps allows you to declaratively describe your clusters for multiple environments and drives to maintain that state for the cluster.The practice of GitOps can apply to both application delivery and operations, but in this chapter, we focus on using it to manage clusters and operational tooling.
 
 Weaveworks Flux was one of the first tools to enable the GitOps approach, and it’s the tool we will use throughout the rest of the chapter. There are many new tools that have been released into the cloud-native ecosystem that are worth a look, such as Argo CD, from the folks at Intuit, which has also been widely adopted for the GitOps approach.
 
@@ -26,27 +27,22 @@ Weaveworks Flux was one of the first tools to enable the GitOps approach, and it
 
 If you remember back in the __Cluster Provisioning__ section we talked about how we used Flux to bootstrap components when we provisioned the cluster. To demonstrate how the cluster synchronizes with our git repo we will delete one of the namespaces and see how it automatically gets synchronized back to the state that is stored in Github.
 
+<<<<<<< HEAD
 First list the namespace to see which ones were configured from our git repo.
 
+=======
+>>>>>>> a86acd8597c0fcc245ab3a8235733ffab457ae92
 ```bash
+# First list the namespace to see which ones were configured from our git repo.
 kubectl get ns
-```
 
-Now we'll delete one of the namespaces.
-
-```bash
+# Now we'll delete one of the namespaces.
 kubectl delete ns dummy-ns
-```
 
-If you run the following command you'll see that the dummy-ns namespace is no longer listed.
-
-```bash
+# If you run the following command you'll see that the dummy-ns namespace is no longer listed.
 kubectl get ns
-```
 
-Now if you watch the namespace you will see it automatically appear after about 1 minutes (Sync time is configurable).
-
-```bash
+# Now if you watch the namespace you will see it automatically appear after about 1 minutes (Sync time is configurable).
 kubectl get ns -w
 ```
 
@@ -60,16 +56,16 @@ When a container does hit the limit there is different behavior from when it hit
 
 It's also important to understand how Kubernetes assigns QoS classes when scheduling pods, as it hav an effect on pod scheduling and eviction. Below is the different QoS classes that can be assigned when a pod is scheduled:
 
-* **QoS class of Guaranteed:**
-   * Every Container in the Pod must have a memory limit and a memory request, and they must be the same.
-   * Every Container in the Pod must have a CPU limit and a CPU request, and they must be the same.
+- **QoS class of Guaranteed:**
+  - Every Container in the Pod must have a memory limit and a memory request, and they must be the same.
+  - Every Container in the Pod must have a CPU limit and a CPU request, and they must be the same.
   
-* **QoS class of Burstable**
-  * The Pod does not meet the criteria for QoS class Guaranteed.
-  * At least one Container in the Pod has a memory or CPU request.
+- **QoS class of Burstable**
+  - The Pod does not meet the criteria for QoS class Guaranteed.
+  - At least one Container in the Pod has a memory or CPU request.
 
-* **QoS class of Best Effort**
-  * For a Pod to be given a QoS class of BestEffort, the Containers in the Pod must not have any memory or CPU limits or requests.
+- **QoS class of Best Effort**
+  - For a Pod to be given a QoS class of BestEffort, the Containers in the Pod must not have any memory or CPU limits or requests.
 
 Below shows a diagram depicting QoS based on request and limits.
 
@@ -80,10 +76,11 @@ Below shows a diagram depicting QoS based on request and limits.
 If you want to ensure every pod get at least a default request/limit, you can set a **LimitRange** on a namespace. If you preform the following command you can see in our cluster we have a LimitRange set on the Dev namespace.
 
 ```bash
+# Check Limit Ranges in Dev Namespace
 kubectl get limitrange dev-limit-range -n dev -o yaml
 ```
 
-You'll see that we have the following defaults:
+**You'll see that we have the following defaults:**
 
 ```yaml
 - Request
@@ -103,8 +100,8 @@ You'll see that we have the following defaults:
 
 __Azure Monitor for Containers__ allows you to collect metrics, live logs, and logs for investigative purposes. Monitoring and logging the health and performance of your Azure Kubernetes Service (AKS) cluster is important to ensure that your applications are up and running as expected. It's first important to understand the difference between __Logs__ and __Metrics__. Both serve difference purposes and are components of observability.
 
-* Metrics - Typically a time series of numbers over a specific amount time
-* Logs - Used for exploratory analysis of a system or application
+- Metrics - Typically a time series of numbers over a specific amount time
+- Logs - Used for exploratory analysis of a system or application
 
 The following screenshot describes how monitoring can be done.
 
@@ -148,11 +145,11 @@ Portal->Azure Kubernetes Service->Cluster->Insights
 
 ![livelogs](./img/livelogs.png)
 
-This is a great way of identifying error messages. 
+This is a great way of identifying error messages.
 
 [Navigation](./imglivelogsnav.png)
 
-Now in Insights 
+Now in Insights
 
 ### Creating Alerts Based on Log Query
 
@@ -211,19 +208,17 @@ The following kusto query gives you the following:
 ContainerInventory
 | where TimeGenerated >= ago(30m)
 | summarize AggregatedValue = dcount(ContainerID) by ContainerState, Image
-| render columnchart 
+| render columnchart
 ```
 
 ![Kusto state overview](./img/kusto-showing-state-running-vs-failed.png)
 
-
-* SSH into Pod
-
+- SSH into Pod
 
 ## Metrics
 
-* Low Disk Space
-* Disk throttling
+- Low Disk Space
+- Disk throttling
 
 ## Cluster Upgrade With Node Pools
 
@@ -234,7 +229,7 @@ With nodepools available in AKS, we have the ability to decouple the Control Pla
 2- Know that control plane upgrades don't impact the application as its running on the nodes
 3- You know that your risk is a failure on the Control Plane and in case this happened you should go and spin up a new cluster and migrate then open a support case to understand what went wrong.
 
-```shell
+```bash
 az aks upgrade -n ${PREFIX}-aks -g $RG -k 1.15.7 --control-plane-only
 
 Kubernetes may be unavailable during cluster upgrades.
@@ -280,7 +275,7 @@ Since control-plane-only argument is specified, this will upgrade only the contr
 
 Lets add a new node pool with the desired version "1.15.7"
 
-```shell
+```bash
 az aks nodepool add \
     --cluster-name ${PREFIX}-aks \
     --resource-group $RG \
@@ -289,22 +284,21 @@ az aks nodepool add \
     --node-vm-size Standard_DS3_v2 \
     --kubernetes-version 1.15.7
 
-#Lets check our nodepools
-```bash
+# Lets check our nodepools
 kubectl get nodes
 ```
-```
+
+```bash
 NAME                               STATUS   ROLES   AGE   VERSION
 aks-node1311-64268756-vmss000000   Ready    agent   40m   v1.15.7
 aks-node1418-64268756-vmss000000   Ready    agent   75s   v1.14.7
 ```
 
-
 TEST TEST TEST, in whatever way you need to test to verify that your application will run on the new node pool, normally you will spin up a test version of your application, if things are in order then proceed to moving workloads
 
 Now we will need to taint the existing nodepool, so no new workloads are scheduled while we migrate workloads to the new nodepool.
 
-```shell
+```bash
 kubectl taint node aks-agentpool-31778897-vmss000000 aks-agentpool-31778897-vmss000001 aks-agentpool-31778897-vmss000002 upgrade=true:NoSchedule
 ```
 
@@ -333,8 +327,8 @@ linkerd-sp-validator-747dcd685c-swsp9    2/2     Running   2          2m4s   100
 
 ## Next Steps
 
-[Validate Scenarios](/validate-scenarios/README.md)
+[Service Mesh](/service-mesh/README.md)
 
 ## Key Links
 
-* ???
+- [Setup Alerts for Performance Problems with Azure Monitor for Containers](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-alerts)

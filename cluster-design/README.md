@@ -4,11 +4,11 @@ This section walks us through some of the different thoughts/questions/topics th
 
 ## Tenancy
 
-???
+Coming Soon.
 
 ## Number of Clusters/Environments
 
-???
+Coming Soon.
 
 ## Networking Topology & Considerations
 
@@ -24,4 +24,4 @@ This section walks us through some of the different thoughts/questions/topics th
 
 ## Key Links
 
-* ???
+* N/A
