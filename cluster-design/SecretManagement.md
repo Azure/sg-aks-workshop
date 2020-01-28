@@ -2,7 +2,7 @@
 
 There are different options for storing, managing and integrating secrets like configuration settings, connection strings and certifcates for Kubernetes in Azure we want to compare and validate against different requirements:
 
-1. Using the plain Kubernetes secrets model 
+1. Using the plain Kubernetes secrets model
 2. Using the plain Kubernetes secrets model but encrypt the data in etcd using Azure KeyVault using the KMS plugin for Azure Key Vault
 3. Using the plain Kubernetes secrets but storing encrypted values in the Kubernetes secrets which are only encrypted at runtime
 4. Using Azure KeyVault for storing secrets and certificates and mounting them into a Kubernetes volume using the KeyVault FlexVolume driver.
@@ -21,7 +21,8 @@ Tradeoffs to be made:
 ## KMS plugin for Azure KeyVault
 
 The KMS plugin for Azure KeyVault allows encryption of data at rest that is stored in etcd. This scenario enabled the encryption of secrets and certifcates with an encryption key that is stored in an instance of Azure KeyVault which is under the control of the customer. It ensures that normal Kubernetes objects can be used and does not make any assumptions on implementation patterns for the applications. While AKS ensures encryption at rest of the data in etcd, it does not allow the usage of a customer managed key. Since AKS does not support the usage of the KMS plugin, this means that the usage of KMS plugin forces the deployment of a cluster on unmanged IaaS or AKS-Engine, where customer can fully control and own the configuration of etcd.
-For further documentation see: https://github.com/Azure/kubernetes-kms
+
+**For further documentation click [here](https://github.com/Azure/kubernetes-kms)**
 
 Tradeoffs to be made:
 
@@ -30,10 +31,11 @@ Tradeoffs to be made:
 - KMS plugin is not supported with managed AKS
 - KMS plugin does not support key ration scenarios.
 
-## Sealed Secrets 
+## Sealed Secrets
 
 The objective for using sealed secrets is to allow for an automated process to frequently replace secret values in Kubernetes. Therefore the cleartext values are encrypted before deployment into a Kubernetes custom resource and deployed into the right namespaces in the cluster in encrypted format. After deployment a custom controller will read the encrypted value and create an unencrypted secret within the same namespace that can now be used as expected by the pods. This process allows a decoupling of responsibilities and a secure deliver mechanism for the deployment of secrets while ensuring compatibilitiy with the Kubernetes object model.
-For further documentation see: https://github.com/bitnami-labs/sealed-secrets
+
+**For further documentation click [here](https://github.com/bitnami-labs/sealed-secrets)**
 
 Tradeoffs to be made:
 
@@ -61,4 +63,4 @@ Tradeoffs to be made:
 
 ## Key Links
 
-* ???
+- [AKS and Kubernetes Secrets](https://docs.microsoft.com/en-us/azure/aks/concepts-security#kubernetes-secrets)

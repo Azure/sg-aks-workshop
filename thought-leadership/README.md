@@ -4,9 +4,10 @@ Now to wrap things up and have you think about things that are coming down the l
 
 ## Key Areas to Ponder
 
-* Multi-Cluster Management
+* Multi-Cluster Management (Azure Arc for Kubernetes)
 * Poly or Multi-Cloud
 * Service Mesh Interface (SMI)
+* Azure Security Center + Azure Policy + AKS
 
 ## Next Steps
 
@@ -14,4 +15,5 @@ Now to wrap things up and have you think about things that are coming down the l
 
 ## Key Links
 
-* ???
+* [Azure Arc Announcement at Ignite 2019](https://azure.microsoft.com/en-au/resources/videos/run-azure-data-services-anywhere-through-azure-arc/)
+* [Service Mesh Interface](https://smi-spec.io/)

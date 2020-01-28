@@ -5,6 +5,7 @@ There are different design decisions and tradeoffs that need to be evaluated for
 ## What is your subnet topology?
 
 Objective:
+
 - Decide on the number of VNETs, subnets, IP ranges and NSGs and their configuration.
 - Decide on ingress and egress routes and ip adresses
 
@@ -23,6 +24,7 @@ The key design decisions for network topology are the following:
 - How to define an explicit egress path for worker nodes to the internet
 
 Technologies used:
+
 - Azure VNET
 - Azure NSG
 - AKS API Server Authorized IP Ranges
@@ -31,6 +33,7 @@ Technologies used:
 ## Do you want to lock down ingress traffic?
 
 Objective:
+
 - Decide on the path of incoming traffic 
 - Decide on if and how you want to encrypt incoming traffic
 - Decide if an azure managed service should be used for ingress
@@ -50,6 +53,7 @@ Technologies used:
 ## Do you want to lock down egress traffic?
 
 Objective:
+
 - Decide on the need for filtering egress traffic 
 - Decide on the required egress communication paths
 - Decide on the the firewall technology
@@ -76,6 +80,7 @@ Technologies used:
 ## Do you want to build a fully private infrastructure?
 
 Objective:
+
 - Do you want to controll all control plane communictions
 - Do you want to avoid internet facing exposure
 
@@ -104,6 +109,7 @@ For more detailed documentation on how to set it up see here: https://docs.micro
 ## Do you want to isolate multiple internal workloads against each other?
 
 Objective:
+
 - How to prevent internal workloads from reaching internal or internet endpoints
 
 ![Pod egress limitations](img/pod-egress.png)
@@ -131,4 +137,5 @@ Technologies used:
 
 ## Key Links
 
-* ???
+- [Azure CNI](https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni)
+- [Kubenet](https://docs.microsoft.com/en-us/azure/aks/configure-kubenet)
