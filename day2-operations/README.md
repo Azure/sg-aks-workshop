@@ -26,7 +26,7 @@ Weaveworks Flux was one of the first tools to enable the GitOps approach, and it
 
 If you remember back in the __Cluster Provisioning__ section we talked about how we used Flux to bootstrap components when we provisioned the cluster. To demonstrate how the cluster synchronizes with our git repo we will delete one of the namespaces and see how it automatically gets synchronized back to the state that is stored in Github.
 
-First list the namespace to see which ones were configured from our gi repo.
+First list the namespace to see which ones were configured from our git repo.
 
 ```bash
 kubectl get ns
@@ -116,9 +116,10 @@ By clicking the Nodes tab in under Insights it also gives you the possibility to
 
 ![Cluster health overview](./img/identifyingpodcpuusage.png)
 
+//TODO:
 Low Disk Space
 
-Monitoring diskspace a critital part of keeping any Kubernetes cluster alive. Enabling and selecting workbooks you get a out of box dashboard that can help you.
+Monitoring disk space a critical part of keeping any Kubernetes cluster alive. Enabling and selecting workbooks you get a out of box dashboard that can help you.
 
 ![iops metrics](./img/metric-for-nodes.png)
 
