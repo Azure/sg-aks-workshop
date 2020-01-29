@@ -4,10 +4,9 @@ Now to wrap things up and have you think about things that are coming down the l
 
 ## Key Areas to Ponder
 
-* Multi-Cluster Management (Azure Arc for Kubernetes)
-* Poly or Multi-Cloud
-* Service Mesh Interface (SMI)
-* Azure Security Center + Azure Policy + AKS
+* Multi-Cluster Mgmt - Azure Arc for Kubernetes
+* Service Mesh Mgmt - Service Mesh Interface
+* Futures of Security & Policy Mgmt - Azure Security Center + Azure Policy + AKS
 
 ## Next Steps
 
