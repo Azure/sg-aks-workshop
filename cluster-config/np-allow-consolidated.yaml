@@ -117,6 +117,9 @@ spec:
             app: dev
       - namespaceSelector:
           matchLabels:
+            app: staging
+      - namespaceSelector:
+          matchLabels:
             app: ingress
     - to:
       - namespaceSelector:
