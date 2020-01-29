@@ -13,7 +13,27 @@ tool we will use due to its maturity and level of adoption. Below is a diagram t
 
 ![GitOps Diagram](./img/gitops.png "GitOps Diagram")
 
-We will first need to setup all our variables from the last lab, so we can utilize the networking infrastructure that was setup.
+Lets first create a fork of the sg-aks-workshop repo in our own Github account.
+
+![Fork](./img/fork.png)
+
+After forking the repo you'll need to clone it locally.
+
+```bash
+git clone https://github.com/<user_name>/sg-aks-workshop
+```
+
+You'll also need to create a github personal access token that will be used to access the git repo from Flux. You can find the instructions on creating a Github personal access token below:
+
+[Github PAT Instructions](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
+
+Now change directories to the cluster-provisioning/terraform directory.
+
+```bash
+cd sg-aks-workshop/cluster-provisioning/terraform
+```
+
+We will also need to setup all our variables from the last lab, so we can utilize the networking infrastructure that was setup.
 
 ```bash
 export TF_VAR_prefix=$PREFIX
@@ -28,7 +48,7 @@ export TF_VAR_azure_aag_name=$AGNAME
 export TF_VAR_azure_aag_public_ip=$(az network public-ip show -g $RG -n $AGPUBLICIP_NAME --query id -o tsv)
 export TF_VAR_azure_vnet_name=$VNET_NAME
 export TF_VAR_github_organization=Azure
-export TF_VAR_github_token=<ask_instructor>
+export TF_VAR_github_token=<use previously created PAT token>
 export TF_VAR_aad_server_app_id=<ask_instructor>
 export TF_VAR_aad_server_app_secret=<ask_instructor>
 export TF_VAR_aad_client_app_id=<ask_instructor>
@@ -36,14 +56,6 @@ export TF_VAR_aad_tenant_id=<ask_instructor>
 ```
 
 Now that we have all of our variables stored we can initialize Terraform.
-
-First ensure you are in the Terraform directory
-
-```bash
-cd cluster-provisioning/terraform
-```
-
-Now initialize Terraform with the following command:
 
 ```bash
 terraform init
