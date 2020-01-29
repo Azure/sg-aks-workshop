@@ -148,6 +148,7 @@ resource "kubernetes_deployment" "flux" {
             "--ssh-keygen-dir=/var/fluxd/keygen",
             "--git-url=${data.github_repository.flux.ssh_clone_url}",
             "--git-branch=master",
+            "--git-poll-interval=120s",
             "--git-path=cluster-config",
           ]
         }
