@@ -10,7 +10,7 @@ The end result on the front-end should display what type of fruit image was proc
 
 ## Container Development
 
-Before we get into setting up the application, let's have a quick discussion on what container development looks like for the customer. No development environment is the same as it is not a one size fits all when it comes to doing development. Computers, OS, languages and IDEs to name a few things are hardly ever the same configuration/setup. And if you through the developer themselves in that mix it is definitely not the same.
+Before we get into setting up the application, let's have a quick discussion on what container development looks like for the customer. No development environment is the same as it is not a one size fits all when it comes to doing development. Computers, OS, languages and IDEs to name a few things are hardly ever the same configuration/setup. And if you throw the developer themselves in that mix it is definitely not the same.
 
 As a result, different users work in different ways. The following are just a few of the **inner devops loop** tools that we are seeing in this eco-system, feel free to try any of them out and let us know what you think. And if it hits the mark.
 
@@ -58,7 +58,7 @@ docker push ${PREFIX}acr.azurecr.io/imageclassifierworker:v1
 
 ## Image Vulnerability Scanning and Management
 
-One of the most important things an organization can do when adopting Containers is good image management hygience. This means that impages should be scanned prior to being deployed to a cluster. **The old saying goes, "Garbage In, Garbage Out", meaning if you deploy unsecure images to the container registry then the cluster will be deploying unsecure and potentially dangerous images.**
+One of the most important things an organization can do when adopting Containers is good image management hygene. This means that images should be scanned prior to being deployed to a cluster. **The old saying goes, "Garbage In, Garbage Out", meaning if you deploy unsecure images to the container registry then the cluster will be deploying unsecure and potentially dangerous images.**
 
 * It is critical to scan images for vulnerabilities in your environment. We recommending using a Enterprise grade tool such as [Aqua Security](https://www.aquasec.com/products/aqua-container-security-platform) or [Twistlock](https://www.twistlock.com/why-twistlock) or [SysDig Secure](https://sysdig.com/products/secure/).
 
