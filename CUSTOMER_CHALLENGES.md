@@ -19,7 +19,7 @@ One of the options for this workshop is to present the content as a bunch of cha
   9. Setup Chargeback
   10. Setup Alerting
     * Alert when SSH access into a Container
-    * Alert when AKS Cluster coes not have IP whitelisting set
+    * Alert when AKS Cluster does not have IP whitelisting set
 
 ## Prerequisites
 
