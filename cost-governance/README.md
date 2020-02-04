@@ -2,7 +2,7 @@
 
 Cost Governance is the continuous process of implementing policies to control costs. In the context of Kubernetes, there are a number of ways organizations can control and optimize their costs. These include native Kubernetes tooling to manage and govern resource usage and consumption as well as proactive monitoring and optimize the underlying infrastructure.
 
-In this section we will use [KubeCost](https://kubecost.com/) monitor and govern our AKS clyster cost. Cost allocation can be scoped to a deployment, service, label, pod, and namespace, which will give you flexibility in how you chargeback/showback users of the cluster.
+In this section, we will use [KubeCost monitor](https://kubecost.com/) and govern our AKS cluster cost. Cost allocation can be scoped to a deployment, service, label, pod, and namespace, which will give you flexibility in how you chargeback/showback users of the cluster.
 
 ## Setup
 
@@ -45,7 +45,7 @@ You now can open your browser and point to <http://127.0.0.1:9090> to open the K
 
 ## Navigating KubeCost
 
-KubeCost will break down resources into the following catagories:
+KubeCost will break down resources into the following categories:
 
 * Monthly Cluster Cost
 * Namespace Cost
@@ -60,7 +60,7 @@ If you select __Allocation__ on the left side you can dig down into the namespac
 
 ![kubecost-allocation](img/allocation.png)
 
-Now if you select  __Savings__ on the left side you can dig down into cost saving for under utilized resources. It will give you info back on under utilized nodes, pods, ans abandoned resources. It will also identify resources request that have been over provisioned within the cluster. You can see a sample below of the overview:
+Now if you select  __Savings__ on the left side you can dig down into cost-saving for underutilized resources. It will give you info back on underutilized nodes, pods, and abandoned resources. It will also identify resource requests that have been overprovisioned within the cluster. You can see a sample below of the overview:
 
 ![kubecost-savings](img/savings.png)
 
