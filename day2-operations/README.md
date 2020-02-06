@@ -144,7 +144,7 @@ Portal->Azure Kubernetes Service->Cluster->Insights
 
 This is a great way of identifying error messages.
 
-[Navigation](./imglivelogsnav.png)
+![Navigation](./img/livelogsnav.png)
 
 Now in Insights
 
