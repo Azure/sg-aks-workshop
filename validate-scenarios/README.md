@@ -53,7 +53,7 @@ The rest of these sections shows how we can validate the requirements above.
 
 - Log into AKS Cluster with Azure AD Credentials
 
-Pull down cluster configuration file and try to execute a command, you should get prompted to authenticate to Azure AD.
+Pull down the cluster configuration file and try to execute a command, you should get prompted to authenticate to Azure AD.
 
 ```bash
 # Grab K8s Config
@@ -254,7 +254,7 @@ open "http://localhost:9090"
 
 - Check that there is no sensitive data stored in the container image or in a configuration file in plain text.
 
-- The first place to start is looking at the application manifest file and we can see from looking at it that it is not storing credentials, it simply points to a Azure Key Vault Name.
+- The first place to start is looking at the application manifest file and we can see from looking at it that it is not storing credentials, it simply points to an Azure Key Vault Name.
 
 ```yaml
       containers:
@@ -347,7 +347,7 @@ This is similar to #8 in that Azure Policy can be used to restrict the creation 
 
 ![Running Application)](/validate-scenarios/img/app_running.png)
 
-## 15. Validate - Easily rollout new versions of Application
+## 15. Validate - Easily roll out new versions of Application
 
 - Ensure the app successfully rolls out a new version of the application and does not cause any downtime.
 

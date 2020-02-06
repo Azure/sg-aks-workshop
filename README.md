@@ -6,7 +6,7 @@ This repo is a **WORK IN PROGRESS**.
 
 Hello, and welcome to the workshop. This is a 2-day hands-on workshop focused on setting up AKS along with additional technologies to make it adhere to the governance and security needs of highly regulated customers.
 
-The workshop runs over 2 days and is meant to take an outside in approach. Meaning, we will start from the outside of the architecture and make our way inwards. It starts with focusing on Governance and Security decisions that need to be made before a single Azure resource is provisioned. We will then focus on decisions that need to get made prior to provisioning the cluster. Next, we will  provision the cluster along with focusing on how to deploy common components post-provisioning. Once the cluster is configured, the next steps are to actually deploy workloads. Finally when the workloads are deployed, we will focus in on Day 2 operations when it comes to managing, maintaining and provising observability into the cluster.
+The workshop runs over 2 days and is meant to take an outside in approach. Meaning, we will start from the outside of the architecture and make our way inwards. It starts with focusing on Governance and Security decisions that need to be made before a single Azure resource is provisioned. We will then focus on decisions that need to get made prior to provisioning the cluster. Next, we will provision the cluster along with focusing on how to deploy common components post-provisioning. Once the cluster is configured, the next steps are to actually deploy workloads. Finally when the workloads are deployed, we will focus in on Day 2 operations when it comes to managing, maintaining and provising observability into the cluster.
 
 ## End Goal
 
@@ -65,7 +65,7 @@ The following are the requirements to **start**.
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+the rights to use your contribution. For details, visit [https://cla.opensource.microsoft.com](https://cla.opensource.microsoft.com).
 
 When you submit a pull request, a CLA bot will automatically determine whether you need to provide
 a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
@@ -85,9 +85,9 @@ see the [LICENSE](LICENSE) file, and grant you a license to any code in the repo
 Microsoft, Windows, Microsoft Azure and/or other Microsoft products and services referenced in the documentation
 may be either trademarks or registered trademarks of Microsoft in the United States and/or other countries.
 The licenses for this project do not grant you rights to use any Microsoft names, logos, or trademarks.
-Microsoft's general trademark guidelines can be found at http://go.microsoft.com/fwlink/?LinkID=254653.
+Microsoft's general trademark guidelines can be found at [http://go.microsoft.com/fwlink/?LinkID=254653](http://go.microsoft.com/fwlink/?LinkID=254653).
 
-Privacy information can be found at https://privacy.microsoft.com/en-us/
+Privacy information can be found at [https://privacy.microsoft.com/en-us/](https://privacy.microsoft.com/en-us/)
 
 Microsoft and any contributors reserve all other rights, whether under their respective copyrights, patents,
 or trademarks, whether by implication, estoppel or otherwise.
