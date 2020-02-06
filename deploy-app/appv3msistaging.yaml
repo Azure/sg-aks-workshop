@@ -1,0 +1,181 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imageclassifierweb
+  namespace: staging
+  labels:
+    app: imageclassifierweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imageclassifierweb
+  template:
+    metadata:
+      labels:
+        app: imageclassifierweb
+        aadpodidbinding: bind-akv-identity
+    spec:
+      securityContext:
+        runAsGroup: 99
+        runAsNonRoot: true
+        runAsUser: 99
+      containers:
+      - name: imageclassifierweb
+        image: kevingbb/imageclassifierweb:v3
+        imagePullPolicy: Always
+        env:
+        - name: KeyVault__Vault
+          valueFrom:
+            secretKeyRef:
+              name: image-akv-secret
+              key: KeyVault__Vault
+        ports:
+        - name: http
+          containerPort: 5000
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        resources:
+          limits:
+            memory: 500Mi
+            cpu: 500m
+          requests:
+            memory: 250Mi
+            cpu: 250m
+      dnsPolicy: ClusterFirst
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imageclassifierweb
+  namespace: staging
+  labels:
+    app: imageclassifierweb
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: imageclassifierweb
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: imageclassifierweb
+  namespace: staging
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/upstream-vhost: imageclassifierweb.staging.svc.cluster.local:80
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_hide_header l5d-remote-ip;
+      proxy_hide_header l5d-server-id;
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: imageclassifierweb
+          servicePort: 80
+        path: "/staging/(.*)"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imageclassifierworker
+  namespace: staging
+  labels:
+    app: imageclassifierworker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imageclassifierworker
+  template:
+    metadata:
+      labels:
+        app: imageclassifierworker
+        aadpodidbinding: bind-akv-identity
+    spec:
+      securityContext:
+        runAsGroup: 99
+        runAsNonRoot: true
+        runAsUser: 99
+      containers:
+      - name: imageclassifierworker
+        image: kevingbb/imageclassifierworker:v3
+        imagePullPolicy: Always
+        env:
+        - name: API_BASE_URL
+          value: http://imageclassifierweb
+        - name: KeyVault__Vault
+          valueFrom:
+            secretKeyRef:
+              name: image-akv-secret
+              key: KeyVault__Vault
+        ports:
+        - name: http
+          containerPort: 5000
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        resources:
+          limits:
+            memory: 1.25G
+            cpu: 500m
+          requests:
+            memory: 750Mi
+            cpu: 250m
+        volumeMounts:
+        - mountPath: /app/assets/images
+          name: fruitshare
+      volumes: 
+      - name: fruitshare
+        azureFile:
+          secretName: fruit-secret
+          shareName: fruit
+          readOnly: false
+      dnsPolicy: ClusterFirst
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imageclassifierworker
+  namespace: staging
+  labels:
+    app: imageclassifierworker
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: imageclassifierworker

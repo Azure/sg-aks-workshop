@@ -4,17 +4,19 @@ This section walks us through some of the different thoughts/questions/topics th
 
 ## Tenancy
 
-???
+Coming Soon.
 
 ## Number of Clusters/Environments
 
-???
+Coming Soon.
 
 ## Networking Topology & Considerations
 
 [Network Design](/cluster-design/NetworkDesign.md)
 
 ## Secrets Management
+
+How to properly store and propagate secrets (connection strings, passwords, certificates) used by your applications
 
 [Secrets Management](/cluster-design/SecretManagement.md)
 
@@ -24,4 +26,4 @@ This section walks us through some of the different thoughts/questions/topics th
 
 ## Key Links
 
-* ???
+* N/A

@@ -51,9 +51,9 @@ The rest of these sections shows how we can validate the requirements above.
 
 ## 1. Validate - Leverage Existing Identity Mgmt Solution
 
-* Log into AKS Cluster with Azure AD Credentials
+- Log into AKS Cluster with Azure AD Credentials
 
-Pull down cluster configuration file and try to execute a command, you should get prompted to authenticate to Azure AD.
+Pull down the cluster configuration file and try to execute a command, you should get prompted to authenticate to Azure AD.
 
 ```bash
 # Grab K8s Config
@@ -67,7 +67,7 @@ kubectl get nodes
 
 ## 2. Validate - Implement Security Least Privilege Principle
 
-* Validate Cluster Reader cannot Create Resources
+- Validate Cluster Reader cannot Create Resources
 
 Authenticate to AKS using the cluster reader credentials and then try and execute a create command.
 
@@ -80,7 +80,7 @@ kubectl run --generator=run-pod/v1 -it --rm centos2 --image=centos
 
 ## 3. Validate - Log Everything for Audit Reporting purposes
 
-* Run log analytics query against AzureActivity table
+- Run log analytics query against AzureActivity table
 
 Go into Azure Monitor for Containers -> Logs and get a summary of activity logs by Resource Provider.
 
@@ -95,24 +95,24 @@ AzureActivity
 
 ## 4. Validate - Ensure Security Controls are being met (No Drifting)
 
-* Look at Flux Logs for GitOps style Drift Configuration. As you can see from the screenshot it detects whether something has changed or not.
+- Look at Flux Logs for GitOps style Drift Configuration. As you can see from the screenshot it detects whether something has changed or not.
 
 ![Flux Logs)](/validate-scenarios/img/flux_logs.png)
 
-* Delete a resource and see it get re-created. Delete the Production NS and then wait upwards of 5 mins to see that Flux re-creates the resource.
+- Delete a resource and see it get re-created. Delete the Production NS and then wait upwards of 5 mins to see that Flux re-creates the resource.
 
 ```bash
 kubectl delete ns production
-kubectl logs -l app=sysdig-falco -n falco -f
+kubectl logs -l name=flux -n flux -f
 ```
 
 ## 5. Validate - Monitoring and Alerting Events
 
-* View Azure Security Center Compliance Dashboard
+- View Azure Security Center Compliance Dashboard
 
 ![Azure Security Center Compliance Dashboard)](/validate-scenarios/img/asc_compliance_dashboard.png)
 
-* Exec into a Container and get an Alert
+- Exec into a Container and get an Alert
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -156,7 +156,7 @@ ContainerLog
 
 ![Azure Monitor Logs SSH Query)](/validate-scenarios/img/monitor_logs_ssh.png)
 
-* AKS Cluster missing IP Whitelisting
+- AKS Cluster missing IP Whitelisting
 
 **Similiar to the above we will run the following Azure Monitor queries against the Azure Security Center data to see which Policies are being met from a security perspective.**
 
@@ -189,7 +189,7 @@ AzureActivity
 
 ## 6. Validate - Integrate with Existing SIEM
 
-* View Azure Security Center Security Solutions
+- View Azure Security Center Security Solutions
 
 **Go to the Azure Portal, click on Security Center, then on the Security Solutions blade.**
 
@@ -197,7 +197,7 @@ AzureActivity
 
 ## 7. Validate - Deploy into Existing VNET with Ingress and Egress Restrictions
 
-* Validate Traffic In & Out of Cluster (North/South)
+- Validate Traffic In & Out of Cluster (North/South)
 
 ```bash
 kubectl exec -it centos -- /bin/bash
@@ -206,21 +206,21 @@ curl http://superman.com
 
 ![North/South)](/validate-scenarios/img/north_south.png)
 
-* Validate Traffic Restriction between Namespaces (East/West)
+- Validate Traffic Restriction between Namespaces (East/West)
 
 ```bash
 kubectl exec -it centos -- /bin/bash
 curl http://imageclassifierweb.dev.svc.cluster.local
+exit
 ```
 
 ![East/West)](/validate-scenarios/img/east_west.png)
 
 ## 8. Validate - Resources can only be created in specific regions due to data sovereignty
 
-* Try to create resource outside of allowed region locations
+- Try to create resource outside of allowed region locations
 
 ```bash
-kubectl exec -it centos -- /bin/bash
 az storage account create --sku Standard_LRS --kind StorageV2 --location westus -g notinallowedregions-rg -n niarsa
 ```
 
@@ -228,7 +228,7 @@ az storage account create --sku Standard_LRS --kind StorageV2 --location westus 
 
 ## 9. Validate - Container Registry Whitelisting
 
-* Try to pull from a non-whitelisted Container Registry
+- Try to pull from a non-whitelisted Container Registry
 
 ```bash
 # Test out Allowed Registry Policy Against production Namespace
@@ -239,7 +239,7 @@ kubectl run --generator=run-pod/v1 -it --rm centosprod --image=centos -n product
 
 ## 10. Validate - Ability to Chargeback to Line of Business
 
-* View Chargeback Dashboard
+- View Chargeback Dashboard
 
 ```bash
 # Do a port-forward to see Kubecost Dashboard
@@ -252,9 +252,9 @@ open "http://localhost:9090"
 
 ## 11. Validate - Secrets Mgmt
 
-* Check that there is no sensitive data stored in the container image or in a configuration file in plain text.
+- Check that there is no sensitive data stored in the container image or in a configuration file in plain text.
 
-* The first place to start is looking at the application manifest file and we can see from looking at it that it is not storing credentials, it simply points to a Azure Key Vault Name.
+- The first place to start is looking at the application manifest file and we can see from looking at it that it is not storing credentials, it simply points to an Azure Key Vault Name.
 
 ```yaml
       containers:
@@ -269,41 +269,54 @@ open "http://localhost:9090"
               key: KeyVault__Vault
 ```
 
-* The next step is to look inside the container to see if there is any configuration information.
+- The next step is to look inside the container to see if there is any configuration information.
 
 ```bash
 # Exec into Web Container for Example
 kubectl get pods -n dev
-# Grab Pod Name and use to exec into Pod
-kubectl exec -it imageclassifierweb-754f6d7b56-cx4hk -c imageclassifierweb /bin/sh
+
+# Grab Pod Name (from above) and use to exec into Pod
+kubectl exec -it imageclassifierweb-d7fdcd8bf-dphbm -n dev -c imageclassifierweb /bin/sh
 # OR
-kubectl exec -it $(k get po -l=app=imageclassifierweb -o jsonpath="{.items[0].metadata.name}") /bin/sh
+kubectl exec -it $(k get po -l=app=imageclassifierweb -n dev -o jsonpath="{.items[0].metadata.name}") -n dev -c imageclassifierweb /bin/sh
+
 # Once inside of Pod Look Around
 ls -al
+
 # Exit Out
 exit
 ```
 
 ![Secrets in Container](/validate-scenarios/img/secrets_exec.png)
 
-* Check for Sensitive values in Key Vault
+- Check for Sensitive values in Key Vault
 
 ```bash
 # Look at Secret Value in Key Vault
-az keyvault secret show --name "AppSecret" --vault-name "contosofinakv"
+az keyvault secret show --name "AppSecret" --vault-name "${PREFIX}akv"
+az keyvault secret show --name "AppInsightsInstrumentationKey" --vault-name "${PREFIX}akv"
 ```
 
 ![AppSecret in Key Vault](/validate-scenarios/img/secrets_akv.png)
 
 ![AppSecret in App](/validate-scenarios/img/secrets_app.png)
 
-* So how does the secret get into the application then? Great question, it relies on Azure AD Pod Identity, or what we like to call Managed Pod Identity. Click [here](https://github.com/Azure/aad-pod-identity) for more details.
+- So how does the secret get into the application then? Great question, it relies on Azure AD Pod Identity, or what we like to call Managed Pod Identity. Click [here](https://github.com/Azure/aad-pod-identity) for more details.
 
 ## 12. Validate - Container Image Mgmt
 
-* Check that container images in ACR are passing image scanning policy check.
+- Check that container images in ACR are passing image scanning policy check.
 
 ```bash
+# Get ACR Variable Name
+echo ACR_NAME=${PREFIX}acr.azurecr.io
+# Exec into Container
+kubectl exec -it $(kubectl get po -l app=anchore-anchore-engine -l component=analyzer -n anchore -o jsonpath='{.items[0].metadata.name}') -n anchore bash
+# Setup Variables
+ANCHORE_CLI_USER=admin
+ANCHORE_CLI_PASS=foobar
+ANCHORE_CLI_URL=http://anchore-anchore-engine-api.anchore.svc.cluster.local:8228/v1/
+
 # Wait for all images to be "analyzed"
 anchore-cli image list
 
@@ -313,9 +326,13 @@ anchore-cli subscription list
 # Get Policies
 anchore-cli policy list
 
-# Evaluate against Policy (Pass or Fail)
+# Evaluate against Policy (Pass or Fail) Using ACR_NAME From Above
+ACR_NAME=...
 anchore-cli evaluate check $ACR_NAME/imageclassifierweb:v1
 anchore-cli evaluate check $ACR_NAME/imageclassifierworker:v1
+
+# Exit out of Pod
+exit
 ```
 
 ![Anchore Pass or Fail](/validate-scenarios/img/anchore_scan.png)
@@ -326,28 +343,32 @@ This is similar to #8 in that Azure Policy can be used to restrict the creation 
 
 ## 14. Validate - Implement & Deploy Image Processing Application
 
-* Does the Application Run, Visit Public IP
+- Does the Application Run, Visit Public IP
 
 ![Running Application)](/validate-scenarios/img/app_running.png)
 
-## 15. Validate - Easily rollout new versions of Application
+## 15. Validate - Easily roll out new versions of Application
 
-* Ensure the app successfully rolls out a new version of the application and does not cause any downtime.
+- Ensure the app successfully rolls out a new version of the application and does not cause any downtime.
 
 ```bash
 # Check Deployment History
 kubectl rollout history deploy imageclassifierweb -n dev
-# Apply a new version of the application
+
+# Make a change to the Manifest File & Apply a new version of the application
+# Hint: Change registry to ACR
 kubectl apply -f appv3msi.yaml
+
 # Watch the Rollout
 kubectl rollout status deploy imageclassifierweb -n dev
+
 # Check Deployment History Again
 kubectl rollout history deploy imageclassifierweb -n dev
 ```
 
 ![Deployment Rollout](/validate-scenarios/img/rollout_app.png)
 
-* Test the app to make sure it continues to work.
+- Test the app to make sure it continues to work.
 
 ## Next Steps
 
@@ -355,7 +376,7 @@ kubectl rollout history deploy imageclassifierweb -n dev
 
 ## Key Links
 
-* [Collect and Analyze Azure Activity Logs](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect)
-* [How to setup Azure Monitor for Container Alerts](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-alerts)
-* [How to query logs from Azure Monitor for Containers](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-log-search)
-* [How to update Azure Monitor for Containers to Enable Metrics](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-update-metrics)
+- [Collect and Analyze Azure Activity Logs](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect)
+- [How to setup Azure Monitor for Container Alerts](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-alerts)
+- [How to query logs from Azure Monitor for Containers](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-log-search)
+- [How to update Azure Monitor for Containers to Enable Metrics](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-update-metrics)

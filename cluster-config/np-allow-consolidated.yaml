@@ -71,6 +71,9 @@ spec:
       - namespaceSelector:
           matchLabels:
             app: dev
+      - namespaceSelector:
+          matchLabels:
+            app: staging
     - to:
       - ipBlock:
           cidr: 0.0.0.0/0
@@ -115,6 +118,9 @@ spec:
       - namespaceSelector:
           matchLabels:
             app: dev
+      - namespaceSelector:
+          matchLabels:
+            app: staging
       - namespaceSelector:
           matchLabels:
             app: ingress
