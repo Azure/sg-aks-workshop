@@ -143,6 +143,7 @@ az network firewall application-rule create -g $RG -f $FWNAME \
         '*blob.core.windows.net' \
         'mcr.microsoft.com' \
         '*cdn.mscr.io' \
+        '*.data.mcr.microsoft.com' \
         'management.azure.com' \
         'login.microsoftonline.com' \
         'ntp.ubuntu.com' \
