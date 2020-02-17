@@ -89,13 +89,13 @@ kubectl get limitrange dev-limit-range -n dev -o yaml
   - Memory = 512Mi
 ```
 
-**It can't be stated enough of the importance of request and limits to ensure you cluster is in a healthy state. You can read more on these topics in the **Key Links** at the end of this lab.**
+**It can't be stated enough of the importance of requests and limits to ensure your cluster is in a healthy state. You can read more on these topics in the **Key Links** at the end of this lab.**
 
 ## Scaling Resources
 
 ## Logging And Alerts
 
-__Azure Monitor for Containers__ allows you to collect metrics, live logs, and logs for investigative purposes. Monitoring and logging the health and performance of your Azure Kubernetes Service (AKS) cluster is important to ensure that your applications are up and running as expected. It's first important to understand the difference between __Logs__ and __Metrics__. Both serve difference purposes and are components of observability.
+__Azure Monitor for Containers__ allows you to collect metrics, live logs, and logs for investigative purposes. Monitoring and logging the health and performance of your Azure Kubernetes Service (AKS) cluster is important to ensure that your applications are up and running as expected. It's first important to understand the difference between __Logs__ and __Metrics__. Both serve different purposes and are components of observability.
 
 - Metrics - Typically a time series of numbers over a specific amount time
 - Logs - Used for exploratory analysis of a system or application
@@ -106,7 +106,7 @@ The following screenshot describes how monitoring can be done.
 
 ![Cluster health overview](./img/cluster-health-preview.png)
 
-By clicking the Nodes tab in under Insights it also gives you the possibility to drill down the tree and expand nodes that where you might have a pod running high on CPU. In this case i 'forgot' to add limits in my manifest file during the busybox pod creation and is now using all the CPU it is asking for.
+By clicking the Nodes tab in under Insights it also gives you the possibility to drill down the tree and expand nodes that where you might have a pod running high on CPU. In this case, I 'forgot' to add limits in my manifest file during the busybox pod creation and is now using all the CPU it is asking for.
 
 ![Cluster health overview](./img/identifyingpodcpuusage.png)
 
@@ -130,7 +130,7 @@ Here is an example of bytes being written per sec.
 
 ![iops metrics](./img/bytespersec.png)
 
-In the next section we'll dive into how to view live logs, create log query, and how to create an alert from the query.
+In the next section, we'll dive into how to view live logs, create log query, and how to create an alert from the query.
 
 ## Live Logs
 
@@ -144,7 +144,7 @@ Portal->Azure Kubernetes Service->Cluster->Insights
 
 This is a great way of identifying error messages.
 
-[Navigation](./imglivelogsnav.png)
+![Navigation](./img/livelogsnav.png)
 
 Now in Insights
 
@@ -154,7 +154,7 @@ Microsoft uses a query language called Kusto, which can be used to create dashbo
 
 ![Azure Monitor](./img/kusto.png)
 
-Now if we want to create a custom kusto query we can do the following search, but remember to change the clustername:
+Now if we want to create a custom Kusto query we can do the following search, but remember to change the cluster name:
 
 ```bash
 // **************************
@@ -189,7 +189,7 @@ Perf
 | summarize TotalCpuConsumedCores = sum(ConsumedValue) / 60 / 1000000 by bin(TimeGenerated, 1h), Namespace
 ```
 
-If we run that query with the changed clustername you should see something a la the following. In case you have multi namespaces it will also be shown.
+If we run that query with the changed cluster name you should see something a la the following. In case you have multi namespaces it will also be shown.
 
 ![Kusto cpu overview](./img/kusto-showing-cpu-overview.png)
 
@@ -197,9 +197,9 @@ Here is another example where we do it based on Memory per namespace
 
 ![Kusto memory overview](./img/kusto-showing-memory-based-on-namespace.png)
 
-Often we also want to create an easy way to see the state of running pods; for example if they are running or failed.
+Often we also want to create an easy way to see the state of running pods; for example, if they are running or failed.
 
-The following kusto query gives you the following:
+The following Kusto query gives you the following:
 
 ```bash
 ContainerInventory
@@ -219,7 +219,7 @@ ContainerInventory
 
 ## Cluster Upgrade With Node Pools
 
-With nodepools available in AKS, we have the ability to decouple the Control Plane upgrade from the nodes upgrade, and we will start by upgrading our control plane. 
+With nodepools available in AKS, we have the ability to decouple the Control Plane upgrade from the nodes upgrade, and we will start by upgrading our control plane.
 
 **Note** Before we start, at this stage you should:
 1- Be fully capable of spinning up your cluster and restore your data in case of any failure (check the backup and restore section)
@@ -270,7 +270,7 @@ Since control-plane-only argument is specified, this will upgrade only the contr
 
 **Note** The Control Plane can support N-2 kubelet on the nodes, which means 1.15 Control Plane supports 1.14, and 1.12 Kubelet. Kubelet can't be *newer* than the Control Plane. more information can be found [here](https://kubernetes.io/docs/setup/release/version-skew-policy/#kube-apiserver)
 
-Lets add a new node pool with the desired version "1.15.7"
+Let's add a new node pool with the desired version "1.15.7"
 
 ```bash
 az aks nodepool add \
@@ -291,7 +291,7 @@ aks-node1311-64268756-vmss000000   Ready    agent   40m   v1.15.7
 aks-node1418-64268756-vmss000000   Ready    agent   75s   v1.14.7
 ```
 
-TEST TEST TEST, in whatever way you need to test to verify that your application will run on the new node pool, normally you will spin up a test version of your application, if things are in order then proceed to moving workloads
+TEST TEST TEST, in whatever way you need to test to verify that your application will run on the new node pool, normally you will spin up a test version of your application; if things are in order then proceed to move workloads
 
 Now we will need to taint the existing nodepool, so no new workloads are scheduled while we migrate workloads to the new nodepool.
 

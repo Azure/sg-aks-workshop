@@ -16,6 +16,8 @@ Coming Soon.
 
 ## Secrets Management
 
+How to properly store and propagate secrets (connection strings, passwords, certificates) used by your applications
+
 [Secrets Management](/cluster-design/SecretManagement.md)
 
 ## Next Steps

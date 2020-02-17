@@ -10,19 +10,19 @@ The end result on the front-end should display what type of fruit image was proc
 
 ## Container Development
 
-Before we get into setting up the application, let's have a quick discussion on what container development looks like for the customer. No development environment is the same as it is not a one size fits all when it comes to doing development. Computers, OS, languages and IDEs to name a few things are hardly ever the same configuration/setup. And if you throw the developer themselves in that mix it is definitely not the same.
+Before we get into setting up the application, let's have a quick discussion on what container development looks like for the customer. No development environment is the same as it is not a one size fits all when it comes to doing development. Computers, OS, languages, and IDEs to name a few things are hardly ever the same configuration/setup. And if you throw the developer themselves in that mix it is definitely not the same.
 
 As a result, different users work in different ways. The following are just a few of the **inner devops loop** tools that we are seeing in this eco-system, feel free to try any of them out and let us know what you think. And if it hits the mark.
 
 ### Tilt
 
-Tilt is a cli tool used for local continuous development of microservice applications. Tilt watches your files for edits with tilt up, and then automatically builds, pushes, and deploys any changes to bring your environment up-to-date in real-time. Tilt provides visibility into your microservices with a command line UI. In addition to monitoring deployment success, the UI also shows logs and other helpful information about your deployments.
+Tilt is a CLI tool used for local continuous development of microservice applications. Tilt watches your files for edits with tilt up, and then automatically builds, pushes, and deploys any changes to bring your environment up-to-date in real-time. Tilt provides visibility into your microservices with a command-line UI. In addition to monitoring deployment success, the UI also shows logs and other helpful information about your deployments.
 
 Click [here](https://github.com/windmilleng/tilt) for more details and to try it out.
 
 ### Telepresence
 
-Telepresence is an open source tool that lets you run a single service locally, while connecting that service to a remote Kubernetes cluster. This lets developers working on multi-service applications to:
+Telepresence is an open-source tool that lets you run a single service locally, while connecting that service to a remote Kubernetes cluster. This lets developers working on multi-service applications to:
 
 1. Do fast local development of a single service, even if that service depends on other services in your cluster. Make a change to your service, save, and you can immediately see the new service in action.
 2. Use any tool installed locally to test/debug/edit your service. For example, you can use a debugger or IDE!
@@ -58,15 +58,15 @@ docker push ${PREFIX}acr.azurecr.io/imageclassifierworker:v1
 
 ## Image Vulnerability Scanning and Management
 
-One of the most important things an organization can do when adopting Containers is good image management hygene. This means that images should be scanned prior to being deployed to a cluster. **The old saying goes, "Garbage In, Garbage Out", meaning if you deploy unsecure images to the container registry then the cluster will be deploying unsecure and potentially dangerous images.**
+One of the most important things an organization can do when adopting Containers is good image management hygiene. This means that images should be scanned prior to being deployed to a cluster. **The old saying goes, "Garbage In, Garbage Out", meaning if you deploy unsecure images to the container registry then the cluster will be deploying unsecure and potentially dangerous images.**
 
-* It is critical to scan images for vulnerabilities in your environment. We recommending using a Enterprise grade tool such as [Aqua Security](https://www.aquasec.com/products/aqua-container-security-platform) or [Twistlock](https://www.twistlock.com/why-twistlock) or [SysDig Secure](https://sysdig.com/products/secure/).
+* It is critical to scan images for vulnerabilities in your environment. We recommending using a Enterprise-grade tool such as [Aqua Security](https://www.aquasec.com/products/aqua-container-security-platform) or [Twistlock](https://www.twistlock.com/why-twistlock) or [SysDig Secure](https://sysdig.com/products/secure/).
 
 * These tools should be integrated into the CI/CD pipeline, Container Registry, and container runtimes to provide end-to-end protection. Review full guidance here: [https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-container-image-management](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-container-image-management)
 
 * For the purposes of this workshop we will be using Anchore for some quick testing. [https://anchore.com/opensource](https://anchore.com/opensource)
 
-* Install anchore with Helm.
+* Install **Anchore** with Helm.
 
 ```bash
 # Check Helm Client Version (Assumes >= v3.0.0)
@@ -220,7 +220,7 @@ open "http://localhost:8228/v1/ui/"
 
 ## Deploy Application
 
-There is an app.yaml file in this directory so either change into this directory or copy the contents of the file to a filename of your choice. Once you have completed the previous step apply the manifest file and you will get the web and worker services deployed into the **dev** namespace.
+There is an app.yaml file in this directory so either change into this directory or copy the contents of the file to a filename of your choice. Once you have completed the previous step, apply the manifest file and you will get the web and worker services deployed into the **dev** namespace.
 
 ```bash
 # Navigate to deploy-app Directory
@@ -233,7 +233,7 @@ kubectl get deploy,rs,po,svc,ingress -n dev
 
 ### File Share Setup
 
-You will notice that some of the pods are not starting up, this is because a secret is missing, the secret to access Azure Files. Please talk to your proctors to get the proper credentials or feel free to setup your own Azure Files and upload the sample fruit images in this repo directory.
+You will notice that some of the pods are not starting up, this is because a secret is missing, the secret to access Azure Files. Please talk to your proctors to get the proper credentials or feel free to set up your own Azure Files and upload the sample fruit images in this repo directory.
 
 **Be careful to take note of the folder name it needs to be in the Azure File Share.**
 
@@ -249,7 +249,7 @@ k create secret generic fruit-secret \
 kubectl get deploy,rs,po,svc,ingress,secrets -n dev
 ```
 
-The end results will look something like this.
+The end result will look something like this.
 
 ![Dev Namespace Output](/deploy-app/img/app_dev_namespace.png)
 
@@ -352,7 +352,7 @@ az role assignment create \
     --scope /subscriptions/$SUBID/resourcegroups/$RG/providers/Microsoft.ManagedIdentity/UserAssignedIdentities/$AAD_IDENTITY
 ```
 
-* Now that we have the Azure AD Identity setup, the next step is to setup the access policy (RBAC) in AKV to allow or deny certain permissions to the data.
+* Now that we have the Azure AD Identity setup, the next step is to set up the access policy (RBAC) in AKV to allow or deny certain permissions to the data.
 
 ```bash
 # Setup Access Policy (Permissions) in AKV
@@ -398,7 +398,7 @@ kubectl get azureidentity,azureidentitybinding -n dev
 
 ### Deploy Updated Version of Application which accesses AKV
 
-* Now that the bindings are setup, we are ready to test it out by deploying our application and see if it is able to read everything it needs from AKV.
+* Now that the bindings are set up, we are ready to test it out by deploying our application and see if it is able to read everything it needs from AKV.
 
 **NOTE: It is the following label, configured via above, that determines whether or not the Identity Controller tries to assign an AzureIdentity to a specific Pod.**
 
