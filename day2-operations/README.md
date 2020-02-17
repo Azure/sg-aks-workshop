@@ -27,11 +27,8 @@ Weaveworks Flux was one of the first tools to enable the GitOps approach, and it
 
 If you remember back in the __Cluster Provisioning__ section we talked about how we used Flux to bootstrap components when we provisioned the cluster. To demonstrate how the cluster synchronizes with our git repo we will delete one of the namespaces and see how it automatically gets synchronized back to the state that is stored in Github.
 
-<<<<<<< HEAD
 First list the namespace to see which ones were configured from our git repo.
 
-=======
->>>>>>> a86acd8597c0fcc245ab3a8235733ffab457ae92
 ```bash
 # First list the namespace to see which ones were configured from our git repo.
 kubectl get ns
