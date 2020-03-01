@@ -105,7 +105,6 @@ az network public-ip create -g $RG -n $FWPUBLICIP_NAME -l $LOC --sku "Standard"
 # Create Azure Firewall
 az network firewall create -g $RG -n $FWNAME -l $LOC
 # Configure Azure Firewall IP Config - This command will take several mins so be patient.
-# ***** Note: There have been troubles with this command. If this happens please go into the portal, delete the existing firewall and public IP, then provision the Public IP and Azure Firewall through the portal at the same time.*****
 az network firewall ip-config create -g $RG -f $FWNAME -n $FWIPCONFIG_NAME --public-ip-address $FWPUBLICIP_NAME --vnet-name $VNET_NAME
 # Capture Azure Firewall IP Address for Later Use
 FWPUBLIC_IP=$(az network public-ip show -g $RG -n $FWPUBLICIP_NAME --query "ipAddress" -o tsv)
@@ -131,6 +130,12 @@ az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aks
 # Add Application FW Rules
 # Required AKS FW Rules
 # https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-ports-and-addresses-for-aks-clusters
+
+# There are two approaches with the application firewall rules. There is a single rule to save time with provisioning. There are also all the rules split out to align with what type of functionality is being enabled.
+# ***** Only do one or the other, not both. *****
+# Single F/W Rule
+az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'AKS' --action allow --priority 100 -n 'required' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns 'aksrepos.azurecr.io' '*blob.core.windows.net' 'mcr.microsoft.com' '*cdn.mscr.io' 'management.azure.com' 'login.microsoftonline.com' 'ntp.ubuntu.com' 'packages.microsoft.com' 'acs-mirror.azureedge.net' '*.hcp.eastus.azmk8s.io' '*.tun.eastus.azmk8s.io' 'security.ubuntu.com' '*archive.ubuntu.com' 'changelogs.ubuntu.com' 'nvidia.github.io' 'us.download.nvidia.com' 'apt.dockerproject.org' 'dc.services.visualstudio.com' '*.ods.opinsights.azure.com' '*.oms.opinsights.azure.com'  '*.microsoftonline.com' '*.monitoring.azure.com' '*auth.docker.io' '*cloudflare.docker.io' '*cloudflare.docker.com' '*registry-1.docker.io' 'apt.dockerproject.org' 'gcr.io' 'storage.googleapis.com' '*.quay.io' 'quay.io' '*.cloudfront.net' '*.azurecr.io' '*.gk.azmk8s.io' 'raw.githubusercontent.com' 'gov-prod-policy-data.trafficmanager.net' 'api.snapcraft.io' '*.github.com' '*.vault.azure.net' '*.azds.io'
+# OR F/W Rules Split Out
 az network firewall application-rule create -g $RG -f $FWNAME \
     --collection-name 'AKS_Global_Required' \
     --action allow \
