@@ -131,146 +131,15 @@ az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aks
 # Required AKS FW Rules
 # https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-ports-and-addresses-for-aks-clusters
 
-# There are two approaches with the application firewall rules. There is a single rule to save time with provisioning. There are also all the rules split out to align with what type of functionality is being enabled.
-# ***** Only do one or the other, not both. *****
 # Single F/W Rule
-az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'AKS' --action allow --priority 100 -n 'required' --source-addresses '*' --protocols 'http=80' 'https=443' --target-fqdns 'aksrepos.azurecr.io' '*blob.core.windows.net' 'mcr.microsoft.com' '*cdn.mscr.io' 'management.azure.com' 'login.microsoftonline.com' 'ntp.ubuntu.com' 'packages.microsoft.com' 'acs-mirror.azureedge.net' '*.hcp.eastus.azmk8s.io' '*.tun.eastus.azmk8s.io' 'security.ubuntu.com' '*archive.ubuntu.com' 'changelogs.ubuntu.com' 'nvidia.github.io' 'us.download.nvidia.com' 'apt.dockerproject.org' 'dc.services.visualstudio.com' '*.ods.opinsights.azure.com' '*.oms.opinsights.azure.com'  '*.microsoftonline.com' '*.monitoring.azure.com' '*auth.docker.io' '*cloudflare.docker.io' '*cloudflare.docker.com' '*registry-1.docker.io' 'apt.dockerproject.org' 'gcr.io' 'storage.googleapis.com' '*.quay.io' 'quay.io' '*.cloudfront.net' '*.azurecr.io' '*.gk.azmk8s.io' 'raw.githubusercontent.com' 'gov-prod-policy-data.trafficmanager.net' 'api.snapcraft.io' '*.github.com' '*.vault.azure.net' '*.azds.io'
-# OR F/W Rules Split Out
 az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_Global_Required' \
-    --action allow \
-    --priority 100 \
-    -n 'required' \
-    --source-addresses '*' \
-    --protocols 'http=80' 'https=443' \
-    --target-fqdns \
-        'aksrepos.azurecr.io' \
-        '*blob.core.windows.net' \
-        'mcr.microsoft.com' \
-        '*cdn.mscr.io' \
-        '*.data.mcr.microsoft.com' \
-        'management.azure.com' \
-        'login.microsoftonline.com' \
-        'ntp.ubuntu.com' \
-        'packages.microsoft.com' \
-        'acs-mirror.azureedge.net'
-
-# Azure Public Cloud Specific
-# Change FQDN based on your Cluster's DC Location (eg. *.hcp.<location>.azmk8s.io where <location> is something like 'eastus')
-# ***NOTE:*** Azure US Gov and China will have different FQDNs
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_Cloud_Specific_Required' \
-    --action allow \
-    --priority 200 \
-    -n 'required' \
-    --source-addresses '*' \
-    --protocols 'http=80' 'https=443' \
-    --target-fqdns \
-        '*.hcp.eastus.azmk8s.io' \
-        '*.tun.eastus.azmk8s.io'
-
-# Required for AKS Updates
-# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#optional-recommended-addresses-and-ports-for-aks-clusters
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_Update_Required' \
-    --action allow \
-    --priority 300 \
-    -n 'ubuntu' \
-    --source-addresses '*' \
-    --protocols 'http=80' 'https=443' \
-    --target-fqdns \
-        'security.ubuntu.com' \
-        'azure.archive.ubuntu.com' \
-        'changelogs.ubuntu.com'
-
-# Only Required for GPU
-# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-for-gpu-enabled-aks-clusters
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_GPU_Optional' \
-    --action allow \
-    --priority 400 \
-    -n 'nvidia' \
-    --source-addresses '*' \
-    --protocols 'https=443' \
-    --target-fqdns \
-        'nvidia.github.io' \
-        'us.download.nvidia.com' \
-        'apt.dockerproject.org'
-
-# Only Required for Azure Monitor for Containers
-# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-monitor-for-containers-enabled
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_Azure_Monitor_Required' \
-    --action allow \
-    --priority 500 \
-    -n 'azure_monitor' \
-    --source-addresses '*' \
-    --protocols 'https=443' \
-    --target-fqdns \
-        'dc.services.visualstudio.com' \
-        '*.ods.opinsights.azure.com' \
-        '*.oms.opinsights.azure.com' \
-        '*.microsoftonline.com' \
-        '*.monitoring.azure.com'
-
-# Only Required for Reaching Public Container Registries
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'AKS_For_Public_Container_Registries_Required' \
-    --action allow \
-    --priority 600 \
-    -n 'registries' \
-    --source-addresses '*' \
-    --protocols 'https=443' \
-    --target-fqdns \
-        '*auth.docker.io' \
-        '*cloudflare.docker.io' \
-        '*cloudflare.docker.com' \
-        '*registry-1.docker.io' \
-        'apt.dockerproject.org' \
-        'gcr.io' \
-        'storage.googleapis.com' \
-        '*.quay.io' \
-        'quay.io' \
-        '*.cloudfront.net' \
-        '*.azurecr.io' \
-        '*.gk.azmk8s.io' \
-        'raw.githubusercontent.com' \
-        'gov-prod-policy-data.trafficmanager.net' \
-        'api.snapcraft.io'
-
-# Required if using Flux - Must communicate with Git Repo (i.e. GitHub)
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'Flux_Optional' \
-    --action allow \
-    --priority 700 \
-    -n 'GitHub' \
-    --source-addresses '*' \
-    --protocols 'https=443' \
-    --target-fqdns \
-        '*.github.com'
-
-# Required if using Azure Key Vault over Public Internet
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'Azure_Services_Required' \
-    --action allow \
-    --priority 800 \
-    -n 'KeyVault' \
-    --source-addresses '*' \
-    --protocols 'https=443' \
-    --target-fqdns \
-        '*.vault.azure.net'
-
-# Only Required if using Azure DevSpaces
-# https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic#required-addresses-and-ports-with-azure-dev-spaces-enabled
-az network firewall application-rule create -g $RG -f $FWNAME \
-    --collection-name 'Azure_DevSpaces_Optional' \
-    --action allow \
-    --priority 900 \
-    -n 'Required' \
-    --source-addresses '*' \
-    --protocols 'https=443' \
-    --target-fqdns \
-        '*.azds.io'
+ --collection-name 'AKS' \
+ --action allow \
+ --priority 100 \
+ -n 'required' \
+ --source-addresses '*' \
+ --protocols 'http=80' 'https=443' \
+ --target-fqdns 'aksrepos.azurecr.io' '*blob.core.windows.net' 'mcr.microsoft.com' '*cdn.mscr.io' 'management.azure.com' 'login.microsoftonline.com' 'ntp.ubuntu.com' 'packages.microsoft.com' 'acs-mirror.azureedge.net' '*.hcp.eastus.azmk8s.io' '*.tun.eastus.azmk8s.io' 'security.ubuntu.com' '*archive.ubuntu.com' 'changelogs.ubuntu.com' 'nvidia.github.io' 'us.download.nvidia.com' 'apt.dockerproject.org' 'dc.services.visualstudio.com' '*.ods.opinsights.azure.com' '*.oms.opinsights.azure.com'  '*.microsoftonline.com' '*.monitoring.azure.com' '*auth.docker.io' '*cloudflare.docker.io' '*cloudflare.docker.com' '*registry-1.docker.io' 'apt.dockerproject.org' 'gcr.io' 'storage.googleapis.com' '*.quay.io' 'quay.io' '*.cloudfront.net' '*.azurecr.io' '*.gk.azmk8s.io' 'raw.githubusercontent.com' 'gov-prod-policy-data.trafficmanager.net' 'api.snapcraft.io' '*.github.com' '*.vault.azure.net' '*.azds.io'
 
 # Associate AKS Subnet to FW
 az network vnet subnet update -g $RG --vnet-name $VNET_NAME --name $AKSSUBNET_NAME --route-table $FWROUTE_TABLE_NAME
