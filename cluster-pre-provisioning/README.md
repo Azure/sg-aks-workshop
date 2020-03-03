@@ -12,7 +12,7 @@ The variables are pretty straight forward, but please note there are a few words
 PREFIX="contosofin"
 RG="${PREFIX}-rg"
 LOC="eastus"
-NAME="${PREFIX}20191111"
+NAME="${PREFIX}"
 ACR_NAME="${NAME}acr"
 VNET_NAME="${PREFIX}vnet"
 AKSSUBNET_NAME="${PREFIX}akssubnet"
