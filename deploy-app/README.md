@@ -233,9 +233,7 @@ kubectl get deploy,rs,po,svc,ingress -n dev
 
 ### File Share Setup
 
-You will notice that some of the pods are not starting up, this is because a secret is missing, the secret to access Azure Files. Please talk to your proctors to get the proper credentials or feel free to set up your own Azure Files and upload the sample fruit images in this repo directory.
-
-**Be careful to take note of the folder name it needs to be in the Azure File Share.**
+You will notice that some of the pods are not starting up, this is because an Azure File Share is missing and the secret to access Azure Files. 
 
 Create an Azure Storage account in your resource group. 
 ```bash
@@ -247,6 +245,9 @@ STORAGE_ACCOUNT=${PREFIX}storage
 
 # create storage account
 az storage account create -g $RG -n $STORAGE_ACCOUNT
+
+# create an azure files share to contain fruit images
+az storage share create --name $SHARE_NAME --account-name $STORAGE_ACCOUNT
 
 # get the key
 STORAGE_KEY=$(az storage account keys list -g $RG -n $STORAGE_ACCOUNT --query "[0].value")
