@@ -9,7 +9,7 @@ For the purpose of this workshop we will be using Azure Firewall to control egre
 The variables are pretty straight forward, but please note there are a few words of caution on some of them.
 
 ```bash
-PREFIX="contosofin" # NOTE: Please make sure PREFIX is unique in your subscription, you must not have any hypens '-' in the value.
+PREFIX="contosofin" # NOTE: Please make sure PREFIX is unique in your tenant, you must not have any hypens '-' in the value.
 RG="${PREFIX}-rg"
 LOC="eastus"
 NAME="${PREFIX}"
