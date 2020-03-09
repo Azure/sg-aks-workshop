@@ -64,19 +64,8 @@ So how do I capture those kubernetes audit logs and where should they be put? Di
 This section sets up the connection between AKS and Azure Container Registry (ACR).
 
 ```bash
-# List Azure Container Registries (ACR) in a Table
-az acr list -o table
-# Setup ACR Permissions
-CLIENT_ID=$(az aks show --resource-group $RG --name ${PREFIX}-aks --query "servicePrincipalProfile.clientId" --output tsv)
-# Get the ACR registry resource id
-ACR_ID=$(az acr show --name ${PREFIX}acr --resource-group $RG --query "id" --output tsv)
-# Look at Configuration Settings
-echo $CLIENT_ID
-echo $ACR_ID
-# Create role assignment
-az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID
-# View Service Principal Permissions
-az role assignment list --assignee $CLIENT_ID --all -o table
+# Update Azure Container Registries (ACR) in a Table
+az aks update -n $NAME-aks -g $RG --attach-acr $ACR_NAME    
 ```
 
 ## Setup Cluster Metrics

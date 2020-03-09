@@ -233,18 +233,36 @@ kubectl get deploy,rs,po,svc,ingress -n dev
 
 ### File Share Setup
 
-You will notice that some of the pods are not starting up, this is because a secret is missing, the secret to access Azure Files. Please talk to your proctors to get the proper credentials or feel free to set up your own Azure Files and upload the sample fruit images in this repo directory.
+You will notice that some of the pods are not starting up, this is because an Azure File Share is missing and the secret to access Azure Files. 
 
-**Be careful to take note of the folder name it needs to be in the Azure File Share.**
+Create an Azure Storage account in your resource group. 
+```bash
+# declare the share referenced above.
+SHARE_NAME=fruit
+
+# az storage creation for app.
+STORAGE_ACCOUNT=${PREFIX}storage 
+
+# create storage account
+az storage account create -g $RG -n $STORAGE_ACCOUNT
+
+# create an azure files share to contain fruit images
+az storage share create --name $SHARE_NAME --account-name $STORAGE_ACCOUNT
+
+# get the key
+STORAGE_KEY=$(az storage account keys list -g $RG -n $STORAGE_ACCOUNT --query "[0].value")
+
+# create a secret
+kubectl create secret generic fruit-secret \
+  --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT \
+  --from-literal=azurestorageaccountkey=$STORAGE_KEY \
+  -n dev
+```
+
+From the Azure portal upload all the contents of the ./deploy-app/fruit/ directory.
+![Upload fruit directory](/deploy-app/img/upload_images.png)
 
 ```bash
-# Add Secrets for Worker Back-End
-STORAGE_ACCOUNT_NAME=""
-STORAGE_ACCOUNT_KEY=""
-k create secret generic fruit-secret \
-  --from-literal=azurestorageaccountname=<STORAGE_ACCOUNT_NAME> \
-  --from-literal=azurestorageaccountkey=<STORAGE_ACCOUNT_KEY> \
-  -n dev
 # Check to see Worker Pod is now Running
 kubectl get deploy,rs,po,svc,ingress,secrets -n dev
 ```
