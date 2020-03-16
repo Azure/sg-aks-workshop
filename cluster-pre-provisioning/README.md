@@ -77,12 +77,12 @@ az network vnet subnet create \
     --resource-group $RG \
     --vnet-name $VNET_NAME \
     --name $APPGWSUBNET_NAME \
-    --address-prefix 100.64.3.0/24
+    --address-prefix 100.64.3.0/26
 az network vnet subnet create \
     --resource-group $RG \
     --vnet-name $VNET_NAME \
     --name $FWSUBNET_NAME \
-    --address-prefix 100.64.4.0/24
+    --address-prefix 100.64.4.0/26
 ```
 
 ## AKS Creation Azure Firewall Pre-requisites
