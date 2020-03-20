@@ -8,7 +8,8 @@ Coming Soon.
 
 ## Number of Clusters/Environments
 
-Coming Soon.
+[Guidance on # of clusters](https://learnk8s.io/how-many-clusters)
+[Guidance on node Sizing](https://learnk8s.io/kubernetes-node-size)
 
 ## Networking Topology & Considerations
 
