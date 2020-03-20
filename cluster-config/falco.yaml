@@ -2175,6 +2175,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: sysdig-falco-audit-service
+  namespace: falco
   labels:
     app: sysdig-falco
     chart: "falco-1.1.1"
