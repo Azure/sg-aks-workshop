@@ -1,3 +1,4 @@
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -7,7 +8,7 @@ rules:
 # Allow kubectl to drain/uncordon
 #
 # NB: These permissions are tightly coupled to the bundled version of kubectl; the ones below
-# match https://github.com/kubernetes/kubernetes/blob/v1.12.1/pkg/kubectl/cmd/drain.go
+# match https://github.com/kubernetes/kubernetes/blob/v1.14.1/pkg/kubectl/cmd/drain/drain.go
 #
 - apiGroups: [""]
   resources: ["nodes"]
@@ -15,7 +16,7 @@ rules:
 - apiGroups: [""]
   resources: ["pods"]
   verbs:     ["list","delete","get"]
-- apiGroups: ["extensions"]
+- apiGroups: ["apps"]
   resources: ["daemonsets"]
   verbs:     ["get"]
 - apiGroups: [""]
@@ -42,7 +43,7 @@ metadata:
   name: kured
 rules:
 # Allow kured to lock/unlock itself
-- apiGroups:     ["extensions"]
+- apiGroups:     ["apps"]
   resources:     ["daemonsets"]
   resourceNames: ["kured"]
   verbs:         ["update"]
@@ -91,7 +92,9 @@ spec:
       restartPolicy: Always
       containers:
         - name: kured
-          image: docker.io/weaveworks/kured:1.2.0
+          image: docker.io/weaveworks/kured:1.3.0
+                 # If you find yourself here wondering why there is no
+                 # :latest tag on Docker Hub,see the FAQ in the README
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true # Give permission to nsenter /proc/1/ns/mnt
@@ -110,9 +113,14 @@ spec:
 #            - --blocking-pod-selector=...
 #            - --ds-name=kured
 #            - --ds-namespace=kube-system
+#            - --end-time=23:59:59
 #            - --lock-annotation=weave.works/kured-node-lock
 #            - --period=1h
 #            - --prometheus-url=http://prometheus.monitoring.svc.cluster.local
+#            - --reboot-days=sun,mon,tue,wed,thu,fri,sat
 #            - --reboot-sentinel=/var/run/reboot-required
 #            - --slack-hook-url=https://hooks.slack.com/...
 #            - --slack-username=prod
+#            - --slack-channel=alerting
+#            - --start-time=0:00
+#            - --time-zone=UTC
