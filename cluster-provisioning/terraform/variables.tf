@@ -1,5 +1,4 @@
 variable "prefix" {
-  default     = "sgchili"
   description = "A prefix used for all resources"
 }
 
@@ -13,7 +12,7 @@ variable "location" {
 }
 
 variable "kubernetes_version" {
-  default     = "1.15.5"
+  default     = "1.15.10"
   description = "The version of Kubernetes you want deployed to your cluster. Please reference the command: az aks get-versions --location eastus -o table"
 }
 
@@ -122,11 +121,6 @@ variable "azure_vnet_name" {
   description = "VNET Name for K8s networking"
 }
 
-variable "github_organization" {
-  default     = "Azure"
-  description = "Name of the Github Organisation"
-}
-
 variable "azure_aag_subnet_name" {
   default     = ""
   description = "Subnet ID For App Gateway"
@@ -145,6 +139,10 @@ variable "azure_aag_name" {
 variable "azure_aag_public_ip" {
   default     = ""
   description = "Public IP For App Gateway"
+}
+
+variable "github_organization" {
+  description = "Name of the Github Organisation"
 }
 
 variable "github_repository" {

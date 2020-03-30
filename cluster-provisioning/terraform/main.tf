@@ -1,19 +1,39 @@
-resource "azurerm_resource_group" "demo" {
-  name     = var.resource_group
-  location = var.location
+resource "azurerm_storage_account" "storage" {
+  name                     = "${var.prefix}logs"
+  resource_group_name      = var.resource_group
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  tags = {
+    environment = "logs"
+  }
+}
+
+#resource "azurerm_resource_group" "demo" {
+#  name     = var.resource_group
+#  location = var.location
+#}
+
+resource "azurerm_container_registry" "acr" {
+  name                = "${var.prefix}acr"
+  resource_group_name = var.resource_group
+  location            = var.location
+  sku                 = "Standard"
+  admin_enabled       = false
 }
 
 resource "azurerm_log_analytics_workspace" "demo" {
   name                = "${var.prefix}-aks-logs"
-  location            = azurerm_resource_group.demo.location
-  resource_group_name = azurerm_resource_group.demo.name
+  location            = var.location
+  resource_group_name = var.resource_group
   sku                 = "PerGB2018"
 }
 
 resource "azurerm_log_analytics_solution" "demo" {
   solution_name         = "Containers"
-  location              = azurerm_resource_group.demo.location
-  resource_group_name   = azurerm_resource_group.demo.name
+  location              = var.location
+  resource_group_name   = var.resource_group
   workspace_resource_id = azurerm_log_analytics_workspace.demo.id
   workspace_name        = azurerm_log_analytics_workspace.demo.name
 
@@ -24,9 +44,9 @@ resource "azurerm_log_analytics_solution" "demo" {
 }
 resource "azurerm_kubernetes_cluster" "demo" {
   name                = "${var.prefix}-aks"
-  location            = azurerm_resource_group.demo.location
+  location            = var.location
   dns_prefix          = "${var.prefix}-aks"
-  resource_group_name = azurerm_resource_group.demo.name
+  resource_group_name = var.resource_group
   kubernetes_version  = var.kubernetes_version
 
   linux_profile {
@@ -37,11 +57,10 @@ resource "azurerm_kubernetes_cluster" "demo" {
     }
   }
 
-  agent_pool_profile {
-    name            = "agentpool"
-    count           = var.agent_count
+  default_node_pool {
+    name            = "default"
+    node_count      = var.agent_count
     vm_size         = var.vm_size
-    os_type         = "Linux"
     os_disk_size_gb = var.os_disk_size_gb
     type            = "VirtualMachineScaleSets"
 
@@ -79,4 +98,12 @@ resource "azurerm_kubernetes_cluster" "demo" {
     docker_bridge_cidr = var.docker_bridge_cidr
     #pod_cidr = var.pod_cidr
   }
+
+  lifecycle {
+        ignore_changes = [
+            default_node_pool[0].node_count,
+            default_node_pool[0].vnet_subnet_id,
+            windows_profile
+        ]
+    }
 }

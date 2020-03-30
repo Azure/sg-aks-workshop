@@ -12,7 +12,7 @@ data "github_repository" "flux" {
 
 resource "github_repository_deploy_key" "flux" {
   title      = "Flux deploy key (flux-${var.prefix})"
-  repository = data.github_repository.flux.name
-  read_only  = false
+  repository = "${data.github_repository.flux.name}"
+  read_only  = true
   key        = tls_private_key.flux.public_key_openssh
 }
