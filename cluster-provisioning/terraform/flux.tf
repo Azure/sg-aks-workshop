@@ -130,7 +130,7 @@ resource "kubernetes_deployment" "flux" {
 
         container {
           name  = "flux"
-          image = "docker.io/fluxcd/flux:1.14.2"
+          image = "docker.io/fluxcd/flux:1.18.0"
 
           volume_mount {
             name       = "git-key"
@@ -171,10 +171,12 @@ resource "kubernetes_secret" "flux-git-deploy" {
   type = "Opaque"
 
   data = {
-    identity = tls_private_key.flux.private_key_pem
+    identity = "${tls_private_key.flux.private_key_pem}"
   }
 
-  depends_on = [kubernetes_namespace.flux]
+  depends_on = [
+    kubernetes_namespace.flux
+    ]
 }
 
 resource "kubernetes_deployment" "memcached" {
@@ -200,7 +202,7 @@ resource "kubernetes_deployment" "memcached" {
       spec {
         container {
           name  = "memcached"
-          image = "memcached:1.4.25"
+          image = "memcached:latest"
 
           port {
             name           = "clients"
@@ -211,7 +213,9 @@ resource "kubernetes_deployment" "memcached" {
     }
   }
 
-  depends_on = [kubernetes_namespace.flux]
+  depends_on = [
+    kubernetes_namespace.flux
+    ]
 }
 
 resource "kubernetes_service" "memcached" {
@@ -231,5 +235,7 @@ resource "kubernetes_service" "memcached" {
     }
   }
 
-  depends_on = [kubernetes_namespace.flux]
+  depends_on = [
+    kubernetes_namespace.flux
+  ]
 }
