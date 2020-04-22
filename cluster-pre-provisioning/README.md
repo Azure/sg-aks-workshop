@@ -87,7 +87,7 @@ az network vnet subnet create \
 
 ## AKS Creation Azure Firewall Pre-requisites
 
-This section walks through setting up Azure Firewall inbound and outbound rules. The main purpose of this firewall is to help organizations set up ingress and egress traffic rules to protect the AKS Cluster from unnecessary internet traffic to and from the internet.
+This section walks through setting up Azure Firewall inbound and outbound rules. The main purpose of this firewall is to help organizations set up ingress and egress traffic rules to protect the AKS Cluster from unnecessary traffic to and from the internet.
 
 **NOTE: Completely locking down inbound and outbound rules for AKS is not supported and will result in a broken cluster.**
 
