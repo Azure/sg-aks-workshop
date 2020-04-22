@@ -1,15 +1,15 @@
 # Cluster Pre-Provisioning
 
-This section walks us through all the pre-requisite setup before actually provisioning the Azure Kubernetes Service (AKS) cluster. Most organizations have existing virtual networks that they need to deploy into, with networking rules that control ingress and egress traffic.
+This section walks us through all of the pre-requisites that should be completed before provisioning the Azure Kubernetes Service (AKS) cluster. Most organizations have existing virtual networks they would like to deploy the cluster into, with networking rules that control ingress and egress traffic.
 
-For the purpose of this workshop we will be using Azure Firewall to control egress traffic destined for the Internet or to simulate going on-prem. Network Security Groups (NSGs) and User-Defined Routes (UDRs) will be used to control North/South traffic in and out of the AKS cluster itself.
+For the purpose of this workshop, we will be using Azure Firewall to control egress traffic destined for the Internet or to simulate going on-premises. Network Security Groups (NSGs) and User-Defined Routes (UDRs) will be used to control North/South traffic in and out of the AKS cluster itself.
 
 ## Variable Setup
 
-The variables are pretty straight forward, but please note there are a few words of caution on some of them.
+The variables should be fairly straightforward, however a few notes have been included on those where additional information is necessary.
 
 ```bash
-PREFIX="contosofin" # NOTE: Please make sure PREFIX is unique in your tenant, you must not have any hypens '-' in the value.
+PREFIX="contosofin" # NOTE: Please make sure PREFIX is unique in your tenant, you must not have any hyphens '-' in the value.
 RG="${PREFIX}-rg"
 LOC="eastus"
 NAME="${PREFIX}"
@@ -18,7 +18,7 @@ VNET_NAME="${PREFIX}vnet"
 AKSSUBNET_NAME="${PREFIX}akssubnet"
 SVCSUBNET_NAME="contosofinsvcsubnet"
 APPGWSUBNET_NAME="${PREFIX}appgwsubnet"
-# DO NOT CHANGE FWSUBNET_NAME - This is currently a requirement for Azure Firewall.
+# NOTE: DO NOT CHANGE FWSUBNET_NAME - This is currently a requirement for Azure Firewall.
 FWSUBNET_NAME="AzureFirewallSubnet"
 FWNAME="${PREFIX}fw"
 FWPUBLICIP_NAME="${PREFIX}fwpublicip"
@@ -31,7 +31,7 @@ AGPUBLICIP_NAME="${PREFIX}agpublicip"
 
 ## Create Resource Group
 
-This section leverages the variables from above and creates the initial Resource Group where all of this will be deployed.
+This section leverages the variables from above and creates the initial Resource Group where all of the subsequent resources will be deployed.
 
 **For the SUBID (Azure Subscription ID), be sure to update your Subscription Name. If you do not know it, feel free to copy and paste your ID directly in. We will need the SUBID variable when working with Azure Resource IDs later in the walkthrough.**
 
@@ -51,12 +51,12 @@ az group create --name $RG --location $LOC
 
 ## AKS Creation VNET Pre-requisites
 
-This section walks through the Virtual Network (VNET) setup pre-requisites before actually creating the AKS Cluster. One caveat on the subnet sizing below. All subnets were selected as /24 because it made things simple, but that is not a requirement. Please work with your networking teams to size the subnets appropriately for your organization's needs.
+This section walks through the Virtual Network (VNET) setup prerequisites before creating the AKS Cluster. NOTE: all subnets were selected as /24 because it made things simple, but that is not a requirement. Please work with your networking teams to size the subnets appropriately for your organization's needs.
 
 Here is a brief description of each of the dedicated subnets leveraging the variables populated from above:
 
 * AKSSUBNET_NAME - This is where the AKS Cluster will get deployed.
-* SVCSUBNET_NAME - This is the subnet that will be used for **Kubernetes Services** that are exposed via an Internal Load Balancer (ILB). By doing it this way we do not take away from the existing IP Address space in the AKS subnet that is used for Nodes and Pods.
+* SVCSUBNET_NAME - This is the subnet that will be used for **Kubernetes Services** that are exposed via an Internal Load Balancer (ILB). By taking this approach, we do not take away from the existing IP Address space in the AKS subnet that is used for Nodes and Pods.
 * APPGWSUBNET_NAME - This subnet is dedicated to Azure Application Gateway v2 which will serve as a Web Application Firewall (WAF).
 * FWSUBNET_NAME - This subnet is dedicated to Azure Firewall. **NOTE: The name cannot be changed at this time.**
 
@@ -87,15 +87,17 @@ az network vnet subnet create \
 
 ## AKS Creation Azure Firewall Pre-requisites
 
-This section walks through setting up Azure Firewall inbound and outbound rules. The main purpose of the firewall here is to help organizations to set up ingress and egress traffic rules so the AKS Cluster is not just open to the world and cannot reach out to everything on the Internet at the same time.
+This section walks through setting up Azure Firewall inbound and outbound rules. The main purpose of this firewall is to help organizations set up ingress and egress traffic rules to protect the AKS Cluster from unnecessary internet traffic.
 
 **NOTE: Completely locking down inbound and outbound rules for AKS is not supported and will result in a broken cluster.**
 
 **NOTE: There are no inbound rules required for AKS to run. The only time an inbound rule is required is to expose a workload/service.**
 
-It starts with creating a Public IP address and then gets into creating the Azure Firewall along with all of the Network (think ports and protocols) and Application (think egress traffic based on FQDNs) rules. If you want to lock down destination IP Addresses on some of the firewall rules you will have to use the destination IP Addresses for the datacenter region you are deploying into due to how AKS communicates with the managed control plane. The list of IP Addresses per region in XML format can be found and downloaded by clicking [here](https://www.microsoft.com/en-us/download/details.aspx?id=56519).
+First, we will create a Public IP address. Then we will create the Azure Firewall, along with all of the Network (think ports and protocols) and Application (think egress traffic based on FQDNs) rules. 
 
-**NOTE: Azure Firewall, like other Network Virtual Appliances (NVAs), can be costly so please take note of that when deploying and if you intend to leave everything running.**
+If you want to lockdown destination IP Addresses on some of the firewall rules, you will have to use the destination IP Addresses for the datacenter region you are deploying into; this is based on how AKS communicates with the managed control plane. The list of IP Addresses per region in XML format can be found and downloaded by clicking [here](https://www.microsoft.com/en-us/download/details.aspx?id=56519).
+
+**NOTE: Azure Firewall, like other Network Virtual Appliances (NVAs), can be costly; please be aware of this when deploying, especially if you intend to leave everything running.**
 
 ```bash
 # Add the Azure Firewall extension to Azure CLI in case you do not already have it.
