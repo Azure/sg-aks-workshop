@@ -43,39 +43,39 @@ The end goal is to take you from having a kubernetes setup that is unsecure by d
 
 The following are the requirements to **start**.
 
-- Azure Account [Azure Portal](https://portal.azure.com)
+- Azure Account | [Azure Portal](https://portal.azure.com)
 
   - Ability to create AKS Clusters
   - Ability to create Azure Service Principals or access to one that can create AKS Clusters
 
-- Azure CLI [Install CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+- Azure CLI | [Install CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
   - Minimum Version: 2.0.80
   - AKS Preview Extension: 0.4.27
   - Firewall Extension Version: 0.1.8
 
-- Kubectl CLI [Install kubectl with Azure CLI](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough#connect-to-the-cluster)
+- Kubectl CLI | [Install kubectl with Azure CLI](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough#connect-to-the-cluster)
 
   - Minimum Version: 1.15.0
 
-- Git [Git SCM](https://git-scm.com/downloads)
+- Git | [Git SCM](https://git-scm.com/downloads)
 
   - Minimum Version: 2.22
 
-- GitHub Account [GitHub Account](https://help.github.com/en/github/getting-started-with-github/signing-up-for-a-new-github-account)
+- GitHub Account | [GitHub Account](https://help.github.com/en/github/getting-started-with-github/signing-up-for-a-new-github-account)
 
   - Required for GitOps Approach to Multi-Cluster Management
 
-- Terraform [Terraform Download](https://www.terraform.io/downloads.html)
+- Terraform | [Terraform Download](https://www.terraform.io/downloads.html)
 
   - Minimum Version: v0.12.20
 
-- Docker Community Edition (CE)[Install CE](https://docs.docker.com/v17.09/engine/installation/)
+- Docker Community Edition (CE) | [Install CE](https://docs.docker.com/v17.09/engine/installation/)
 
   - [Install Docker for Mac](https://docs.docker.com/v17.09/docker-for-mac/install/)
   - [Install Docker for Windows](https://docs.docker.com/v17.09/docker-for-windows/install/)
 
-- Code Editor [Install VS Code](https://code.visualstudio.com/download)
+- Code Editor | [Install VS Code](https://code.visualstudio.com/download)
 
 ## Fork the Repo
 
