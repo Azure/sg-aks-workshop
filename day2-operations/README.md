@@ -45,32 +45,32 @@ kubectl get ns -w
 
 ## Resource Management
 
-One of the important task of day 2 operations is resource management. Resource Management consist of maintaining adequate resources to serve your workloads. Kubernetes provides built in mechanisms to provide both soft and hard limits on CPU and Memory. It's important to understand how these request and limits work as it will ensure you provide adequate resource utilization for your cluster.
+One of the important task of day 2 operations is resource management. Resource Management consists of maintaining adequate resources to serve your workloads. Kubernetes provides built-in mechanisms to provide both soft and hard limits on CPU and Memory. It's important to understand how these request and limits work as it will ensure you provide adequate resource utilization for your cluster.
 
 __Requests__ are what the container is guaranteed to get. If a container requests a resource then Kubernetes will only schedule it on a node that satisfies the request. __Limits__, on the other hand, ensure a container never goes above a certain configured value. The container is only allowed to go up to this limit, and then it is restricted.
 
 When a container does hit the limit there is different behavior from when it hits a memory limit vs a CPU limit. With a memory limit the container will be killed and you'll see an "Out Of Memory Error". When a CPU limit is hit it will just start throttling the CPU vs restarting the container.
 
-It's also important to understand how Kubernetes assigns QoS classes when scheduling pods, as it hav an effect on pod scheduling and eviction. Below is the different QoS classes that can be assigned when a pod is scheduled:
+It's also important to understand how Kubernetes assigns QoS classes when scheduling pods, as it has an effect on pod scheduling and eviction. Below is the different QoS classes that can be assigned when a pod is scheduled:
 
 - **QoS class of Guaranteed:**
   - Every Container in the Pod must have a memory limit and a memory request, and they must be the same.
   - Every Container in the Pod must have a CPU limit and a CPU request, and they must be the same.
   
 - **QoS class of Burstable**
-  - The Pod does not meet the criteria for QoS class Guaranteed.
+  - The Pod does not meet the criteria for QoS class **Guaranteed*.
   - At least one Container in the Pod has a memory or CPU request.
 
 - **QoS class of Best Effort**
   - For a Pod to be given a QoS class of BestEffort, the Containers in the Pod must not have any memory or CPU limits or requests.
 
-Below shows a diagram depicting QoS based on request and limits.
+Below shows a diagram depicting QoS based on requests and limits.
 
 ![QoS](./img/qos.png)
 
 **Failure to set limits for memory on pods can lead to a single pod starving the cluster of memory.**
 
-If you want to ensure every pod get at least a default request/limit, you can set a **LimitRange** on a namespace. If you preform the following command you can see in our cluster we have a LimitRange set on the Dev namespace.
+If you want to ensure every pod gets at least a default request/limit, you can set a **LimitRange** on a namespace. If you perform the following command you can see in our cluster we have a LimitRange set on the Dev namespace.
 
 ```bash
 # Check Limit Ranges in Dev Namespace
@@ -120,9 +120,9 @@ Monitoring disk space a critical part of keeping any Kubernetes cluster alive. E
 Here is an example of disk capacity
 ![iops metrics](./img/diskcapacity.png)
 
-Disk throttling 
+Disk throttling
 
-From the Insights portal you can also view the node disk capacity. 
+From the Insights portal you can also view the node disk capacity.
 
 ![iops metrics](./img/dropdownmenu.png)
 
@@ -134,7 +134,7 @@ In the next section, we'll dive into how to view live logs, create log query, an
 
 ## Live Logs
 
-Live logs are nice way to see logs being emitted from STDOUT/STDERR of a container. You can give developers access to the live logging, so they can live debug issues happening with their application. This allows you to limit their exposure to using __kubectl__ for application issues.
+Live logs are a nice way to see logs being emitted from STDOUT/STDERR of a container. You can give developers access to the live logging, so they can live debug issues happening with their application. This allows you to limit their exposure to using __kubectl__ for application issues.
 
 To access the live logs you will need to navigate to the Insights section of the AKS Cluster
 
@@ -172,17 +172,17 @@ Perf
 | where CounterName == 'cpuUsageNanoCores'
 | summarize UsageValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
 | project-away CounterName
-| join kind = fullouter 
+| join kind = fullouter
 (Perf
 | where ObjectName == 'K8SContainer'
 | where CounterName == 'cpuRequestNanoCores'
 | summarize RequestValue = max(CounterValue) by bin(TimeGenerated, 1m), Computer, InstanceName, CounterName
 | project-away CounterName
 ) on Computer, InstanceName, TimeGenerated
-| project TimeGenerated = iif(isnotempty(TimeGenerated), TimeGenerated, TimeGenerated1), 
+| project TimeGenerated = iif(isnotempty(TimeGenerated), TimeGenerated, TimeGenerated1),
           Computer = iif(isnotempty(Computer), Computer, Computer1),
           InstanceName = iif(isnotempty(InstanceName), InstanceName, InstanceName1),
-          UsageValue = iif(isnotempty(UsageValue), UsageValue, 0.0), 
+          UsageValue = iif(isnotempty(UsageValue), UsageValue, 0.0),
           RequestValue = iif(isnotempty(RequestValue), RequestValue, 0.0)
 | extend ConsumedValue = iif(UsageValue > RequestValue, UsageValue, RequestValue)
 ) on InstanceName, TimeGenerated
@@ -191,7 +191,7 @@ Perf
 
 If we run that query with the changed cluster name you should see something a la the following. In case you have multi namespaces it will also be shown.
 
-![Kusto cpu overview](./img/kusto-showing-cpu-overview.png)
+![Kusto CPU overview](./img/kusto-showing-cpu-overview.png)
 
 Here is another example where we do it based on Memory per namespace
 
@@ -219,7 +219,7 @@ ContainerInventory
 
 ## Cluster Upgrade With Node Pools
 
-With nodepools available in AKS, we have the ability to decouple the Control Plane upgrade from the nodes upgrade, and we will start by upgrading our control plane.
+With nodepools available in AKS, we can decouple the Control Plane upgrade from the nodes upgrade, and we will start by upgrading our control plane.
 
 **Note** Before we start, at this stage you should:
 1- Be fully capable of spinning up your cluster and restore your data in case of any failure (check the backup and restore section)
@@ -268,7 +268,7 @@ Since control-plane-only argument is specified, this will upgrade only the contr
  ....
 ```
 
-**Note** The Control Plane can support N-2 kubelet on the nodes, which means 1.15 Control Plane supports 1.14, and 1.12 Kubelet. Kubelet can't be *newer* than the Control Plane. more information can be found [here](https://kubernetes.io/docs/setup/release/version-skew-policy/#kube-apiserver)
+**Note** The Control Plane can support N-2 kubelet on the nodes, which means 1.15 Control Plane supports 1.14, and 1.13 Kubelet. Kubelet can't be *newer* than the Control Plane. more information can be found [here](https://kubernetes.io/docs/setup/release/version-skew-policy/#kube-apiserver)
 
 Let's add a new node pool with the desired version "1.15.7"
 

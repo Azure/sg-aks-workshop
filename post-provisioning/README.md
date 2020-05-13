@@ -47,15 +47,15 @@ exit
 
 ## Kubernetes Audit Logs
 
-There is an overwhelming need for organizations to capture all data that they can in case they need it. The Kubernetes audit logs falls into this bucket. It produces a ton of data that chews up storage, and most organizations are not sure what to do with.
+There is an overwhelming need for organizations to capture all data that they can in case they need it. The Kubernetes audit logs fall into this bucket. It produces a ton of data that chews up storage, and most organizations are not sure what to do with.
 
 So what do we do? We highly encourage organizations to only capture the data that they need to help reduce costs as well as optimize around analytics that need to be done. The less data that needs to be processed, the less compute that is needed, which means less cost. So, do you really need the audit logs?
 
-Ok, you get it, or you don't buy into selectively capturing data. Your orgnization needs to capture all of the data because you don't know what you don't know.
+Ok, you get it, or you don't buy into selectively capturing data. Your organization needs to capture all of the data because you don't know what you don't know.
 
 ### Capturing & Storing AKS Audit Logs
 
-So how do I capture those kubernetes audit logs and where should they be put? Directing the logs to Azure Monitor for Containers gets really expensive, really fast, due to the sheer volume of data records that are captured. Considering that most organizations are not 100% sure if they need the logs or not, and to keep costs to a minimum, the guidance is to direct the audit logs to Azure Storage.
+So how do I capture those Kubernetes audit logs and where should they be put? Directing the logs to Azure Monitor for Containers gets really expensive, really fast, due to the sheer volume of data records that are captured. Considering that most organizations are not 100% sure if they need the logs or not, and to keep costs to a minimum, the guidance is to direct the audit logs to Azure Storage.
 
 * Click [Enable Kubernetes Logs](https://docs.microsoft.com/en-us/azure/aks/view-master-logs) for more details and direct **kube-audit** logs to an Azure Storage Account, **NOT Log Analytics**.
 

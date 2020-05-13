@@ -193,6 +193,6 @@ az network public-ip create -g $RG -n $AGPUBLICIP_NAME -l $LOC --sku "Standard"
 * [Configure AKS with Azure CNI](https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni)
 * [Plan IP Addressing with Azure CNI](https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni#plan-ip-addressing-for-your-cluster)
 * [Using Multiple Node Pools](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools)
-* [Create nginx Ingress Controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic)
+* [Create Nginx Ingress Controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic)
 * [Create HTTPS Ingress Controller](https://docs.microsoft.com/en-us/azure/aks/ingress-tls)
 * [Integrate ILB with Firewall](https://docs.microsoft.com/en-us/azure/firewall/integrate-lb)

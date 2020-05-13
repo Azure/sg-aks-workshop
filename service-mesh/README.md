@@ -42,12 +42,12 @@ So you did not buy into the statements above, or maybe your organization has bou
 
 **For the purposes of this workshop, our focus is around securing communication between services, nothing else. Given that is our requirement, Linkerd was chosen for its focus on performance and minimizing impact on cluster resources.** The following sections will demonstrate Linkerd as we have found it straight forward, easy to use, and able to get up and running in minutes.
 
-* Click [here](https://linkerd.io/2/getting-started/) to get the linkerd cli installed if you have not already.
+* Click [here](https://linkerd.io/2/getting-started/) to get the Linkerd CLI installed if you have not already.
 * Click [here](https://linkerd.io/2/reference/architecture/) for an architectural overview.
 
 ### Quick Dive into Linkerd
 
-The first thing we will check is to make sure linkerd is running correctly, this is done by checking the control plane and namespaces for any errors using the linkerd cli.
+The first thing we will check is to make sure Linkerd is running correctly, this is done by checking the control plane and namespaces for any errors using the Linkerd CLI.
 
 ```bash
 # Check Version

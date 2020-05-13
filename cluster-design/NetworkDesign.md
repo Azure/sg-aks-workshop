@@ -105,9 +105,9 @@ Technologies used:
 - Azure private DNS Zone
 - User Defined Routes
 
-For more detailed documentation on how to set it up see here: https://docs.microsoft.com/en-gb/azure/aks/private-clusters
+For more detailed documentation on how to set it up see here: [https://docs.microsoft.com/en-gb/azure/aks/private-clusters](https://docs.microsoft.com/en-gb/azure/aks/private-clusters)
 
-## Do you want to isolate multiple internal workloads against each other?
+## Do you want to isolate multiple internal workloads against each other ?
 
 Objective:
 

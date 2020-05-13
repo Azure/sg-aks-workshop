@@ -23,7 +23,7 @@ After forking the repo you'll need to clone it locally.
 git clone https://github.com/<user_name>/sg-aks-workshop
 ```
 
-You'll also need to create a github personal access token that will be used to access the git repo from Flux. You can find the instructions on creating a Github personal access token below:
+You'll also need to create a Github personal access token that will be used to access the git repo from Flux. You can find the instructions on creating a Github personal access token below:
 
 [Github PAT Instructions](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
 
@@ -136,7 +136,7 @@ You'll notice once your cluster is provisioned you'll also have the following de
 
 * __Network Policy Rules__ - The network policies will restrict communication between different teams' namespace, to limit the exposure of access between namespaces.
 
-* __Gatekeeper Policies__ - Allows a custom admission control to define policies to meet the company's compliance and governance needs. For example, if you want to only allow users to deploy internal load balancers, then gatekeeper can enforce it based on the policy that has been set.
+* __Gatekeeper Policies__ - Allows a custom admission control to define policies to meet the company's compliance and governance needs. For example, if you want to only allow users to deploy internal load balancers, then Gatekeeper can enforce it based on the policy that has been set.
 
 * __Falco Rules__ - Provides runtime security to enforce policy across all your Kubernetes clusters. For example, one of the policies will inform you based on users performing an "exec" command against a container.
 
